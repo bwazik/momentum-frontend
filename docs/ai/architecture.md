@@ -23,11 +23,9 @@ CORS is required and configured on the Laravel side. All API calls use absolute 
 ```
 frontend/
 ├── app/                        # Next.js App Router
-│   ├── [locale]/               # ar | en
-│   │   ├── (auth)/             # Unauthenticated layouts (login)
-│   │   ├── (dashboard)/        # Authenticated shell (sidebar + topbar)
-│   │   └── layout.tsx          # Root locale layout (dir, lang, fonts)
-│   ├── layout.tsx              # Root layout
+│   ├── (auth)/             # Unauthenticated layouts (login)
+│   ├── (dashboard)/        # Authenticated shell (sidebar + topbar)
+│   ├── layout.tsx          # Root layout (reads NEXT_LOCALE cookie for dir/lang)
 │   └── not-found.tsx
 ├── components/
 │   ├── ui/                     # shadcn/ui primitives (CLI-managed)
@@ -59,8 +57,8 @@ frontend/
 
 ```
 Browser
-  → Next.js Middleware (locale redirect, session cookie check)
-  → App Router → Layout → Page (Server Component)
+  → Next.js Middleware (checks session auth, NO locale redirects)
+  → App Router → Root Layout (reads `NEXT_LOCALE` cookie for dir/lang) → Page
   → Client Component renders with TanStack Query hooks
   → fetch('https://api.momentum.test/v1/...', { credentials: 'include' })
   → Nginx routes api.momentum.test to Laravel PHP-FPM
@@ -117,11 +115,12 @@ See `security-policy.md` for full security details.
 ## i18n & RTL
 
 - **Locales:** `ar` (default), `en`
-- **Routing:** `app/[locale]/` dynamic segment
-- **Document direction:** `<html dir="rtl" lang="ar">` or `dir="ltr" lang="en"`
-- **Layout properties:** Tailwind logical (`ms-`, `me-`, `ps-`, `pe-`, `start`, `end`) — see `coding-standards.md`
-- **Hijri dates:** Display layer only (API returns Gregorian; convert via `Intl.DateTimeFormat`)
-- **Typography:** Inter font via `next/font` (supports Arabic glyphs; fallback to Noto Sans Arabic if needed)
+- **Routing:** Cookie-based (`NEXT_LOCALE`), URLs remain clean (e.g., `/tasks` instead of `/ar/tasks`).
+- **Implementation:** Root `layout.tsx` (Server Component) reads the `NEXT_LOCALE` cookie to set `<html dir="rtl" lang="ar">` or `dir="ltr" lang="en"`.
+- **Syncing:** Upon login, the user's `preferred_language` from the backend is saved to the cookie.
+- **Layout properties:** Tailwind logical (`ms-`, `me-`, `ps-`, `pe-`, `start`, `end`) — see `coding-standards.md`.
+- **Hijri dates:** Display layer only (API returns Gregorian; convert via `Intl.DateTimeFormat`).
+- **Typography:** Geist for English, Alexandria for Arabic (loaded via `next/font`).
 
 ---
 

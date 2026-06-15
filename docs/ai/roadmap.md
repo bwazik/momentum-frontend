@@ -62,7 +62,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - shadcn/ui init
 - TanStack Query + Zustand setup
 - OpenAPI typegen script (pointing to `../backend/openapi/openapi.json`)
-- Locale routing (`ar`/`en`) + RTL shell
+- Cookie-based locale routing (`NEXT_LOCALE`) + RTL shell
 - Implement design tokens from `docs/design-system/01-tokens.md`
 - Liquid glass effects from `docs/design-system/02-glassmorphism.md`
 - Dashboard shell layout (sidebar + topbar)
