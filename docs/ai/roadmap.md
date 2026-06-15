@@ -30,26 +30,26 @@
 
 ## Frontend Spec Catalog
 
-| Spec | Requires backend specs | Status |
-|------|------------------------|--------|
-| `001-executive-dashboard` | `009-analytics-reporting` | ⬜ |
-| `002-task-board` | `005-task-execution` | ⬜ |
-| `003-task-details` | `005`, `006`, `012`, `013` | ⬜ |
-| `004-blueprint-builder` | `004-blueprint-engine` | ⬜ |
-| `005-workflow-visualization` | `006-stage-lifecycle` | ⬜ |
-| `006-follow-up-center` | `007`, `010-follow-up-board` | ⬜ |
-| `007-organization-structure` | `002-organization-structure` | ⬜ |
-| `008-analytics-reporting` | `009-analytics-reporting` | ⬜ |
-| `009-system-administration` | `001`, `003`, `015` | ⬜ |
-| `010-help-center` | `020-help-center` | ⬜ |
-| `011-department-manager-dashboard` | `009-analytics-reporting` | ⬜ |
-| `012-pending-approvals` | `006-stage-lifecycle` | ⬜ |
-| `013-team-capacity-workload` | `009` (V2 workload) | ⬜ Deferred V2 |
-| `014-staff-performance-hub` | `009` (V2) | ⬜ Deferred V2 |
-| `015-decisions-registry` | TBD | ⬜ Deferred |
-| `016-department-memos` | TBD | ⬜ Deferred |
+| Spec | Milestone | Domain | Requires backend specs | Status |
+|------|-----------|--------|------------------------|--------|
+| `001-executive-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
+| `002-task-board` | F2 | Tasks | `005-task-execution`, `014` | ⬜ |
+| `003-task-details` | F2 | Tasks | `005`, `006`, `012`, `013` | ⬜ |
+| `004-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ⬜ |
+| `005-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ⬜ |
+| `006-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ⬜ |
+| `007-organization-structure` | F6 | Organization | `002-organization-structure` | ⬜ |
+| `008-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
+| `009-system-administration` | F6 | Platform | `001`, `003`, `015` | ⬜ |
+| `010-help-center` | F6 | Support | `020-help-center` | ⬜ |
+| `011-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
+| `012-pending-approvals` | F2 | Tasks | `006-stage-lifecycle` | ⬜ |
+| `013-team-capacity-workload` | V2 | Analytics | `009` (V2 workload) | ⬜ Deferred V2 |
+| `014-staff-performance-hub` | V2 | Analytics | `009` (V2) | ⬜ Deferred V2 |
+| `017-notifications-search` | F1 | Core | `008`, `011` | ⬜ |
+| `018-user-settings-delegation` | F6 | Settings | `016` | ⬜ |
 
-Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API dependencies.
+Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API dependencies. `015` and `016` were removed as orphaned specs with no backend counterpart.
 
 ---
 

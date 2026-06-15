@@ -10,9 +10,14 @@
       ],
       "enabled": true
     },
-	"next-devtools": {
-      "command": "npx",
-      "args": ["-y", "next-devtools-mcp@latest"]
+    "next-devtools": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "next-devtools-mcp@latest"
+      ],
+      "enabled": true
     }
   }
 }
