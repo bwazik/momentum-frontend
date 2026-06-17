@@ -16,12 +16,9 @@ components/
 │   ├── follow-up/      # Follow-up center UI
 │   ├── analytics/      # Dashboard charts, stat cards
 │   └── organization/   # Org chart, position tree
-└── shared/             # Cross-domain reusable
-    ├── data-table.tsx
-    ├── page-header.tsx
-    ├── empty-state.tsx
-    ├── glass-card.tsx
-    └── skeleton-card.tsx
+└── shared/             # Cross-domain reusable (planned — not yet created)
+    ├── data-table.tsx   # currently at components/data-table.tsx
+    └── site-header.tsx  # currently at components/site-header.tsx
 ```
 
 **Rules:**
@@ -35,11 +32,11 @@ components/
 
 ### Sidebar
 
-- Background: `bg-slate-900/95 backdrop-blur-xl` (dark glass)
-- Width: `w-64` (256px)
+- Background: uses `--sidebar` CSS variable (solid, no glass)
+- Width: `calc(var(--spacing) * 72)` (288px)
 - Tenant logo + name in header
 - Nav items: icon + label
-- Active item: `bg-emerald-600/20 text-emerald-300`
+- Active item: `bg-amber-600/20 text-amber-300`
 - Inactive item: `text-slate-400 hover:text-white hover:bg-white/5`
 - User footer: avatar, name, position
 - RTL: Sidebar on the right (use logical `border-e` not `border-r`)
@@ -47,38 +44,25 @@ components/
 
 ### Top Bar
 
-- Background: `bg-white/80 backdrop-blur-md` (glass, sticky)
+- Background: solid, sticky (shadcn `SiteHeader` component)
 - Height: `h-16`
 - Border: `border-b border-border/50`
 - Content: page title, global search input, theme toggle (Light/Dark/System), notification bell with count badge, primary action button
-- Sticky: `sticky top-0 z-sticky`
+- Sticky: `sticky top-0`
 
 ---
 
 ## Buttons
 
-| Variant | shadcn Variant | Tailwind | Usage |
-|---------|---------------|----------|-------|
-| Primary | `default` | emerald bg, white text | One main CTA per view |
-| Secondary | `outline` | border, transparent bg | Secondary actions |
-| Ghost | `ghost` | transparent, hover bg | Toolbar, table row actions |
-| Danger | `destructive` | red bg | Cancel task, delete |
-| Link | `link` | underline, no bg | Inline navigation |
+| Variant | shadcn Variant | Usage |
+|---------|---------------|-------|
+| Primary | `default` | One main CTA per view |
+| Secondary | `outline` | Secondary actions |
+| Ghost | `ghost` | Toolbar, table row actions |
+| Danger | `destructive` | Cancel task, delete |
+| Link | `link` | Inline navigation |
 
-```tsx
-<Button>إنشاء مهمة</Button>                     {/* Primary */}
-<Button variant="outline">تصدير</Button>         {/* Secondary */}
-<Button variant="ghost" size="icon">             {/* Ghost icon */}
-  <MoreHorizontal className="h-4 w-4" />
-</Button>
-<Button variant="destructive">إلغاء المهمة</Button> {/* Danger */}
-```
-
-**Interaction:**
-- Hover: slight darken + cursor pointer
-- Press: `active:scale-[0.98]` micro-shrink
-- Loading: spinner icon replacing text, button disabled
-- All buttons: `rounded-lg` (8px radius)
+**Interaction:** Hover darken, `active:scale-[0.98]` micro-shrink, loading spinner + disabled. All buttons `rounded-lg` (14px). See `npx shadcn@latest docs button` for full API.
 
 ---
 
@@ -86,73 +70,26 @@ components/
 
 ### SLA Health Badge
 
-```tsx
-// components/domain/tasks/sla-badge.tsx
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils/cn';
-import { SLA_CONFIG } from '@/lib/utils/sla-utils';
-
-interface SlaBadgeProps {
-  health: 'green' | 'amber' | 'red' | 'grey';
-  locale?: 'ar' | 'en';
-}
-
-export function SlaBadge({ health, locale = 'ar' }: SlaBadgeProps) {
-  const config = SLA_CONFIG[health];
-  return (
-    <Badge variant="outline" className={cn(config.bg, config.color, 'gap-1.5')}>
-      <span className={cn('h-1.5 w-1.5 rounded-full', config.dot)} />
-      {locale === 'ar' ? config.label_ar : config.label_en}
-    </Badge>
-  );
-}
-```
+See `npx shadcn@latest docs badge` for component API. SLA badge example would combine `Badge variant="outline"` with semantic Tailwind classes (`text-emerald-600`, `bg-amber-50`, etc.) and a dot indicator.
 
 ### Priority Badge
 
-| Priority | Background | Text |
-|----------|-----------|------|
-| Critical | `bg-red-50` | `text-red-600` |
-| Urgent | `bg-amber-50` | `text-amber-600` |
-| Routine | `bg-slate-50` | `text-slate-600` |
-
-```tsx
-<Badge className="bg-red-50 text-red-600 rounded-full">حرجة</Badge>
-<Badge className="bg-amber-50 text-amber-600 rounded-full">عاجلة</Badge>
-<Badge className="bg-slate-50 text-slate-600 rounded-full">روتينية</Badge>
-```
-
-### Stage Type Badge
-
-```tsx
-<Badge className="bg-blue-50 text-blue-700">مراجعة</Badge>
-```
+| Priority | Color Scheme |
+|----------|-------------|
+| Critical | Red (`text-red-600`, `bg-red-50`) |
+| Urgent | Amber (`text-amber-600`, `bg-amber-50`) |
+| Routine | Slate (`text-slate-600`, `bg-slate-50`) |
 
 ---
 
 ## Data Table (Task Board)
 
-- Surface: glass card or white `rounded-xl border`
-- Header row: `text-[10px] uppercase tracking-wider text-slate-500 font-semibold`
-- Columns: Task (title + ref), Blueprint, Stage, Assignee (avatar), SLA, Priority, Due
-- Row hover: `hover:bg-slate-50/50`
+- Surface: shadcn `Card` or `Table` component
+- Columns: Task (title + ref), Blueprint, Stage, Assignee, SLA, Priority, Due
+- Pagination: **Manual "Load More" button** (Cursor pagination). Do not use infinite scroll.
 - Row click: navigates to task details
-- Quick filter chips above table
-- Pagination: **Manual "Load More" button** (Cursor pagination). Do not use infinite scroll for dense data tables to preserve memory and allow footer access.
 
-```tsx
-// Column header pattern
-<th className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold px-4 py-3 text-start">
-  المهمة
-</th>
-
-// Row pattern
-<tr className="border-b border-border/50 hover:bg-slate-50/50 cursor-pointer transition-colors">
-  <td className="px-4 py-3 text-sm">{task.title_ar}</td>
-  <td className="px-4 py-3"><SlaBadge health={task.sla_health} /></td>
-  {/* ... */}
-</tr>
-```
+Use shadcn `Table` with `@tanstack/react-table`. See `npx shadcn@latest docs table` and the dashboard-01 block for the full pattern.
 
 ---
 
@@ -161,132 +98,63 @@ export function SlaBadge({ health, locale = 'ar' }: SlaBadgeProps) {
 Vertical timeline on task details page:
 
 - Completed stage: emerald check icon, solid line
-- Active stage: blue pulse dot (`animate-pulse`), bold text
+- Active stage: blue pulse dot, bold text
 - Pending stage: grey number, dashed line
 - Overdue indicator: red label on active stage
-- Pagination: **Automatic Infinite Scroll** using `useInfiniteQuery` and an Intersection Observer when approaching the bottom of the feed.
-
-```tsx
-// Timeline node pattern
-<div className="flex gap-3 items-start">
-  {/* Node indicator */}
-  <div className={cn(
-    'w-8 h-8 rounded-full flex items-center justify-center shrink-0',
-    status === 'completed' && 'bg-emerald-100 text-emerald-600',
-    status === 'active' && 'bg-blue-100 text-blue-600 animate-pulse',
-    status === 'pending' && 'bg-slate-100 text-slate-400',
-  )}>
-    {status === 'completed' ? <Check className="w-4 h-4" /> : <span>{sequence}</span>}
-  </div>
-  {/* Content */}
-  <div>
-    <p className={cn('text-sm', status === 'active' && 'font-semibold')}>
-      {stageName}
-    </p>
-    {status === 'active' && isOverdue && (
-      <span className="text-xs text-red-600">متأخر</span>
-    )}
-  </div>
-</div>
-```
+- Pagination: **Automatic Infinite Scroll** using `useInfiniteQuery` + Intersection Observer
 
 ---
 
 ## Stat Cards (Executive Dashboard)
 
-- Glass card: `GlassCard variant="elevated"`
+- Card: shadcn `Card` component
 - Grid: 5-column on desktop, 2-column on tablet, 1-column on mobile
 - Layout: icon in tinted square top-right, large number, trend caption
-- At-risk / overdue cards: tinted border (`border-amber-200` / `border-red-200`)
+- At-risk / overdue cards: tinted border
 - Hover: lift + shadow increase
+
+See `npx shadcn@latest docs card` and the dashboard-01 block for the full pattern.
 
 ---
 
 ## Blueprint Builder
 
 - Canvas: dashed border area for stage nodes
-- Stage cards: `w-44`, `border-2`, sequence badge top-left
-- Selected stage: `ring-2 ring-blue-500`
-- Return path: dashed red arrow between nodes
+- Stage cards: fixed-width cards with sequence badge
+- Selected stage: focus ring
+- Return path: dashed arrow between nodes
 - Properties panel: right side panel (left in RTL), sliding drawer on mobile
 
 ---
 
 ## Forms
 
-- Use shadcn `Form` + `FormField` + `FormItem` + `FormLabel` + `FormControl` + `FormMessage`
+- Use shadcn `Field` + `FieldGroup` + `FieldLabel` + `FieldDescription` + `FieldError` (nova pattern)
+- For inputs with icons/addons: use `InputGroup` + `InputGroupInput` + `InputGroupAddon`
 - Bilingual fields: Arabic required indicator (`*`), English optional
 - Date picker: support Hijri display at presentation layer
 - Select: use shadcn `Select` with `SelectTrigger`, `SelectContent`, `SelectItem`
-- Error: red text below field via `FormMessage`
+- Error: red text below field via `FieldError`
 
 ---
 
 ## Empty States
 
-Every data component needs an empty state:
-
-```tsx
-// components/shared/empty-state.tsx
-interface EmptyStateProps {
-  icon: LucideIcon;
-  title: string;
-  description?: string;
-  action?: React.ReactNode;
-}
-
-export function EmptyState({ icon: Icon, title, description, action }: EmptyStateProps) {
-  return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-4">
-        <Icon className="w-6 h-6 text-slate-400" />
-      </div>
-      <h3 className="text-sm font-semibold text-text-primary mb-1">{title}</h3>
-      {description && <p className="text-sm text-text-secondary mb-4">{description}</p>}
-      {action}
-    </div>
-  );
-}
+Every data component needs an empty state. Use shadcn `Card` or custom markup with a centered layout, icon, title, description, and optional CTA. See `npx shadcn@latest docs card` for available components.
 ```
 
 ---
 
 ## Loading Skeletons
 
-Skeletons must match the shape of real content:
-
-```tsx
-// Stat card skeleton
-<div className="rounded-xl border p-5 animate-pulse">
-  <div className="flex justify-between mb-3">
-    <div className="h-4 w-24 bg-slate-200 rounded" />
-    <div className="h-10 w-10 bg-slate-200 rounded-lg" />
-  </div>
-  <div className="h-8 w-16 bg-slate-200 rounded" />
-</div>
-
-// Table row skeleton
-<div className="flex items-center gap-4 px-4 py-3 animate-pulse">
-  <div className="h-4 w-48 bg-slate-200 rounded" />
-  <div className="h-4 w-20 bg-slate-200 rounded" />
-  <div className="h-6 w-6 bg-slate-200 rounded-full" />
-  <div className="h-5 w-16 bg-slate-200 rounded-full" />
-</div>
-```
+Skeletons must match the shape of real content. Use shadcn `Skeleton` component — see `npx shadcn@latest docs skeleton`.
 
 ---
 
 ## Icon Library
 
-Use **Lucide React** (bundled with shadcn/ui):
+Use **Lucide React** (bundled with shadcn/ui). Import icons individually from `lucide-react`.
 
-```tsx
-import { ListTodo, ChevronRight, Bell, Search, Plus, X, Check } from 'lucide-react';
-```
-
-**Directional icons** must flip in RTL:
-```tsx
-<ChevronRight className="w-4 h-4 rtl:rotate-180" />
-```
-
-**Non-directional icons** do NOT flip: `Check`, `Plus`, `X`, `Search`, `Bell`, `Settings`, `User`.
+- **Directional icons** (chevrons, arrows) must flip in RTL with `rtl:rotate-180`
+- **Non-directional icons** do NOT flip: `Check`, `Plus`, `X`, `Search`, `Bell`, `Settings`, `User`
+- Inside shadcn components, use `data-icon="inline-start"` or `data-icon="inline-end"` — no sizing classes

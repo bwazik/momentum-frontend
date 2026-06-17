@@ -1,6 +1,6 @@
 # Design System — Momentum Frontend
 
-> Inspired by Apple's macOS / visionOS Liquid Glass aesthetic.
+
 
 ---
 
@@ -9,7 +9,7 @@
 | # | File | When to Read |
 |---|------|-------------|
 | 01 | [01-tokens.md](01-tokens.md) | Any UI work — colors, typography, spacing, motion |
-| 02 | [02-glassmorphism.md](02-glassmorphism.md) | Building cards, surfaces, overlays, modals |
+| 02 | [02-glassmorphism.md](02-glassmorphism.md) | Glassmorphism (deferred — not yet implemented) |
 | 03 | [03-components.md](03-components.md) | Using or creating components |
 | 04 | [04-layout-patterns.md](04-layout-patterns.md) | Page layouts, grids, responsive, navigation |
 | 05 | [05-accessibility.md](05-accessibility.md) | Any interactive element, forms, data display |
@@ -19,8 +19,7 @@
 
 ## Philosophy
 
-- **Liquid Glass clarity** — Transparent, layered surfaces inspired by Apple's visionOS and macOS Liquid Glass. Depth through blur, light refraction, and subtle borders.
-- **Government-grade legibility** — Despite glass effects, text contrast meets WCAG AA. Data density for enterprise users.
+- **Government-grade legibility** — Text contrast meets WCAG AA. Data density for enterprise users.
 - **Consistency** — Reuse sidebar + header shell across all screens. Never invent one-off patterns.
 - **RTL-first** — Arabic is the primary locale. Every layout uses logical properties. English has full feature parity.
 - **Token-driven** — All visual values derive from design tokens. No hardcoded hex colors or arbitrary spacing.
@@ -31,7 +30,6 @@
 
 | Source | What We Take |
 |--------|-------------|
-| Apple visionOS / macOS Liquid Glass | Frosted glass surfaces, depth layering, luminance borders |
 | Linear | Clean navigation, keyboard-first, fast interactions |
 | Jira | Dense data tables, board views, workflow visualization |
 | Notion | Bilingual content handling, clean typography |
@@ -53,10 +51,10 @@
 
 | Element | Value |
 |---------|-------|
-| Sidebar width | 256px (`w-64`) |
+| Sidebar width | 288px (`calc(var(--spacing) * 72)`) |
 | Content padding | `p-6` (24px) |
-| Card radius | `rounded-xl` (12px) |
-| Button radius | `rounded-lg` (8px) |
+| Card radius | `rounded-xl` (20px) |
+| Button radius | `rounded-lg` (14px) |
 | Avatar radius | `rounded-full` |
 | Gap between cards | `gap-4` (16px) |
 | Section gap | `gap-6` (24px) |

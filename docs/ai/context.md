@@ -56,7 +56,7 @@ This repo is **Next.js only**. Laravel API lives in `../backend/`.
 | Client state | Zustand |
 | API types | Generated from OpenAPI (`../backend/openapi/openapi.json`) |
 | Auth | Sanctum SPA cookies (same-origin) |
-| Forms | React Hook Form + Zod |
+| Forms | shadcn Field + InputGroup (nova) |
 | CI/CD | GitHub Actions → VPS on merge to `main` |
 | i18n | Arabic RTL (default) + English LTR |
 

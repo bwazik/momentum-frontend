@@ -89,40 +89,9 @@ const queryClient = new QueryClient({
 
 ## Route Protection
 
-### Middleware Pattern
+### Middleware Pattern (Planned)
 
-Use Next.js middleware to protect authenticated routes:
-
-```ts
-// middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-
-const PUBLIC_PATHS = ['/login', '/forgot-password'];
-
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const locale = pathname.split('/')[1]; // ar or en
-
-  // Allow public paths
-  const isPublic = PUBLIC_PATHS.some(p =>
-    pathname === `/${locale}${p}` || pathname === p
-  );
-  if (isPublic) return NextResponse.next();
-
-  // Check for session cookie (presence check only — server validates)
-  const hasSession = request.cookies.has('laravel_session') ||
-                     request.cookies.has('momentum_session');
-
-  if (!hasSession) {
-    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
-  }
-
-  return NextResponse.next();
-}
-```
-
-**Rule:** Middleware checks cookie *presence* only. The server validates session validity. A 401 response triggers client-side redirect.
+Next.js middleware to protect authenticated routes — not yet implemented. The intended pattern checks for session cookie presence and redirects unauthenticated requests to `/login`. See `architecture.md` for details.
 
 ---
 
@@ -264,32 +233,9 @@ function RichContent({ html }: { html: string }) {
 
 ---
 
-## Content Security Policy (CSP)
+## Content Security Policy (CSP) — Planned
 
-### Headers
-
-Configure CSP headers in Next.js middleware or `next.config.ts`:
-
-```ts
-// next.config.ts — security headers
-const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-eval'",  // Next.js requires unsafe-eval in dev
-      "style-src 'self' 'unsafe-inline'",  // Tailwind requires inline styles
-      "img-src 'self' data: blob:",
-      "font-src 'self'",
-      "connect-src 'self'",
-      "frame-ancestors 'none'",
-    ].join('; '),
-  },
-  { key: 'X-Frame-Options', value: 'DENY' },
-  { key: 'X-Content-Type-Options', value: 'nosniff' },
-  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-];
-```
+CSP headers will be added to `next.config.ts` when deployed. Intended directives: `default-src 'self'`, `script-src 'self'`, `style-src 'self' 'unsafe-inline'`, `img-src 'self' data: blob:`, `font-src 'self'`, `connect-src 'self'`, `frame-ancestors 'none'`.
 
 ---
 

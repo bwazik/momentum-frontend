@@ -21,7 +21,7 @@
 | Unit | Vitest | Pure utility functions, hooks with mock fetch |
 | Component | Vitest + Testing Library | Domain components, forms, interactions |
 | Hook | Vitest + `renderHook` | TanStack Query hooks with MSW |
-| E2E | Playwright | Critical flows when core screens exist (login, task board, stage advance) |
+| E2E | Playwright (planned) | Critical flows when core screens exist (login, task board, stage advance) |
 
 ---
 
@@ -322,7 +322,7 @@ await user.click(screen.getByRole('button', { name: 'حفظ' }));
 expect(screen.getByText('هذا الحقل مطلوب')).toBeInTheDocument();
 
 // Navigation
-expect(window.location.pathname).toBe('/ar/tasks');
+expect(window.location.pathname).toBe('/tasks');
 
 // Async wait
 await waitFor(() => {
