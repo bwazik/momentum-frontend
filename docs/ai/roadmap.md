@@ -8,7 +8,6 @@
 
 **Phase:** F0 — Scaffold & design system (no application code yet)
 **Active spec:** none (waiting for Next.js scaffold)
-**Next planned:** `009-system-administration` after backend `001` + `003` APIs stable
 
 ---
 
@@ -16,7 +15,7 @@
 
 | # | Name | Status | Requires Backend |
 |---|------|--------|------------------|
-| F0 | Scaffold & design system | ⬜ Not Started | — |
+| F0 | Scaffold & design system | 🔄 In Progress | — |
 | F1 | App shell, auth, i18n/RTL | ⬜ Not Started | M2 backend (IAM) |
 | F2 | Task board & task details | ⬜ Not Started | M4 backend |
 | F3 | Blueprint builder | ⬜ Not Started | M3 backend |
@@ -55,19 +54,26 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 ## F0 — Scaffold & Design System
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
-**Tasks:**
-- `create-next-app` with TypeScript, Tailwind v4, App Router
-- shadcn/ui init
-- TanStack Query + Zustand setup
-- OpenAPI typegen script (pointing to `../backend/openapi/openapi.json`)
+**Completed:**
+- `create-next-app` with TypeScript, Tailwind v4, App Router ✅
+- shadcn/ui init ✅
+- shadcn preset applied (amber theme) ✅
+- TanStack Query + Zustand installed ✅
+- Dashboard + login pages scaffolded ✅
+- Design tokens documented (amber theme) ✅
+- Test skeleton (vitest, MSW, testing-library) ✅
+- API client + query keys + hooks + stores ✅
+- OpenAPI typegen script added ✅
+
+**Remaining:**
 - Cookie-based locale routing (`NEXT_LOCALE`) + RTL shell
-- Implement design tokens from `docs/design-system/01-tokens.md`
-- Liquid glass effects from `docs/design-system/02-glassmorphism.md`
-- Dashboard shell layout (sidebar + topbar)
+- Alexandria Arabic font loading
+- Middleware for route protection
+- CSP headers for production
 
-**Established patterns:** (none yet — update when F0 complete)
+**Established patterns:** (update when F0 complete)
 
 ---
 

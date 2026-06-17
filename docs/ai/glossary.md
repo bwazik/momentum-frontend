@@ -121,7 +121,7 @@
 | Stage node | Custom | `StageTimelineNode` |
 | Stat metric | `Card` | `StatCard` |
 | Confirmation | `AlertDialog` | — (use shadcn directly) |
-| Form fields | `Form` + `Input` + `Select` | — (use shadcn directly) |
+| Form fields | `Field` + `InputGroup` + `Select` | — (use shadcn directly) |
 | Toast | `Sonner` | — (use sonner directly) |
 
 ---
@@ -152,16 +152,17 @@
 
 | Route | Example |
 |-------|---------|
-| Dashboard | `/ar/` or `/en/` |
-| Task board | `/ar/tasks` |
-| Task details | `/ar/tasks/[publicId]` |
-| Blueprint builder | `/ar/blueprints/[publicId]` |
-| Follow-up center | `/ar/follow-up` |
-| Analytics | `/ar/analytics` |
-| Organization | `/ar/organization` |
-| Admin | `/ar/admin` |
+| Dashboard | `/` |
+| Login | `/login` |
+| Task board | `/tasks` |
+| Task details | `/tasks/[publicId]` |
+| Blueprint builder | `/blueprints/[publicId]` |
+| Follow-up center | `/follow-up` |
+| Analytics | `/analytics` |
+| Organization | `/organization` |
+| Admin | `/admin` |
 
-**Rule:** Route params always use `publicId`, never internal database IDs.
+**Rule:** Locale is cookie-based (`NEXT_LOCALE`), not URL-based. Route params always use `publicId`, never internal database IDs.
 
 ---
 

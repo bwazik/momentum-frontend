@@ -23,9 +23,9 @@ CORS is required and configured on the Laravel side. All API calls use absolute 
 ```
 frontend/
 ├── app/                        # Next.js App Router
-│   ├── (auth)/             # Unauthenticated layouts (login)
-│   ├── (dashboard)/        # Authenticated shell (sidebar + topbar)
-│   ├── layout.tsx          # Root layout (reads NEXT_LOCALE cookie for dir/lang)
+│   ├── (auth)/             # Future: unauthenticated layout
+│   ├── (dashboard)/        # Future: authenticated shell (sidebar + topbar)
+│   ├── layout.tsx          # Root layout (planned: reads NEXT_LOCALE cookie for dir/lang)
 │   └── not-found.tsx
 ├── components/
 │   ├── ui/                     # shadcn/ui primitives (CLI-managed)
@@ -57,8 +57,8 @@ frontend/
 
 ```
 Browser
-  → Next.js Middleware (checks session auth, NO locale redirects)
-  → App Router → Root Layout (reads `NEXT_LOCALE` cookie for dir/lang) → Page
+  → Next.js Middleware (planned: checks session auth, NO locale redirects)
+  → App Router → Root Layout (planned: reads `NEXT_LOCALE` cookie for dir/lang) → Page
   → Client Component renders with TanStack Query hooks
   → fetch('https://api.momentum.test/v1/...', { credentials: 'include' })
   → Nginx routes api.momentum.test to Laravel PHP-FPM
@@ -78,7 +78,7 @@ Browser
 | Filter/sort state (shareable) | URL search params | Bookmarkable, back-button works |
 | UI preferences (sidebar open) | Zustand | Persists across navigation, no URL noise |
 | Wizard/builder local state | Zustand | Complex multi-step state too large for URL |
-| Form input values | React Hook Form | Validation, dirty tracking, controlled fields |
+| Form input values | shadcn Field + InputGroup | Form layout via `FieldGroup`, `Field`, icons via `InputGroup` |
 | Single-component toggle | `useState` | Simplest option for local state |
 
 ### Rules
@@ -95,7 +95,7 @@ Browser
 1. `GET /sanctum/csrf-cookie` — Sets XSRF-TOKEN cookie
 2. `POST /api/v1/iam/auth/login` — Sets HttpOnly session cookie
 3. Subsequent requests include cookie automatically (`credentials: 'include'`)
-4. Next.js middleware checks session cookie presence for protected routes
+4. Next.js middleware (planned) checks session cookie presence for protected routes
 5. 401 response → clear query cache → redirect to login
 
 See `security-policy.md` for full security details.
@@ -106,7 +106,7 @@ See `security-policy.md` for full security details.
 
 - **Input:** `../backend/openapi/openapi.json`
 - **Output:** `lib/generated/api-types.ts`
-- **Command:** `npm run generate:api` (script TBD at scaffold)
+- **Command:** `npm run generate:api`
 - **CI check:** Fail if generated types are out of date vs. `openapi.json`
 - **Rule:** Never edit generated files. Never hand-write API response interfaces.
 
@@ -120,7 +120,7 @@ See `security-policy.md` for full security details.
 - **Syncing:** Upon login, the user's `preferred_language` from the backend is saved to the cookie.
 - **Layout properties:** Tailwind logical (`ms-`, `me-`, `ps-`, `pe-`, `start`, `end`) — see `coding-standards.md`.
 - **Hijri dates:** Display layer only (API returns Gregorian; convert via `Intl.DateTimeFormat`).
-- **Typography:** Geist for English, Alexandria for Arabic (loaded via `next/font`).
+- **Typography:** Geist for English (loaded). Alexandria for Arabic (planned).
 
 ---
 
@@ -129,7 +129,7 @@ See `security-policy.md` for full security details.
 - Fetch `/api/v1/tenant/branding` on load (when backend ready)
 - Inject CSS variables for `--color-primary` from tenant settings
 - Logo from object storage URL
-- Default to emerald theme until branding API available
+- Default to amber theme until branding API available
 
 ---
 

@@ -47,16 +47,7 @@
 <span className="h-3 w-3 rounded-full bg-emerald-500" />
 ```
 
-### Glassmorphism Contrast
 
-Glass surfaces reduce contrast because background content bleeds through. Rules:
-
-- Glass card text must have **minimum 4.5:1 contrast** against the **worst-case background** (lightest content visible through glass)
-- If page background is `slate-100` and glass opacity is 72%, effective background is approximately `#f5f7fa` — verify contrast against this
-- Increase glass opacity (`bg-white/80` or higher) if contrast is insufficient
-- Dark text on glass: use `text-slate-900` (not `text-slate-700` or lighter)
-
----
 
 ## Focus Management
 
@@ -69,7 +60,7 @@ All interactive elements must show a visible focus indicator:
 // focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
 
 // Custom interactive elements must add:
-<button className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/20 focus-visible:ring-offset-2">
+<button className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/20 focus-visible:ring-offset-2">
   Action
 </button>
 ```
@@ -96,7 +87,7 @@ Sidebar nav → Top bar search → Top bar actions → Main content
 Skip links for keyboard users:
 
 ```tsx
-// app/[locale]/(dashboard)/layout.tsx
+// app/(dashboard)/layout.tsx
 <a
   href="#main-content"
   className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:start-4 focus:z-[999] focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded-lg"
@@ -104,7 +95,7 @@ Skip links for keyboard users:
   تخطي إلى المحتوى الرئيسي
 </a>
 {/* ... */}
-<main id="main-content" className="flex-1 overflow-y-auto bg-page-bg p-6">
+<main id="main-content" className="flex-1 overflow-y-auto bg-background p-6">
   {children}
 </main>
 ```
@@ -190,7 +181,7 @@ Toast notifications and dynamic content updates should use ARIA live regions:
       <Link
         href="/tasks"
         aria-current={isActive ? 'page' : undefined}
-        className={cn(isActive && 'bg-emerald-600/20 text-emerald-300')}
+        className={cn(isActive && 'bg-amber-600/20 text-amber-300')}
       >
         <ListTodo className="w-5 h-5" aria-hidden="true" />
         لوحة المهام

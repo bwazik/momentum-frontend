@@ -1,13 +1,12 @@
-# 02 — Glassmorphism & Liquid Glass
+# 02 — Glassmorphism & Liquid Glass (Deferred)
 
-> Inspired by Apple's macOS Sequoia / visionOS Liquid Glass aesthetic.
-> Use glass effects for layered surfaces. Never sacrifice legibility for visual flair.
+> ⏱ **This feature is deferred.** Glass effects are not yet implemented. CSS variables, components, and utility classes documented below do not exist in the current codebase. This file serves as a design reference for future implementation.
 
 ---
 
-## Philosophy
+## Concept
 
-Liquid Glass creates a sense of **depth and spatial hierarchy** through translucent surfaces, blur, and luminance borders. It communicates that UI elements exist in layers — content behind glass is visible but receded, while the glass surface is the focus.
+Liquid Glass creates a sense of **depth and spatial hierarchy** through translucent surfaces, blur, and luminance borders. The effect would be inspired by Apple's visionOS Liquid Glass aesthetic.
 
 **When to use glass:** Cards, panels, modals, sidebars, stat cards — surfaces that float above the page background.
 
@@ -15,199 +14,18 @@ Liquid Glass creates a sense of **depth and spatial hierarchy** through transluc
 
 ---
 
-## Core Glass Recipe
+## Implementation Plan
 
-The Liquid Glass effect combines four layers:
+When this feature is picked up:
 
-```
-┌─────────────────────────────────┐
-│ 1. Luminance border (subtle)   │  ← White/light inner border for depth
-│ ┌─────────────────────────────┐ │
-│ │ 2. Translucent background   │ │  ← Semi-transparent white/dark
-│ │ ┌─────────────────────────┐ │ │
-│ │ │ 3. Backdrop blur        │ │ │  ← Blurs content behind
-│ │ │ ┌─────────────────────┐ │ │ │
-│ │ │ │ 4. Content (sharp)  │ │ │ │  ← Text and icons remain crisp
-│ │ │ └─────────────────────┘ │ │ │
-│ │ └─────────────────────────┘ │ │
-│ └─────────────────────────────┘ │
-└─────────────────────────────────┘
-```
+1. Add CSS variables to `app/globals.css` (`:root` and `.dark`):
+   - `--color-surface-glass`, `--color-border-glass`
+   - `--shadow-glass`, `--blur-glass`
+2. Register them in `@theme inline`
+3. Create a `.glass` utility class via `@utility`
+4. Apply to shadcn `Card` components via `className`
 
----
-
-## Implementation
-
-### Base Glass Card
-
-```tsx
-// components/shared/glass-card.tsx
-import { cn } from '@/lib/utils/cn';
-
-interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'elevated' | 'subtle';
-  children: React.ReactNode;
-}
-
-export function GlassCard({
-  variant = 'default',
-  className,
-  children,
-  ...props
-}: GlassCardProps) {
-  return (
-    <div
-      className={cn(
-        // Base glass
-        'rounded-xl border backdrop-blur-md',
-        'transition-all duration-200',
-        // Variants
-        variant === 'default' && [
-          'bg-white/72 border-white/25',
-          'shadow-[0_8px_32px_rgba(0,0,0,0.08)]',
-        ],
-        variant === 'elevated' && [
-          'bg-white/80 border-white/30',
-          'shadow-[0_12px_40px_rgba(0,0,0,0.12)]',
-          'hover:shadow-[0_16px_48px_rgba(0,0,0,0.15)]',
-          'hover:-translate-y-0.5',
-        ],
-        variant === 'subtle' && [
-          'bg-white/50 border-white/15',
-          'shadow-sm',
-        ],
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
-```
-
-### CSS Custom Properties
-
-```css
-/* app/globals.css — glass variables */
-@theme {
-  --color-surface-glass: oklch(1 0 0 / 0.72);
-  --color-border-glass: oklch(1 0 0 / 0.25);
-  --shadow-glass: 0 8px 32px oklch(0 0 0 / 0.08);
-  --blur-glass: 16px;
-}
-
-/* Utility class for reuse */
-.glass {
-  background: var(--color-surface-glass);
-  border: 1px solid var(--color-border-glass);
-  backdrop-filter: blur(var(--blur-glass));
-  -webkit-backdrop-filter: blur(var(--blur-glass));
-  box-shadow: var(--shadow-glass);
-}
-```
-
-### Tailwind Utility Approach
-
-```tsx
-// Direct Tailwind classes (no component needed)
-<div className="rounded-xl bg-white/72 border border-white/25 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-  {/* Content */}
-</div>
-```
-
----
-
-## Glass in Specific UI Elements
-
-### Stat Cards (Executive Dashboard)
-
-Stat cards use the `elevated` glass variant with hover lift:
-
-```tsx
-<GlassCard variant="elevated" className="p-5">
-  <div className="flex items-center justify-between mb-3">
-    <span className="text-sm font-medium text-text-secondary">المهام النشطة</span>
-    <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-      <ListTodo className="w-5 h-5 text-blue-500" />
-    </div>
-  </div>
-  <div className="text-3xl font-bold text-text-primary">142</div>
-  <div className="text-xs text-emerald-600 mt-1">+12% من الأسبوع الماضي</div>
-</GlassCard>
-```
-
-### Modal / Dialog Overlay
-
-Modals use glass backdrop + elevated glass surface:
-
-```tsx
-// Glass backdrop
-<div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-overlay" />
-
-// Glass modal surface
-<div className="fixed inset-0 z-modal flex items-center justify-center p-4">
-  <div className="w-full max-w-lg rounded-2xl bg-white/85 border border-white/30 backdrop-blur-xl shadow-[0_24px_64px_rgba(0,0,0,0.15)] p-6">
-    {/* Modal content */}
-  </div>
-</div>
-```
-
-### Sidebar (Optional Glass)
-
-The sidebar uses a dark glass effect on top of `slate-900`:
-
-```tsx
-<aside className="w-64 bg-slate-900/95 backdrop-blur-xl border-e border-white/5">
-  {/* Navigation items */}
-</aside>
-```
-
-### Top Bar
-
-Sticky top bar with glass effect for depth when content scrolls beneath:
-
-```tsx
-<header className="sticky top-0 z-sticky h-16 border-b border-border/50 bg-white/80 backdrop-blur-md">
-  {/* Page title, search, actions */}
-</header>
-```
-
-### Tooltip / Popover
-
-Small glass surfaces for tooltips and popovers:
-
-```tsx
-<div className="rounded-lg bg-slate-900/90 backdrop-blur-md border border-white/10 px-3 py-2 text-sm text-white shadow-lg">
-  {/* Tooltip content */}
-</div>
-```
-
----
-
-## Dark Mode Glass
-
-Glass surfaces automatically invert via Tailwind dark mode utilities (`dark:`):
-
-| Property | Light Mode | Dark Mode |
-|----------|-----------|-----------|
-| Background | `bg-white/72` | `bg-slate-900/72` |
-| Border | `border-white/25` | `border-white/8` |
-| Blur | `backdrop-blur-md` (16px) | `backdrop-blur-md` (16px) |
-| Shadow | `rgba(0,0,0,0.08)` | `rgba(0,0,0,0.3)` |
-| Luminance | White glow on top edge | Subtle white glow on top edge |
-| Text | `text-slate-900` | `text-slate-100` |
-
-```tsx
-// Dark mode variant
-<div className={cn(
-  'rounded-xl backdrop-blur-md',
-  'bg-white/72 border-white/25 shadow-[0_8px_32px_rgba(0,0,0,0.08)]',
-  'dark:bg-slate-900/72 dark:border-white/8 dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)]',
-)}>
-  {children}
-</div>
-```
+See [01-tokens.md](01-tokens.md) for token conventions and `02-glassmorphism.md` in the deferred spec for the full GlassCard component and usage examples.
 
 ---
 

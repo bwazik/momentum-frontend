@@ -122,7 +122,7 @@ Create plan.md for specs/[number]-[name]/ based on the approved spec.
   - Two simple test cases (render → expected output)
   - Explicit notes on which `coding-standards.md` rules apply
 - **Data Flow** — How data flows from API → query hook → component → display.
-- **Route Structure** — File paths under `app/[locale]/` for pages and layouts.
+- **Route Structure** — File paths under `app/` for pages and layouts (locale is cookie-based).
 - **Execution Order** — Numbered steps with dependencies.
 - **What to Test Manually** — Numbered list of manual test scenarios covering:
   - Happy paths in both locales (AR RTL + EN LTR)
@@ -151,7 +151,7 @@ Keep concise; mark uncertain details with `<!-- TODO: verify -->`.
     - All 4 states handled (loading skeleton, error, empty, success)
     - Logical Tailwind properties for RTL
     - Permission checks via `useCapability()`
-    - Form handling via React Hook Form + Zod
+    - Form handling via shadcn Field + InputGroup (nova)
     - Generated types (no hand-written API interfaces)
 11. After generating the plan, include a short **Implementation Prompt** that can be given directly to another coding LLM.
 12. After implementation is completed, perform a full review of the implementation against the approved spec and plan.
@@ -191,7 +191,7 @@ Perform a design review of the implementation for specs/[number]-[name]/.
 2. Read `docs/design-system/01-tokens.md`, `02-glassmorphism.md`, `03-components.md`, `04-layout-patterns.md`, `05-accessibility.md`, `06-anti-patterns.md`.
 3. Review the implemented component files against:
    - Design token usage (colors, spacing, typography, radius)
-   - Glassmorphism effects (where specified in spec)
+   - Glassmorphism effects (deferred — see docs/design-system/02-glassmorphism.md)
    - Component patterns (correct shadcn variant usage)
    - Layout patterns (shell, grid, responsive breakpoints)
    - Accessibility (ARIA labels, focus management, color contrast, keyboard nav)
@@ -244,9 +244,9 @@ Before approving a plan, verify:
 - [ ] All 4 states implemented in every data component
 - [ ] RTL logical properties used throughout (no `ml-`, `mr-`)
 - [ ] Permission checks use `useCapability()` hook
-- [ ] Forms use React Hook Form + Zod + shadcn Form
+- [ ] Forms use shadcn Field + InputGroup (nova)
 - [ ] Generated types used (no hand-written API interfaces)
-- [ ] Route structure specified under `app/[locale]/`
+- [ ] Route structure specified (locale is cookie-based — no `[locale]` prefix)
 - [ ] Manual test checklist covers both locales, states, and responsive
 
 ## Checklist: Design Review Criteria
@@ -254,7 +254,7 @@ Before approving a plan, verify:
 Before approving a design review, verify:
 
 - [ ] All design tokens used correctly (colors, spacing, typography)
-- [ ] Glassmorphism effects match spec (where applicable)
+- [ ] Glassmorphism effects (deferred — see docs/design-system/02-glassmorphism.md)
 - [ ] SLA colors match token mapping (emerald/amber/red/slate)
 - [ ] Both locales tested (AR RTL + EN LTR)
 - [ ] Directional icons flip in RTL (`rtl:rotate-180`)

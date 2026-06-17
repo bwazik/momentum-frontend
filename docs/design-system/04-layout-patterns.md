@@ -12,40 +12,22 @@ Standard authenticated layout used across all screens:
 ```
 ┌──────────┬──────────────────────────────────────┐
 │ Sidebar  │  Top bar (title, search, actions)   │
-│ 256px    ├──────────────────────────────────────┤
-│ slate-900│  Main content (scrollable)          │
-│ /95      │  bg-slate-100                       │
-│ glass    │  p-6                                │
+│ 288px    ├──────────────────────────────────────┤
+│          │  Main content (scrollable)          │
+│          │                                      │
 │          │                                      │
 └──────────┴──────────────────────────────────────┘
 ```
 
-### Implementation
-
-```tsx
-// app/[locale]/(dashboard)/layout.tsx
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <TopBar />
-        <main className="flex-1 overflow-y-auto bg-page-bg p-6">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
-}
-```
+Uses shadcn `SidebarProvider` + `AppSidebar` + `SiteHeader` — see the dashboard-01 block for the implementation pattern.
 
 ### Sidebar
 
 | Property | Value |
 |----------|-------|
-| Width | `w-64` (256px) |
-| Background | `bg-slate-900/95 backdrop-blur-xl` |
-| Border | `border-e border-white/5` (logical — flips in RTL) |
+| Width | `calc(var(--spacing) * 72)` (288px) |
+| Background | uses `--sidebar` CSS variable (solid) |
+| Border | logical (`border-e`) — flips in RTL |
 | Position | Start edge (left in LTR, right in RTL) |
 | Mobile | Hidden by default, overlay drawer on toggle |
 
@@ -54,8 +36,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 | Property | Value |
 |----------|-------|
 | Height | `h-16` |
-| Background | `bg-white/80 backdrop-blur-md` (glass) |
-| Position | `sticky top-0 z-sticky` |
+| Background | solid (shadcn `SiteHeader`) |
+| Position | `sticky top-0` |
 | Border | `border-b border-border/50` |
 | Content | Page title, search, theme toggle (Light/Dark/System), notifications, primary CTA |
 
@@ -79,18 +61,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 └─────────────────────────────────────┘
 ```
 
-```tsx
-export default function TaskBoardPage() {
-  return (
-    <>
-      <PageHeader title="لوحة المهام" action={<Button>مهمة جديدة</Button>} />
-      <TaskFilters className="mb-4" />
-      <TaskBoard />
-    </>
-  );
-}
-```
-
 ### Detail Page (Task Details)
 
 ```
@@ -106,59 +76,16 @@ export default function TaskBoardPage() {
 └──────────────────────────┴────────────────┘
 ```
 
-```tsx
-export default function TaskDetailPage() {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2 space-y-6">
-        <TaskHeader />
-        <TaskDescription />
-        <StageTimeline />
-      </div>
-      <aside className="space-y-6">
-        <TaskMetaPanel />
-        <TaskAssignees />
-        <TaskReferences />
-        <TaskActions />
-      </aside>
-    </div>
-  );
-}
-```
-
 ### Dashboard Page (Executive, Department Manager)
 
 ```
 ┌───────┬───────┬───────┬───────┬───────┐
-│ Stat  │ Stat  │ Stat  │ Stat  │ Stat  │  ← 5-col grid (glass cards)
+│ Stat  │ Stat  │ Stat  │ Stat  │ Stat  │  ← 5-col grid
 └───────┴───────┴───────┴───────┴───────┘
 ┌─────────────────────┬─────────────────┐
 │ Chart / Table       │ Side widget     │  ← 2/3 + 1/3
 │ (Department health) │ (Top overdue)   │
 └─────────────────────┴─────────────────┘
-```
-
-```tsx
-export default function DashboardPage() {
-  return (
-    <>
-      <PageHeader title="لوحة المتابعة" />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-        <StatCard label="المهام النشطة" value={142} icon={ListTodo} />
-        <StatCard label="متأخرة" value={23} icon={AlertTriangle} variant="danger" />
-        {/* ... */}
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <DepartmentHealthChart />
-        </div>
-        <div>
-          <TopOverdueWidget />
-        </div>
-      </div>
-    </>
-  );
-}
 ```
 
 ### Form Page (Create Task, Edit Blueprint)
@@ -201,7 +128,7 @@ export default function DashboardPage() {
 ### Sidebar Navigation Items
 
 - Dashboard, Task Board, Blueprints, Analytics, Follow-Up, Organization
-- Active route: highlighted with emerald accent
+- Active route: highlighted with amber accent
 - Grouped by category (future: collapsible groups)
 
 ### Breadcrumbs
@@ -210,14 +137,6 @@ Detail pages show breadcrumb below top bar:
 
 ```
 Task Board / T-2026-0412
-```
-
-```tsx
-<nav className="flex items-center gap-1 text-sm text-text-secondary mb-4">
-  <Link href="/tasks" className="hover:text-text-primary">لوحة المهام</Link>
-  <ChevronRight className="w-3 h-3 rtl:rotate-180" />
-  <span className="text-text-primary font-medium">T-2026-0412</span>
-</nav>
 ```
 
 ---
@@ -243,50 +162,11 @@ Task Board / T-2026-0412
 | Tablet | 640-1024px | 2-column grids, sidebar visible or drawer |
 | Desktop | ≥ 1024px | Full layout, sidebar fixed, multi-column grids |
 
-### Sidebar Responsive
-
-```tsx
-// Mobile: drawer overlay
-// Desktop: fixed sidebar
-
-export function Sidebar() {
-  const { isOpen, toggle } = useSidebarStore();
-
-  return (
-    <>
-      {/* Desktop: always visible */}
-      <aside className="hidden lg:flex w-64 flex-col bg-sidebar border-e border-white/5">
-        <SidebarContent />
-      </aside>
-
-      {/* Mobile: drawer */}
-      <Sheet open={isOpen} onOpenChange={toggle}>
-        <SheetContent side="start" className="w-64 bg-sidebar p-0">
-          <SidebarContent />
-        </SheetContent>
-      </Sheet>
-    </>
-  );
-}
-```
+Responsive behavior is handled by shadcn `SidebarProvider` — collapses to icons on mobile, full sidebar on desktop.
 
 ### Tables on Mobile
 
-Dense data tables collapse to card view on mobile:
-
-```tsx
-// Desktop: full table
-<div className="hidden md:block">
-  <DataTable columns={columns} data={tasks} />
-</div>
-
-// Mobile: card list
-<div className="md:hidden space-y-3">
-  {tasks.map(task => (
-    <TaskCardCompact key={task.public_id} task={task} />
-  ))}
-</div>
-```
+Dense data tables collapse to card view on mobile. Use responsive utilities (`hidden md:block` / `md:hidden`).
 
 ---
 
@@ -314,17 +194,7 @@ The sidebar uses `border-e` (end border) which automatically flips:
 
 ### Icon Flipping
 
-Directional icons must flip in RTL:
-
-```tsx
-// These MUST flip
-<ChevronRight className="rtl:rotate-180" />
-<ArrowLeft className="rtl:rotate-180" />
-<ArrowRight className="rtl:rotate-180" />
-
-// These must NOT flip
-<Check />  <X />  <Plus />  <Search />  <Bell />  <Settings />
-```
+Directional icons (chevrons, arrows) must flip in RTL with `rtl:rotate-180`. Non-directional icons (`Check`, `Plus`, `Search`, `Bell`, etc.) must NOT flip.
 
 ### Form Layout
 
@@ -370,27 +240,11 @@ Every new screen: verify layout in both `ar` (RTL) and `en` (LTR) before PR merg
 ### Task Board Filters
 
 - Chip buttons: All, My Tasks, Overdue, At Risk, Suspended
-- Dropdown selects: Department, Priority, Blueprint
+- Dropdown selects: Department, Priority, Blueprint via shadcn `Select`
 - Sticky below top bar on scroll
 - Reset button to clear all filters
 
-```tsx
-<div className="flex flex-wrap items-center gap-2 mb-4">
-  <FilterChip active={!status} onClick={() => setFilter('status', null)}>الكل</FilterChip>
-  <FilterChip active={status === 'overdue'} onClick={() => setFilter('status', 'overdue')}>
-    متأخرة
-  </FilterChip>
-  <FilterChip active={status === 'at_risk'} onClick={() => setFilter('status', 'at_risk')}>
-    قريبة من الموعد
-  </FilterChip>
-  <div className="ms-auto flex gap-2">
-    <Select onValueChange={(v) => setFilter('department', v)}>
-      <SelectTrigger className="w-40"><SelectValue placeholder="القسم" /></SelectTrigger>
-      <SelectContent>{/* department options */}</SelectContent>
-    </Select>
-  </div>
-</div>
-```
+See `npx shadcn@latest docs select` for the Select API.
 
 ---
 

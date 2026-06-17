@@ -56,6 +56,7 @@ Read these files **in order** at the start of every session:
 | Components, badges, tables | `design-system/03-components.md` |
 | Page layout, grids, RTL | `design-system/04-layout-patterns.md` |
 | Interactive elements, forms | `design-system/05-accessibility.md` |
+| Adding or using a shadcn component | Run `npx shadcn@latest docs <component>` first — don't guess the API |
 | Code review, before PR | `design-system/06-anti-patterns.md` |
 
 ---
@@ -79,7 +80,7 @@ Read these files **in order** at the start of every session:
 ## Rules
 
 - Smallest safe change
-- shadcn/ui + Tailwind CSS v4
+- shadcn/ui + Tailwind CSS v4 — before adding or using any component, read `docs/design-system/03-components.md` and run `npx shadcn@latest docs <component>` first — don't guess the API
 - RTL-first for Arabic (logical properties: `ms-`, `me-`, `ps-`, `pe-`)
 - No client-side authority enforcement — server is source of truth
 - Mocks allowed until backend contract stable (mark with `// MOCK`)
