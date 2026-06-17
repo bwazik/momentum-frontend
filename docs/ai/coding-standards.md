@@ -62,37 +62,22 @@ components/
 │   └── follow-up/
 │       ├── follow-up-board.tsx
 │       └── action-log.tsx
-└── shared/                 # Cross-domain reusable
-    ├── data-table.tsx
-    ├── page-header.tsx
-    ├── empty-state.tsx
-    └── skeleton-card.tsx
+└── shared/                 # Cross-domain reusable (planned — not yet created)
 ```
 
 ### Route Structure
 
 ```
 app/
-├── [locale]/               # ar | en
-│   ├── (auth)/             # Unauthenticated layouts
-│   │   ├── login/
-│   │   │   └── page.tsx
-│   │   └── layout.tsx
-│   ├── (dashboard)/        # Authenticated shell
-│   │   ├── layout.tsx      # Sidebar + topbar
-│   │   ├── page.tsx        # Executive dashboard
-│   │   ├── tasks/
-│   │   │   ├── page.tsx    # Task board
-│   │   │   └── [publicId]/
-│   │   │       └── page.tsx # Task details
-│   │   ├── blueprints/
-│   │   ├── follow-up/
-│   │   ├── analytics/
-│   │   ├── organization/
-│   │   └── admin/
-│   └── layout.tsx          # Root locale layout (dir, lang, fonts)
+├── (auth)/                 # Future: unauthenticated layout
+├── (dashboard)/            # Future: authenticated shell (sidebar + topbar)
+├── dashboard/
+│   └── page.tsx            # Dashboard page
+├── login/
+│   └── page.tsx            # Login page
 ├── layout.tsx              # Root layout
-└── not-found.tsx
+├── not-found.tsx           # 404 page
+└── page.tsx                # Home page
 ```
 
 ### Hooks & Lib Structure
@@ -104,19 +89,19 @@ lib/
 │   ├── query-keys.ts       # Centralized query key factory
 │   └── hooks/
 │       ├── use-tasks.ts    # Task query/mutation hooks
-│       ├── use-blueprints.ts
+│       ├── use-blueprints.ts  # planned
 │       ├── use-auth.ts
-│       └── use-notifications.ts
+│       └── use-notifications.ts  # planned
 ├── generated/
 │   └── api-types.ts        # OpenAPI → TypeScript (auto-generated, never edit)
 ├── stores/
 │   ├── use-filter-store.ts
 │   ├── use-sidebar-store.ts
-│   └── use-locale-store.ts
+│   └── use-locale-store.ts  # planned
 └── utils/
-    ├── date-utils.ts       # Hijri conversion, relative time
-    ├── sla-utils.ts        # SLA health color/label mapping
-    └── cn.ts               # Tailwind class merging utility
+    ├── date-utils.ts       # planned — Hijri conversion, relative time
+    ├── sla-utils.ts        # planned — SLA health color/label mapping
+    └── utils.ts            # Utility functions (cn, etc.)
 ```
 
 ---
@@ -141,7 +126,7 @@ Does the component...
 
 ```tsx
 // ✅ Correct — Server Component (default, no directive needed)
-// app/[locale]/(dashboard)/tasks/page.tsx
+// app/(dashboard)/tasks/page.tsx
 export default function TasksPage() {
   return (
     <PageHeader title="task_board.title" />
@@ -440,7 +425,7 @@ Where does this data live?
 
 ├── Comes from API?           → TanStack Query (server state)
 ├── URL filter/sort params?   → URL search params (useSearchParams)
-├── Form input values?        → React Hook Form (local form state)
+├── Form input values?        → shadcn Field (local form state)
 ├── UI toggle (sidebar open)? → Zustand (client-only global state)
 ├── Single-component toggle?  → useState (local component state)
 └── Shared across pages?      → Zustand (persisted if needed)
@@ -536,91 +521,15 @@ const FilterContext = createContext(null);  // Use Zustand instead
 
 ## Form Handling
 
-### React Hook Form + Zod + shadcn Form
+### shadcn Field + InputGroup
 
-All forms use React Hook Form with Zod validation and shadcn Form components:
+Forms use shadcn nova components: `Field`, `FieldGroup`, `FieldLabel`, `FieldDescription`, `FieldError`, `FieldSeparator` for layout, and `InputGroup` + `InputGroupInput` + `InputGroupAddon` for inputs with icons.
 
-```tsx
-'use client';
-
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import {
-  Form, FormField, FormItem, FormLabel, FormControl, FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-
-const createTaskSchema = z.object({
-  title_ar: z.string().min(1, 'required').max(255),
-  title_en: z.string().max(255).optional(),
-  description_ar: z.string().min(1, 'required'),
-  blueprint_public_id: z.string().uuid(),
-  priority_public_id: z.string().uuid(),
-});
-
-type CreateTaskValues = z.infer<typeof createTaskSchema>;
-
-export function CreateTaskForm() {
-  const form = useForm<CreateTaskValues>({
-    resolver: zodResolver(createTaskSchema),
-    defaultValues: {
-      title_ar: '',
-      title_en: '',
-      description_ar: '',
-    },
-  });
-
-  const createTask = useCreateTask();
-
-  function onSubmit(values: CreateTaskValues) {
-    createTask.mutate(values, {
-      onSuccess: () => {
-        form.reset();
-        // Navigate or show toast
-      },
-    });
-  }
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="title_ar"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>العنوان بالعربية *</FormLabel>
-              <FormControl>
-                <Input {...field} dir="rtl" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" disabled={createTask.isPending}>
-          {createTask.isPending ? <Spinner /> : 'إنشاء مهمة'}
-        </Button>
-      </form>
-    </Form>
-  );
-}
-```
+See `npx shadcn@latest docs input-group` and `npx shadcn@latest docs field` for the full API.
 
 ### Bilingual Form Fields
 
-Arabic is required; English is optional. Use a consistent pattern:
-
-```tsx
-// ✅ Correct — Arabic required, English optional
-<FormField name="title_ar" render={...}>
-  <FormLabel>العنوان *</FormLabel>
-</FormField>
-<FormField name="title_en" render={...}>
-  <FormLabel>Title (English, optional)</FormLabel>
-</FormField>
-```
+Arabic is required; English is optional. Use a consistent pattern with `FieldLabel` for each locale variant.
 
 ---
 
@@ -631,7 +540,7 @@ Arabic is required; English is optional. Use a consistent pattern:
 Wrap route segments with error boundaries:
 
 ```tsx
-// app/[locale]/(dashboard)/tasks/error.tsx
+// app/(dashboard)/tasks/error.tsx
 'use client';
 
 export default function TasksError({
@@ -705,19 +614,7 @@ function TaskBoard() {
 
 ### Skeleton Pattern
 
-Use skeleton loaders that match the shape of the real content:
-
-```tsx
-// ✅ Correct — skeleton matches real layout
-export function StatCardSkeleton() {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5 animate-pulse">
-      <div className="h-4 w-24 bg-muted rounded mb-3" />
-      <div className="h-8 w-16 bg-muted rounded" />
-    </div>
-  );
-}
-```
+Use shadcn `Skeleton` component to match the shape of real content. See `npx shadcn@latest docs skeleton`.
 
 ### Toast Notifications
 
@@ -939,49 +836,7 @@ function processData(data: unknown) {
 
 SLA health colors are critical for the platform. Use the semantic token system consistently:
 
-```ts
-// lib/utils/sla-utils.ts
-import type { SlaHealth } from '@/lib/generated/api-types';
-
-export const SLA_CONFIG: Record<SlaHealth, {
-  color: string;
-  bg: string;
-  dot: string;
-  label_ar: string;
-  label_en: string;
-}> = {
-  green: {
-    color: 'text-emerald-600',
-    bg: 'bg-emerald-50',
-    dot: 'bg-emerald-500',
-    label_ar: 'في الموعد',
-    label_en: 'On Track',
-  },
-  amber: {
-    color: 'text-amber-600',
-    bg: 'bg-amber-50',
-    dot: 'bg-amber-500',
-    label_ar: 'قريب من الموعد',
-    label_en: 'At Risk',
-  },
-  red: {
-    color: 'text-red-600',
-    bg: 'bg-red-50',
-    dot: 'bg-red-500',
-    label_ar: 'متأخر',
-    label_en: 'Overdue',
-  },
-  grey: {
-    color: 'text-slate-500',
-    bg: 'bg-slate-50',
-    dot: 'bg-slate-400',
-    label_ar: 'معلق',
-    label_en: 'Suspended',
-  },
-};
-```
-
-**Rule:** SLA status is NEVER color-only — always include a text label for accessibility.
+SLA colors: emerald (on track), amber (at risk), red (overdue), slate (suspended). Always pair color with a text label — never color-only.
 
 ---
 
@@ -1067,14 +922,10 @@ Use the `@theme` directive in CSS for design tokens:
 /* app/globals.css */
 @import "tailwindcss";
 
-@theme {
-  --color-primary: #10b981;
-  --color-primary-hover: #059669;
-  --color-sidebar: #0f172a;
-  --color-page-bg: #f1f5f9;
-  --color-surface: #ffffff;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-sidebar: var(--sidebar);
 }
 ```
 
@@ -1090,7 +941,7 @@ Use the `@theme` directive in CSS for design tokens:
 Always use the `cn()` utility for conditional classes:
 
 ```ts
-// lib/utils/cn.ts
+// lib/utils.ts
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -1119,7 +970,7 @@ export function cn(...inputs: ClassValue[]) {
 
 ## Code Style
 
-- **Formatter:** ESLint + Prettier (configured in `eslint.config.mjs`)
+- **Formatter:** ESLint (configured in `eslint.config.mjs`)
 - **Linter:** `next lint` catches Next.js-specific issues
 - Run before commit: `npm run lint && npm run typecheck`
 

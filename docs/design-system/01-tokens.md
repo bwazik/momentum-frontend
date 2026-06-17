@@ -8,43 +8,18 @@
 
 | Token | Value | Tailwind | CSS Variable | Usage |
 |-------|-------|----------|-------------|-------|
-| primary | `#10b981` | `bg-primary` | `--color-primary` | CTAs, active nav, success SLA |
-| primary-hover | `#059669` | `hover:bg-primary-hover` | `--color-primary-hover` | Button hover |
-| primary-muted | `emerald-600/20` | `bg-primary-muted` | `--color-primary-muted` | Active sidebar item bg |
+| primary | `#f59e0b` | `bg-primary` | `--color-primary` | CTAs, active nav, buttons |
 | primary-foreground | `#ffffff` | `text-primary-foreground`| `--color-primary-foreground` | Text on primary buttons |
 
-**Tenant Override:** `--color-primary` is injected from `/api/v1/tenant/branding` when the branding API is available. Default to emerald until then.
+**Tenant Override:** `--color-primary` is injected from `/api/v1/tenant/branding` when the branding API is available. Default to amber until then.
 
 ---
 
-## Neutral
-
-| Token | Value | Tailwind | CSS Variable | Usage |
-|-------|-------|----------|-------------|-------|
-| sidebar | `#0f172a` | `slate-900` | `--color-sidebar` | Sidebar background |
-| page-bg | `#f1f5f9` | `slate-100` | `--color-page-bg` | Main canvas |
-| surface | `#ffffff` | `white` | `--color-surface` | Cards, tables, modals |
-| surface-glass | `rgba(255,255,255,0.72)` | — | `--color-surface-glass` | Glass card backgrounds |
-| border | `#e2e8f0` | `slate-200` | `--color-border` | Card/table borders |
-| border-glass | `rgba(255,255,255,0.25)` | — | `--color-border-glass` | Glass surface borders |
-| text-primary | `#0f172a` | `slate-900` | `--color-text-primary` | Headings |
-| text-secondary | `#64748b` | `slate-500` | `--color-text-secondary` | Labels, meta |
-| text-muted | `#94a3b8` | `slate-400` | `--color-text-muted` | Placeholders |
+<!-- Neutral: not yet implemented. See globals.css for current border/sidebar colors. -->
 
 ---
 
-## Semantic (SLA & Status)
-
-| Token | Value | Tailwind | Usage |
-|-------|-------|----------|-------|
-| success | `#10b981` | `emerald-500/600` | On track, completed |
-| warning | `#f59e0b` | `amber-500` | At risk |
-| danger | `#ef4444` | `red-500` | Overdue, critical priority |
-| info | `#3b82f6` | `blue-500` | Active stage, info badges |
-| suspended | `#64748b` | `slate-500` | Suspended task SLA |
-| purple-accent | `#8b5cf6` | `purple-500` | Completion rate, analytics |
-
-**Rule:** Semantic colors must always be paired with a text label. Color-only indicators violate accessibility standards.
+<!-- Semantic (SLA) colors: not yet tokenized in globals.css. Use raw Tailwind classes (text-emerald-600, bg-amber-50, etc.) until tokens are added. -->
 
 ---
 
@@ -53,7 +28,7 @@
 | Token | Value | Usage |
 |-------|-------|-------|
 | font-sans | `Geist, system-ui, sans-serif` | English UI text (load via `next/font`) |
-| font-arabic | `Alexandria` | Primary Arabic UI text (load via `next/font`) |
+| font-arabic | `Alexandria` | Primary Arabic UI text (planned — not yet loaded) |
 | text-xs | 12px / `0.75rem` | Table headers, badge text, labels |
 | text-sm | 14px / `0.875rem` | Body text, table cells, form inputs |
 | text-base | 16px / `1rem` | Descriptions, longer content |
@@ -87,14 +62,17 @@ Tailwind default 4px base. Common values:
 
 ## Radius
 
-| Token | Value | Tailwind | Usage |
-|-------|-------|----------|-------|
-| radius-sm | 4px | `rounded-sm` | Small badges |
-| radius-md | 6px | `rounded-md` | Inputs, selects |
-| radius-lg | 8px | `rounded-lg` | Buttons, dropdowns |
-| radius-xl | 12px | `rounded-xl` | Cards, panels, modals |
-| radius-2xl | 16px | `rounded-2xl` | Hero cards (dashboard) |
-| radius-full | 9999px | `rounded-full` | Avatars, priority pills, dots |
+Derived from a single `--radius` variable (`0.875rem`). Components compute their radius from this base:
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--radius` | `0.875rem` (14px) | Base radius |
+| radius-sm | `calc(var(--radius) * 0.6)` ≈ 8px | Small badges |
+| radius-md | `calc(var(--radius) * 0.8)` ≈ 11px | Inputs, selects |
+| radius-lg | `var(--radius)` ≈ 14px | Buttons, dropdowns |
+| radius-xl | `calc(var(--radius) * 1.4)` ≈ 20px | Cards, panels, modals |
+| radius-2xl | `calc(var(--radius) * 1.8)` ≈ 25px | Hero cards (dashboard) |
+| radius-full | `9999px` | Avatars, priority pills, dots |
 
 ---
 
@@ -106,35 +84,17 @@ Tailwind default 4px base. Common values:
 | shadow-md | `0 4px 6px rgba(0,0,0,0.07)` | `shadow-md` | Dropdowns, popovers |
 | shadow-lg | `0 10px 15px rgba(0,0,0,0.1)` | `shadow-lg` | Modals |
 | shadow-xl | `0 20px 25px rgba(0,0,0,0.1)` | `shadow-xl` | Stat card hover |
-| shadow-glass | `0 8px 32px rgba(0,0,0,0.08)` | Custom | Glass surfaces |
-| shadow-glow | `0 0 20px rgba(16,185,129,0.15)` | Custom | Primary action glow |
+<!-- Glass shadows deferred — see 02-glassmorphism.md -->
 
 ---
 
-## Z-Index
-
-| Token | Value | Usage |
-|-------|-------|-------|
-| base | 0 | Default content |
-| dropdown | 100 | Dropdown menus, select options |
-| sticky | 200 | Sticky headers, filter bars |
-| overlay | 300 | Backdrop overlays |
-| modal | 400 | Modals, dialogs |
-| toast | 500 | Toast notifications |
-| tooltip | 600 | Tooltips |
+<!-- Z-index tokens not yet implemented in globals.css. shadcn components handle their own stacking. -->
 
 ---
 
 ## Motion & Transitions
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| duration-fast | `150ms` | Hover states, toggles |
-| duration-normal | `200ms` | Card transitions, accordion |
-| duration-slow | `300ms` | Modal open/close, page transitions |
-| duration-slower | `500ms` | Complex animations, chart reveals |
-| easing-default | `cubic-bezier(0.4, 0, 0.2, 1)` | Standard easing |
-| easing-spring | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Bounce/spring for interactive elements |
+<!-- Duration/easing not yet tokenized in globals.css. Use standard Tailwind duration utilities. -->
 
 ### Animation Patterns
 
@@ -151,40 +111,7 @@ Tailwind default 4px base. Common values:
 
 ---
 
-## Tailwind v4 `@theme` Configuration
-
-```css
-/* app/globals.css */
-@import "tailwindcss";
-
-@theme {
-  /* Brand */
-  --color-primary: #10b981;
-  --color-primary-hover: #059669;
-  --color-primary-muted: oklch(0.65 0.15 160 / 0.2);
-
-  /* Neutral */
-  --color-sidebar: #0f172a;
-  --color-page-bg: #f1f5f9;
-  --color-surface: #ffffff;
-  --color-surface-glass: oklch(1 0 0 / 0.72);
-  --color-border-glass: oklch(1 0 0 / 0.25);
-
-  /* Semantic */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #3b82f6;
-
-  /* Glass */
-  --shadow-glass: 0 8px 32px oklch(0 0 0 / 0.08);
-  --blur-glass: 16px;
-
-  /* Radius */
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-}
-```
+See `app/globals.css` for the full `@theme inline`, `:root`, and `.dark` variable declarations. The file is the single source of truth for all CSS custom properties.
 
 ---
 
@@ -192,17 +119,7 @@ Tailwind default 4px base. Common values:
 
 The system is prepared from day one for Light Mode, Dark Mode, and System Theme support. We use `next-themes` to manage the `dark` class on the HTML element.
 
-| Token | Light | Dark |
-|-------|-------|------|
-| page-bg | `slate-100` | `slate-950` |
-| surface | `white` | `slate-900` |
-| surface-glass | `rgba(255,255,255,0.72)` | `rgba(15,23,42,0.72)` |
-| border | `slate-200` | `slate-800` |
-| border-glass | `rgba(255,255,255,0.25)` | `rgba(255,255,255,0.08)` |
-| text-primary | `slate-900` | `slate-100` |
-| text-secondary | `slate-500` | `slate-400` |
-
-Glass effects in dark mode use a darker base with more visible luminance borders. components automatically respond via Tailwind's `dark:` variant mapping in `@theme`.
+See `globals.css:root` and `globals.css .dark` for light/dark values.
 
 ---
 
@@ -222,4 +139,4 @@ useEffect(() => {
 }, [branding]);
 ```
 
-Default to emerald (`#10b981`) until branding API is available.
+Default to amber (`#f59e0b`) until branding API is available.
