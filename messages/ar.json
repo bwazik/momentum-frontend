@@ -1,0 +1,98 @@
+{
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "email": "البريد الإلكتروني",
+      "email_placeholder": "name@domain.com",
+      "password": "كلمة المرور",
+      "password_placeholder": "********",
+      "email_invalid": "البريد الإلكتروني غير صالح",
+      "password_required": "كلمة المرور مطلوبة",
+      "submit": "دخول",
+      "submitting": "جاري الدخول...",
+      "error": "فشل تسجيل الدخول. تأكد من صحة البريد الإلكتروني وكلمة المرور.",
+      "success": "تم تسجيل الدخول بنجاح",
+      "forgot_password": "نسيت كلمة المرور؟",
+      "forgot_password_toast": "يرجى التواصل مع مسؤول المنصة",
+      "no_account": "ليس لديك حساب؟",
+      "sign_up": "التسجيل",
+      "terms_prefix": "باستمرارك، أنت توافق على",
+      "terms": "شروط الخدمة",
+      "terms_and": "و",
+      "privacy": "سياسة الخصوصية"
+    },
+    "logout": "تسجيل الخروج",
+    "theme": "المظهر",
+    "brand_color": "اللون الأساسي"
+  },
+  "locale": {
+    "switch_to_english": "Switch to English",
+    "switch_to_arabic": "التبديل إلى العربية"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "tasks": "المهام",
+    "blueprints": "القوالب",
+    "analytics": "التحليلات",
+    "follow_up": "المتابعة",
+    "organization": "الهيكل التنظيمي",
+    "admin": "الإدارة",
+    "no_permission": "ليس لديك صلاحية الوصول",
+    "quick_create": "إنشاء سريع",
+    "inbox": "الوارد"
+  },
+  "shell": {
+    "search_placeholder": "بحث...",
+    "page_titles": {
+      "dashboard": "لوحة التحكم",
+      "tasks": "المهام",
+      "blueprints": "القوالب",
+      "analytics": "التحليلات",
+      "follow_up": "المتابعة",
+      "organization": "الهيكل التنظيمي",
+      "admin": "الإدارة"
+    },
+    "skip_to_main": "تخطي إلى المحتوى الرئيسي",
+    "brand_color": "اختيار اللون الأساسي",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "النظام"
+  },
+  "placeholder": {
+    "dashboard": "لوحة التحكم — قيد التطوير",
+    "tasks": "المهام — قيد التطوير",
+    "blueprints": "القوالب — قيد التطوير",
+    "analytics": "التحليلات — قيد التطوير",
+    "follow_up": "المتابعة — قيد التطوير",
+    "organization": "الهيكل التنظيمي — قيد التطوير",
+    "admin": "الإدارة — قيد التطوير"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "mark_all_read": "تحديد الكل كمقروء",
+    "empty": "لا توجد إشعارات",
+    "empty_description": "سيتم عرض الإشعارات هنا",
+    "load_more": "تحميل المزيد",
+    "loading": "جاري التحميل..."
+  },
+  "search": {
+    "trigger": "بحث...",
+    "placeholder": "ابحث عن مهمة...",
+    "recent": "آخر النشاطات",
+    "results": "نتائج البحث",
+    "no_results": "لا توجد نتائج",
+    "no_results_for": "لا توجد نتائج لـ \"{query}\"",
+    "no_recent": "لا توجد نتائج"
+  },
+  "colors": {
+    "amber": "عنبر",
+    "blue": "أزرق",
+    "emerald": "زمرد",
+    "rose": "وردي",
+    "slate": "رمادي"
+  },
+  "shared": {
+    "error": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    "retry": "إعادة المحاولة"
+  }
+}

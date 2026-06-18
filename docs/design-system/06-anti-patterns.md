@@ -99,9 +99,9 @@ Add `rtl:rotate-180` to chevrons, arrows, and other directional icons.
 
 Use logical alignment (`text-start`, `text-end`) instead of `text-left`/`text-right`.
 
-### ❌ English-only strings in user-facing code
+### ❌ English-only (or Arabic-only) strings in user-facing code
 
-Use translation keys (via an i18n library) instead of hardcoded English strings in user-facing components.
+Use translation keys via `next-intl` (`useTranslations()` / `getTranslations()`) instead of hardcoded strings. Translation files are in `messages/{locale}.json`.
 
 ---
 

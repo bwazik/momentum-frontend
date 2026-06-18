@@ -69,15 +69,21 @@ components/
 
 ```
 app/
-├── (auth)/                 # Future: unauthenticated layout
-├── (dashboard)/            # Future: authenticated shell (sidebar + topbar)
-├── dashboard/
-│   └── page.tsx            # Dashboard page
-├── login/
-│   └── page.tsx            # Login page
-├── layout.tsx              # Root layout
+├── (auth)/                 # Unauthenticated layout (login page)
+├── (dashboard)/            # Authenticated shell (sidebar + topbar)
+│   ├── layout.tsx          # Dashboard shell with auth guard
+│   ├── page.tsx            # Dashboard home
+│   ├── tasks/page.tsx      # Task board (spec 002)
+│   ├── blueprints/page.tsx # Blueprint builder (spec 003)
+│   ├── analytics/page.tsx  # Analytics (spec 005)
+│   ├── follow-up/page.tsx  # Follow-up center (spec 004)
+│   ├── organization/page.tsx # Org structure (spec 006)
+│   └── admin/page.tsx      # Admin panel (capability-gated)
+├── login-block/            # shadcn login block demo (reference)
+├── dashboard-block/        # shadcn dashboard block demo (reference)
+├── layout.tsx              # Root layout (reads NEXT_LOCALE cookie)
 ├── not-found.tsx           # 404 page
-└── page.tsx                # Home page
+└── proxy.ts                # Security headers + cache control
 ```
 
 ### Hooks & Lib Structure
@@ -89,15 +95,18 @@ lib/
 │   ├── query-keys.ts       # Centralized query key factory
 │   └── hooks/
 │       ├── use-tasks.ts    # Task query/mutation hooks
-│       ├── use-blueprints.ts  # planned
-│       ├── use-auth.ts
-│       └── use-notifications.ts  # planned
+│       ├── use-auth.ts     # Current user, login, logout
+│       ├── use-capabilities.ts  # Capability checks
+│       ├── use-notifications.ts # Notifications list, count, mark-read
+│       ├── use-search.ts   # Global search + recent activity
+│       └── use-tenant.ts   # Tenant info hook
 ├── generated/
 │   └── api-types.ts        # OpenAPI → TypeScript (auto-generated, never edit)
 ├── stores/
-│   ├── use-filter-store.ts
-│   ├── use-sidebar-store.ts
-│   └── use-locale-store.ts  # planned
+│   ├── use-locale-store.ts       # Locale state (used by LocaleToggle)
+│   ├── use-capability-store.ts   # Capability strings for permission UI
+│   ├── use-brand-color-store.ts  # Persisted brand color (Zustand persist)
+│   └── use-sidebar-store.ts      # Pre-existing scaffold — currently unused
 └── utils/
     ├── date-utils.ts       # planned — Hijri conversion, relative time
     ├── sla-utils.ts        # planned — SLA health color/label mapping
@@ -214,7 +223,7 @@ export const queryKeys = {
   },
   auth: {
     me: ['auth', 'me'] as const,
-    capabilities: ['auth', 'capabilities'] as const,
+    capabilities: (userPublicId: string) => ['auth', 'capabilities', userPublicId] as const,
   },
 } as const;
 ```
@@ -635,29 +644,87 @@ createTask.mutate(values, {
 
 ## i18n & RTL
 
+### Library: next-intl
+
+Uses `next-intl` v4 for all UI strings. Translation files live at `messages/{locale}.json` with dot-namespaced keys by feature domain.
+
+**Setup:**
+- `next.config.ts` wrapped with `createNextIntlPlugin('./i18n/request.ts')`
+- `i18n/request.ts` reads `NEXT_LOCALE` cookie via `cookies()`, returns locale + messages
+- `NextIntlClientProvider` in root layout wraps all children
+
+**Server Components** (page.tsx, layouts):
+
+```tsx
+import { getTranslations } from 'next-intl/server';
+
+export default async function Page() {
+  const t = await getTranslations('namespace');
+  return <p>{t('key')}</p>;
+}
+```
+
+**Client Components:**
+
+```tsx
+import { useTranslations } from 'next-intl';
+
+export function Component() {
+  const t = useTranslations('namespace');
+  return <p>{t('key')}</p>;
+}
+```
+
+**Zod schema validation messages** must be generated inside the component using `t()`:
+
+```tsx
+const loginSchema = z.object({
+  email: z.string().email(t('email_invalid')),
+  password: z.string().min(1, t('password_required')),
+});
+```
+
 ### Translation Key Conventions
 
-```ts
-// Namespace by feature, use snake_case
+Keys are dot-namespaced by feature, using snake_case:
+
+```json
 {
-  "task_board": {
-    "title": "لوحة المهام",
-    "columns": {
-      "task_title": "المهمة",
-      "sla_health": "حالة SLA",
-      "assignee": "المكلف"
-    },
-    "filters": {
-      "all": "الكل",
-      "overdue": "متأخرة"
-    },
-    "empty": {
-      "title": "لا توجد مهام",
-      "description": "لم يتم العثور على مهام تطابق معايير البحث"
+  "auth": {
+    "login": {
+      "email": "البريد الإلكتروني",
+      "email_invalid": "البريد الإلكتروني غير صالح",
+      "submit": "دخول"
     }
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "tasks": "المهام"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "empty": "لا توجد إشعارات",
+    "load_more": "تحميل المزيد"
   }
 }
 ```
+
+Usage: `t('auth.login.email')`, `t('nav.dashboard')`.
+
+### Bilingual Entity Data
+
+API entities return **both** Arabic and English (`name_ar`/`name_en`, `title_ar`/`title_en`). The frontend picks the correct one:
+
+```tsx
+const name = user.name_ar || user.name_en;
+const title = blueprint.title_ar ?? blueprint.title_en;
+```
+
+This is NOT done through `useTranslations` — these values come from the database.
+
+### Backend Error Localization
+
+The frontend sends `X-Locale` header on every API request (from `NEXT_LOCALE` cookie). Backend middleware `SetLocaleFromHeader` calls `app()->setLocale()`, so `__('auth.failed')` returns in the correct language.
 
 ### Logical Properties — Mandatory
 
@@ -932,7 +999,7 @@ Use the `@theme` directive in CSS for design tokens:
 ### Dark Mode & Theming
 
 - We use `next-themes` to manage Light/Dark/System preferences.
-- Wrap the application in `<ThemeProvider attribute="class" defaultTheme="system" enableSystem>` in `app/layout.tsx`.
+- Wrap the application in `<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>` in `app/layout.tsx`. Theme toggle moved inside user menu dropdown (Preferences submenu).
 - Use Tailwind's `dark:` variant for all inverted styles.
 - Do not implement custom theme toggles using local state or `localStorage` directly.
 

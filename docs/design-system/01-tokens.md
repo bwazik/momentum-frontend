@@ -8,7 +8,7 @@
 
 | Token | Value | Tailwind | CSS Variable | Usage |
 |-------|-------|----------|-------------|-------|
-| primary | `#f59e0b` | `bg-primary` | `--color-primary` | CTAs, active nav, buttons |
+| primary | `#9A3B00` | `bg-primary` | `--color-primary` | CTAs, active nav, buttons |
 | primary-foreground | `#ffffff` | `text-primary-foreground`| `--color-primary-foreground` | Text on primary buttons |
 
 **Tenant Override:** `--color-primary` is injected from `/api/v1/tenant/branding` when the branding API is available. Default to amber until then.
@@ -28,7 +28,7 @@
 | Token | Value | Usage |
 |-------|-------|-------|
 | font-sans | `Geist, system-ui, sans-serif` | English UI text (load via `next/font`) |
-| font-arabic | `Alexandria` | Primary Arabic UI text (planned — not yet loaded) |
+| font-arabic | `IBM Plex Sans Arabic` | Primary Arabic UI text (loaded via `next/font`) |
 | text-xs | 12px / `0.75rem` | Table headers, badge text, labels |
 | text-sm | 14px / `0.875rem` | Body text, table cells, form inputs |
 | text-base | 16px / `1rem` | Descriptions, longer content |
@@ -131,12 +131,11 @@ The `--color-primary` CSS variable is injected from `/api/v1/tenant/branding` at
 // Fetch branding and apply
 const branding = useBranding(); // TanStack Query hook
 
-useEffect(() => {
-  if (branding?.primary_color) {
-    document.documentElement.style.setProperty('--color-primary', branding.primary_color);
-    document.documentElement.style.setProperty('--color-primary-hover', darken(branding.primary_color));
-  }
-}, [branding]);
+  useEffect(() => {
+    if (branding?.primary_color) {
+      document.documentElement.style.setProperty('--color-primary', branding.primary_color);
+    }
+  }, [branding]);
 ```
 
 Default to amber (`#f59e0b`) until branding API is available.

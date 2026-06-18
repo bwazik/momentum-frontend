@@ -23,10 +23,12 @@ CORS is required and configured on the Laravel side. All API calls use absolute 
 ```
 frontend/
 ├── app/                        # Next.js App Router
-│   ├── (auth)/             # Future: unauthenticated layout
-│   ├── (dashboard)/        # Future: authenticated shell (sidebar + topbar)
-│   ├── layout.tsx          # Root layout (planned: reads NEXT_LOCALE cookie for dir/lang)
-│   └── not-found.tsx
+│   ├── (auth)/             # Unauthenticated layout (login)
+│   ├── (dashboard)/        # Authenticated shell (sidebar + topbar)
+│   ├── layout.tsx          # Root layout (reads NEXT_LOCALE cookie for dir/lang)
+│   ├── not-found.tsx
+│   ├── login-block/        # shadcn login block demo (reference)
+│   └── dashboard-block/    # shadcn dashboard block demo (reference)
 ├── components/
 │   ├── ui/                     # shadcn/ui primitives (CLI-managed)
 │   ├── domain/                 # Business domain components
@@ -57,8 +59,8 @@ frontend/
 
 ```
 Browser
-  → Next.js Middleware (planned: checks session auth, NO locale redirects)
-  → App Router → Root Layout (planned: reads `NEXT_LOCALE` cookie for dir/lang) → Page
+  → Next.js Middleware (proxy.ts: no auth logic, security headers + cache control)
+  → App Router → Root Layout (reads `NEXT_LOCALE` cookie for dir/lang) → Page
   → Client Component renders with TanStack Query hooks
   → fetch('https://api.momentum.test/v1/...', { credentials: 'include' })
   → Nginx routes api.momentum.test to Laravel PHP-FPM
@@ -95,8 +97,8 @@ Browser
 1. `GET /sanctum/csrf-cookie` — Sets XSRF-TOKEN cookie
 2. `POST /api/v1/iam/auth/login` — Sets HttpOnly session cookie
 3. Subsequent requests include cookie automatically (`credentials: 'include'`)
-4. Next.js middleware (planned) checks session cookie presence for protected routes
-5. 401 response → clear query cache → redirect to login
+4. Dashboard layout calls `prefetchAuthenticatedUser()` server-side — redirects to `/login` on 401 before shell HTML renders
+5. 401 response → `QueryCache.onError` clears cache and redirects to `/login` (skips if already on `/login`)
 
 See `security-policy.md` for full security details.
 
@@ -114,22 +116,31 @@ See `security-policy.md` for full security details.
 
 ## i18n & RTL
 
+- **Library:** `next-intl` v4
 - **Locales:** `ar` (default), `en`
 - **Routing:** Cookie-based (`NEXT_LOCALE`), URLs remain clean (e.g., `/tasks` instead of `/ar/tasks`).
-- **Implementation:** Root `layout.tsx` (Server Component) reads the `NEXT_LOCALE` cookie to set `<html dir="rtl" lang="ar">` or `dir="ltr" lang="en"`.
-- **Syncing:** Upon login, the user's `preferred_language` from the backend is saved to the cookie.
-- **Layout properties:** Tailwind logical (`ms-`, `me-`, `ps-`, `pe-`, `start`, `end`) — see `coding-standards.md`.
+- **Config:** `next.config.ts` wrapped with `createNextIntlPlugin('./i18n/request.ts')`. The request config reads `NEXT_LOCALE` cookie and returns locale + messages.
+- **Translation files:** `messages/ar.json` and `messages/en.json` — dot-namespaced keys by feature (e.g. `auth.login.email`, `nav.dashboard`).
+- **Server Components:** `getTranslations('namespace')` from `next-intl/server` (async).
+- **Client Components:** `useTranslations('namespace')` from `next-intl` (hook).
+- **Provider:** `NextIntlClientProvider` in root layout receives `locale` + `messages` from `getMessages()`.
+- **Syncing:** Upon login, the user's `preferred_language` from the backend should be saved to `NEXT_LOCALE` cookie (not yet wired).
+- **Locale toggle:** Sets `NEXT_LOCALE` cookie + reloads page — server re-reads cookie, renders correct messages.
+- **Backend locale:** `X-Locale` header sent on every API request via `apiClient`. Backend middleware `SetLocaleFromHeader` reads it and calls `app()->setLocale()`. This localizes `__('auth.failed')`, validation errors, etc.
+- **Entity data:** Backend returns bilingual fields (`name_ar`/`name_en`). The frontend picks locale-aware: `locale === 'ar' ? name_ar || name_en : name_en || name_ar`. These are NOT translated — they come from the database.
 - **Hijri dates:** Display layer only (API returns Gregorian; convert via `Intl.DateTimeFormat`).
-- **Typography:** Geist for English (loaded). Alexandria for Arabic (planned).
+- **Typography:** Geist for English, IBM Plex Sans Arabic for Arabic (loaded via `next/font`).
+- **Logical properties:** Tailwind logical (`ms-`, `me-`, `ps-`, `pe-`, `start`, `end`) — see `coding-standards.md`.
 
 ---
 
 ## Dynamic Branding
 
-- Fetch `/api/v1/tenant/branding` on load (when backend ready)
-- Inject CSS variables for `--color-primary` from tenant settings
-- Logo from object storage URL
-- Default to amber theme until branding API available
+- Brand color persisted in localStorage via Zustand persist (`useBrandColorStore`), default `#9A3B00`
+- `BrandColorProvider` injects `--color-primary` and `--primary` CSS variables on `<html>`
+- Blocking `<script>` in root layout reads localStorage before React hydrates (eliminates color flash)
+- Default amber (`#9A3B00`) until user selects a different color via Preferences menu
+- Future: tenant branding API will override default color per-tenant
 
 ---
 
@@ -150,7 +161,7 @@ See `security-policy.md` for full security details.
 |------|---------|
 | Domain components self-contained | `components/domain/tasks/` owns all task-related UI |
 | Shared components are generic | `components/shared/` has no domain imports |
-| UI primitives untouched | `components/ui/` managed by shadcn CLI — do not hand-edit |
+| UI primitives mostly untouched | `components/ui/` managed by shadcn CLI — some files hand-edited for RTL fixes: `input-group.tsx`, `sidebar.tsx`, `dropdown-menu.tsx`, `command.tsx`. Changes noted in `specs/001-core-shell/plan.md`. |
 | Hooks per domain | `lib/api/hooks/use-tasks.ts` — one hook file per API domain |
 | Stores are minimal | Zustand stores for UI-only state — never API data |
 | Utils are pure | `lib/utils/` has no React imports, no side effects |

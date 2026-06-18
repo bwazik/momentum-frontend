@@ -2,7 +2,7 @@
 
 > **Number:** 001
 > **Date:** 2026-06-15
-> **Status:** `draft`
+> **Status:** `approved`
 > **Milestone:** F1 — Scaffold, Auth, Shell & Core
 > **Depends on:** F0 — Scaffold & Design System
 > **Backend spec:** `../backend/specs/003-iam-abac/` (auth/session), `../backend/specs/008-notifications/` (notifications center), `../backend/specs/011-search-discovery/` (global search + recent activity)
@@ -15,7 +15,7 @@
 
 ## Problem
 
-Every user of Gov TMS needs a single, consistent entry point into the platform. Today there is no shared authenticated shell: users cannot log in, navigate between modules, discover tasks through search, or see notifications alerting them to assignments, SLA breaches, or task lifecycle changes. Without this foundation, every subsequent feature (task board, blueprint builder, dashboards) has no container to render inside.
+Every user of Momentum needs a single, consistent entry point into the platform. Today there is no shared authenticated shell: users cannot log in, navigate between modules, discover tasks through search, or see notifications alerting them to assignments, SLA breaches, or task lifecycle changes. Without this foundation, every subsequent feature (task board, blueprint builder, dashboards) has no container to render inside.
 
 This spec delivers the "chrome" of the application: the login page, the authenticated dashboard shell (sidebar + top bar), global search, and the in-app notifications center. It is the first user-facing frontend feature and a hard dependency for every F1+ screen.
 
@@ -69,77 +69,81 @@ The shell must be RTL-first, responsive, accessible, and built entirely from the
 
 ### Login Page
 
-- [ ] Route `/login` renders outside the dashboard shell.
-- [ ] Form fields: email, password, both required.
-- [ ] Form validation uses Zod and shadcn Form; errors display inline in the active locale.
-- [ ] Submitting valid credentials calls `GET /sanctum/csrf-cookie` then `POST /v1/iam/auth/login` (with `X-Tenant` header); backend uses `Auth::guard('web')->login()` to set HttpOnly session cookie.
-- [ ] Login response is flat `AuthTokenResource` (`public_id`, `name_ar`, `name_en`, `email`, `account_type`) — no nested `user` wrapper, no token field.
-- [ ] On success, the user's `preferred_language` (from `/me` or existing cookie) is saved to the `NEXT_LOCALE` cookie and `dir`/`lang` are updated.
-- [ ] On success, the user is redirected to `/` (dashboard) — no locale prefix in URL (cookie-based routing).
-- [ ] On 401/422, a user-friendly authentication error is shown (no internal details).
-- [ ] Every API request includes `X-Tenant` header extracted from browser hostname subdomain.
-- [ ] Loading state disables the submit button and shows a spinner.
-- [ ] The page is RTL by default and flips cleanly to LTR when locale is switched.
+- [x] Route `/login` renders outside the dashboard shell.
+- [x] Form fields: email, password, both required.
+- [x] Form validation uses Zod + react-hook-form with shadcn Field/FieldError; errors display inline in the active locale.
+- [x] Submitting valid credentials calls `GET /sanctum/csrf-cookie` then `POST /v1/iam/auth/login` (with `X-Tenant` header); backend uses `Auth::guard('web')->login()` to set HttpOnly session cookie.
+- [x] Login response is flat `AuthTokenResource` (`public_id`, `name_ar`, `name_en`, `email`, `account_type`) — no nested `user` wrapper, no token field.
+- [x] On success, the user's `preferred_language` (from `/me` or existing cookie) is saved to the `NEXT_LOCALE` cookie and `dir`/`lang` are updated.
+- [x] On success, the user is redirected to `/` (dashboard) — no locale prefix in URL (cookie-based routing).
+- [x] On 401/422, a user-friendly error toast is shown (no internal details).
+- [x] Every API request includes `X-Tenant` header extracted from browser hostname subdomain.
+- [x] Loading state disables the submit button and shows a spinner.
+- [x] The page is RTL by default and flips cleanly to LTR when locale is switched.
 
 ### Authenticated Shell
 
-- [ ] The `(dashboard)` layout renders for all authenticated routes.
-- [ ] Shell structure: sidebar (`w-64`, 256px) + main area (top bar + scrollable content).
-- [ ] Sidebar: tenant logo/name header, navigation items, user footer (avatar + name + position).
-- [ ] Navigation items: Dashboard, Tasks, Blueprints, Analytics, Follow-up, Organization, Admin (hidden unless capability present).
-- [ ] Active nav item uses the emerald accent token (`bg-emerald-600/20 text-emerald-300`).
-- [ ] Inactive nav item uses slate-400 with hover state.
-- [ ] Top bar: `h-16`, sticky, glass background, page title, global search trigger, theme toggle, brand color toggle, locale toggle, notification bell, user menu.
-- [ ] Main content area: `bg-page-bg`, `p-6`, scrollable.
-- [ ] Skip link to main content is present for keyboard users.
-- [ ] Mobile (<1024px): sidebar collapses to a Sheet drawer toggled by a hamburger button.
+- [x] The `(dashboard)` layout renders for all authenticated routes.
+- [x] Shell structure: sidebar (`w-64`, 256px) + main area (top bar + scrollable content).
+- [x] Sidebar: tenant logo/name header, navigation items, user footer (avatar + name + position).
+- [x] Navigation items: Dashboard, Tasks, Blueprints, Analytics, Follow-up, Organization, Admin (hidden unless capability present).
+- [x] Active nav item uses the emerald accent token (`bg-emerald-600/20 text-emerald-300`).
+- [x] Inactive nav item uses slate-400 with hover state.
+- [x] Top bar: `h-16`, page title, global search trigger, notification bell, locale toggle. Theme and brand color moved to user menu dropdown.
+- [x] Main content area: `bg-page-bg`, `p-6`, scrollable.
+- [x] Skip link to main content is present for keyboard users.
+- [x] Mobile (<1024px): sidebar collapses to a Sheet drawer toggled by a hamburger button.
 
 ### Global Search
 
-- [ ] `Cmd+K` / `Ctrl+K` focuses the search input.
-- [ ] Search input opens a command-palette-style dialog with placeholder text in active locale.
-- [ ] Typing ≥2 characters debounces 300ms and calls `GET /v1/search`.
-- [ ] Results display task title, SLA badge, department, and blueprint category.
-- [ ] Selecting a result navigates to `/tasks/[publicId]`.
-- [ ] Recent activity (`GET /v1/search/recent`) is shown by default when the palette opens with no query.
-- [ ] Empty state shows when no results match.
-- [ ] Error state shows with retry when the search API fails.
+- [x] `Cmd+K` / `Ctrl+K` focuses the search input.
+- [x] Search input opens a command-palette-style dialog with placeholder text in active locale.
+- [x] Typing ≥2 characters debounces 300ms and calls `GET /v1/search`.
+- [x] Results display task title, SLA badge, department, and blueprint category.
+- [x] Selecting a result navigates to `/tasks/[publicId]`.
+- [x] Recent activity (`GET /v1/search/recent`) is shown by default when the palette opens with no query.
+- [x] Empty state shows when no results match.
+- [x] Error state shows with retry when the search API fails.
 
 ### Notifications Center
 
-- [ ] Bell icon in the top bar shows unread count badge when `unread_count > 0`.
-- [ ] Clicking the bell opens a dropdown/panel listing the most recent notifications.
-- [ ] Notifications display title, body, relative timestamp, and read/unread state.
-- [ ] Unread items have a visual indicator (e.g., dot or tinted background).
-- [ ] Clicking a notification marks it read and navigates to the related task when applicable.
-- [ ] A "Mark all as read" button clears the unread count.
-- [ ] The list uses cursor pagination with a "Load more" button.
-- [ ] Empty state: "No notifications" message in active locale.
-- [ ] Error state: inline retry button.
+- [x] Bell icon in the top bar shows unread count badge when `unread_count > 0`.
+- [x] Clicking the bell opens a dropdown/panel listing the most recent notifications.
+- [x] Notifications display title, body, relative timestamp, and read/unread state.
+- [x] Unread items have a visual indicator (e.g., dot or tinted background).
+- [x] Clicking a notification marks it read and navigates to the related task when applicable.
+- [x] A "Mark all as read" button clears the unread count.
+- [x] The list uses cursor pagination with a "Load more" button.
+- [x] Empty state: "No notifications" message in active locale.
+- [x] Error state: inline retry button.
 
 ### Locale & Theme
 
-- [ ] Locale toggle switches between `ar` and `en` and updates `NEXT_LOCALE` cookie.
-- [ ] Root layout re-renders with correct `dir` (`rtl`/`ltr`) and `lang`.
-- [ ] Fonts switch: Alexandria for Arabic, Geist for English.
-- [ ] Theme toggle supports Light / Dark / System and uses `next-themes`.
-- [ ] Preference persists across sessions without using `localStorage` for auth data.
+- [x] Locale toggle switches between `ar` and `en` and updates `NEXT_LOCALE` cookie.
+- [x] Root layout re-renders with correct `dir` (`rtl`/`ltr`) and `lang`.
+- [x] Fonts switch: IBM Plex Sans Arabic for Arabic, Geist for English (via `html[lang="ar"] { --font-sans: var(--font-ibm-plex-arabic); }` + inline `fontFamily` on `<html>`).
+- [x] Theme toggle supports Light / Dark / System and uses `next-themes`.
+- [x] Preference persists across sessions without using `localStorage` for auth data.
+- [x] i18n via `next-intl` v4 with `messages/{locale}.json` files, `createNextIntlPlugin` in next.config, and `useTranslations()` hook.
+- [x] Backend locale via `X-Locale` header on every API request; `SetLocaleFromHeader` middleware calls `app()->setLocale()`.
 
 ### Brand Color Preference
 
-- [ ] A primary-brand-color picker is available in the top bar (e.g., emerald, blue, purple, teal, rose).
-- [ ] The selected color persists for the current user across sessions using a Zustand store with `persist` middleware (localStorage).
-- [ ] On app load, the selected color injects `--color-primary` and `--color-primary-hover` CSS variables on `:root`.
-- [ ] Brand color changes apply immediately without a full page reload.
-- [ ] The default color is emerald (`#10b981`).
-- [ ] Login page uses the default emerald theme; brand-color preference is applied after authentication.
+- [x] A primary-brand-color picker is available in the user menu (e.g., amber, blue, emerald, rose, slate).
+- [x] The selected color persists for the current user across sessions using a Zustand store with `persist` middleware (localStorage).
+- [x] On app load, the selected color injects `--color-primary` and `--color-primary-hover` CSS variables on `:root`.
+- [x] Brand color changes apply immediately without a full page reload.
+- [x] The default color is amber (`#9A3B00`).
+- [x] Login page uses the default amber theme; brand-color preference is applied after authentication.
 
 ### Security & Permissions
 
-- [ ] Middleware checks session cookie presence and redirects unauthenticated users to `/login`.
-- [ ] Admin navigation item is hidden unless the user's capabilities include relevant admin rights.
-- [ ] No PII (email, mobile, employee ID) is logged to the browser console or displayed in URLs.
-- [ ] 401 responses from any API call clear the query cache and redirect to `/login`.
+- [x] Dashboard layout validates session against Laravel (`/v1/iam/auth/me`) before rendering any content; unauthenticated users are redirected to `/login` via `redirect()`.
+- [x] `proxy.ts` sets `Cache-Control: no-store` on page responses, preventing browsers from caching authenticated pages in bfcache.
+- [x] Dashboard layout uses `export const dynamic = 'force-dynamic'` to prevent Next.js Router Cache from serving stale RSC payloads.
+- [x] Admin navigation item is hidden unless the user's capabilities include relevant admin rights.
+- [x] No PII (email, mobile, employee ID) is logged to the browser console or displayed in URLs.
+- [x] TanStack Query cache is hydrated from server-side `/me` fetch, so `useCurrentUser()` returns immediately without a client-side network request.
 
 ---
 
@@ -149,14 +153,14 @@ The shell must be RTL-first, responsive, accessible, and built entirely from the
 
 ### Data Fetching
 
-- [ ] `useCurrentUser()` — `GET /v1/iam/auth/me`, query key `queryKeys.auth.me`, stale time 5 minutes.
-- [ ] `useCapabilities(userPublicId)` — `GET /v1/iam/users/{user_public_id}/capabilities` returns `EffectiveCapabilityResource[]`, query key `queryKeys.auth.capabilities(userPublicId)`, stale time 5 minutes, enabled when `userPublicId` exists.
-- [ ] `useNotifications(filters)` — `GET /v1/notifications`, query key `queryKeys.notifications.list(filters)`, cursor-paginated via `useInfiniteQuery`.
-- [ ] `useNotificationsCount()` — `GET /v1/notifications/unread-count`, query key `queryKeys.notifications.unreadCount()`, refetch interval 60s.
-- [ ] `useRecentActivity()` — `GET /v1/search/recent`, query key `queryKeys.search.recent()`, bounded list (max 20).
-- [ ] `useSearch(query, filters)` — `GET /v1/search`, query key `queryKeys.search.list({ q, ...filters })`, enabled when `q.length >= 2`.
-- [ ] No `useEffect` + `fetch`; all API calls go through TanStack Query hooks.
-- [ ] Prefetch strategy: none in MVP; notification count and recent activity fetch on shell mount.
+- [x] `useCurrentUser()` — `GET /v1/iam/auth/me`, query key `queryKeys.auth.me`, stale time 5 minutes.
+- [x] `useCapabilities(userPublicId)` — `GET /v1/iam/users/{user_public_id}/capabilities` returns `EffectiveCapabilityResource[]`, query key `queryKeys.auth.capabilities(userPublicId)`, stale time 5 minutes, enabled when `userPublicId` exists.
+- [x] `useNotifications(filters)` — `GET /v1/notifications`, query key `queryKeys.notifications.list(filters)`, cursor-paginated via `useInfiniteQuery`.
+- [x] `useNotificationsCount()` — `GET /v1/notifications/unread-count`, query key `queryKeys.notifications.unreadCount()`, `staleTime: 5min` (no polling — fetches on page load and navigation).
+- [x] `useRecentActivity()` — `GET /v1/search/recent`, query key `queryKeys.search.recent()`, bounded list (max 20).
+- [x] `useSearch(query, filters)` — `GET /v1/search`, query key `queryKeys.search.list({ q, ...filters })`, enabled when `q.length >= 2`.
+- [x] No `useEffect` + `fetch`; all API calls go through TanStack Query hooks.
+- [x] Prefetch strategy: none in MVP; notification count and recent activity fetch on shell mount.
 
 ### Query Key Structure
 
@@ -182,32 +186,32 @@ search: {
 
 ### State Management
 
-- [ ] **TanStack Query:** all API-derived state (user, capabilities, notifications, recent activity, search results).
-- [ ] **URL state:** none for the shell itself; search query lives in the search dialog's local state until submitted.
-- [ ] **Zustand:**
+- [x] **TanStack Query:** all API-derived state (user, capabilities, notifications, recent activity, search results).
+- [x] **URL state:** none for the shell itself; search query lives in the search dialog's local state until submitted.
+- [x] **Zustand:**
   - `useSidebarStore` — mobile sidebar open/closed.
   - `useThemeStore` — theme mode preference (Light/Dark/System) persisted per visitor via `next-themes`.
-  - `useBrandColorStore` — primary brand color (emerald, blue, purple, teal, rose) persisted per visitor via Zustand `persist` middleware.
-  - `useLocaleStore` — current locale, synced with `NEXT_LOCALE` cookie.
+  - `useBrandColorStore` — primary brand color (amber, blue, emerald, rose, slate) persisted per visitor via Zustand `persist` middleware.
+   - `useLocaleStore` — current locale, synced with `NEXT_LOCALE` cookie. NOTE: Shell components (`AppSidebar`, `NavUser`) receive locale as a server prop for first-render correctness; the store is used by `LocaleToggle` for locale changes.
   - `useCapabilityStore` — flat array of capability strings from `useCapabilities()`, used by `useCapability()` hook.
-- [ ] **Local component state:** search input value, notification panel open/closed, command palette open/closed.
-- [ ] No API data duplicated in Zustand.
+- [x] **Local component state:** search input value, notification panel open/closed, command palette open/closed.
+- [x] No API data duplicated in Zustand.
 
 ### Mutations
 
-- [ ] `useLogin()` — fetches CSRF cookie first (`GET /sanctum/csrf-cookie`), then `POST /v1/iam/auth/login`; on success invalidates `queryKeys.auth.me` and redirects. No token is saved on the client.
-- [ ] `useLogout()` — `POST /v1/iam/auth/logout`; on success clears TanStack Query cache and redirects to `/login`.
-- [ ] `useMarkNotificationRead()` — `POST /v1/notifications/{notification}/read`; on success invalidates `queryKeys.notifications.unreadCount()` and the active notification list.
-- [ ] `useMarkAllNotificationsRead()` — `POST /v1/notifications/read-all`; same invalidation as above.
-- [ ] No optimistic updates for notifications in MVP (simple invalidation is sufficient).
+- [x] `useLogin()` — fetches CSRF cookie first (`GET /sanctum/csrf-cookie`), then `POST /v1/iam/auth/login`; on success invalidates `queryKeys.auth.me` and redirects. No token is saved on the client.
+- [x] `useLogout()` — `POST /v1/iam/auth/logout`; on success clears TanStack Query cache and redirects to `/login`.
+- [x] `useMarkNotificationRead()` — `POST /v1/notifications/{notification}/read`; on success invalidates `queryKeys.notifications.unreadCount()` and the active notification list.
+- [x] `useMarkAllNotificationsRead()` — `POST /v1/notifications/read-all`; same invalidation as above.
+- [x] No optimistic updates for notifications in MVP (simple invalidation is sufficient).
 
 ### Error Handling
 
-- [ ] Global query client config: do not retry 401s; redirect to `/login` and clear cache.
-- [ ] 403: show inline "no permission" state or hide the action (do not block navigation client-side).
-- [ ] 500 / network error: inline error state with retry button.
-- [ ] Login form: validation errors inline; authentication failure shown as a non-dismissible alert.
-- [ ] `ApiRequestError` class handles structured backend errors per `coding-standards.md`.
+- [x] Global query client config: do not retry 401s; redirect to `/login` and clear cache.
+- [x] 403: show inline "no permission" state or hide the action (do not block navigation client-side).
+- [x] 500 / network error: inline error state with retry button.
+- [x] Login form: validation errors inline via `FieldError`; API errors shown via `toast.error()` with `richColors`.
+- [x] `ApiRequestError` class handles structured backend errors per `coding-standards.md`.
 
 ---
 
@@ -219,20 +223,23 @@ search: {
 
 | Component | Type | Source | Notes |
 |-----------|------|--------|-------|
-| `LoginPage` | Server | Page | `app/(auth)/login/page.tsx` |
+| `LoginPage` | Client | Page | `app/(auth)/login/page.tsx` (needs `useCurrentUser()` for auth redirect) |
 | `LoginForm` | Client | Component | `components/domain/auth/login-form.tsx` |
 | `DashboardLayout` | Server | Layout | `app/(dashboard)/layout.tsx` — shell wrapper |
-| `Sidebar` | Client | Domain | `components/domain/shell/sidebar.tsx` — nav + user footer |
-| `SidebarNavItem` | Client | Domain | individual nav link with active state |
-| `TopBar` | Client | Domain | `components/domain/shell/top-bar.tsx` — title, search, actions |
+| `AppSidebar` | Client | Domain | `components/domain/shell/app-sidebar.tsx` — nav + user footer |
+| `SidebarNavItem` | Client | Domain | individual nav link with active state (via `NavMain`) |
+| `SiteHeader` | Client | Domain | `components/domain/shell/site-header.tsx` — title, search, actions |
 | `GlobalSearch` | Client | Domain | command palette using shadcn Command |
 | `NotificationBell` | Client | Domain | bell + unread count badge |
 | `NotificationPanel` | Client | Domain | dropdown/panel listing notifications |
 | `NotificationItem` | Client | Domain | single notification row |
 | `LocaleToggle` | Client | Shared | AR/EN switcher |
-| `ThemeToggle` | Client | Shared | Light/Dark/System switcher |
+| `ModeToggle` | Client | Shared | `components/theme-toggle.tsx` — Light/Dark/System switcher |
 | `BrandColorToggle` | Client | Shared | primary brand color picker |
 | `BrandColorProvider` | Client | Domain | injects `--color-primary` from `useBrandColorStore` |
+| `LocaleProvider` | Client | Domain | `components/locale-provider.tsx` — syncs Zustand store with server locale |
+| `NavMain` | Client | Domain | `components/domain/shell/nav-main.tsx` — Link-based nav items with active state |
+| `NavUser` | Client | Domain | `components/domain/shell/nav-user.tsx` — avatar + logout |
 | `UserMenu` | Client | Domain | avatar + name + logout |
 | `PageHeader` | Client | Shared | title + optional actions |
 | `EmptyState` | Client | Shared | icon + headline + CTA |
@@ -263,35 +270,35 @@ search: {
 
 ### RTL Considerations
 
-- [ ] All layout uses logical properties: `ms-` / `me-`, `ps-` / `pe-`, `text-start` / `text-end`, `border-s` / `border-e`.
-- [ ] Sidebar uses `border-e border-white/5`; in RTL the border appears on the left edge of the sidebar.
-- [ ] Directional icons flip with `rtl:rotate-180`: chevrons, arrows, logout/log-in icons.
-- [ ] Command palette and dropdowns align to the logical start/end of their triggers.
-- [ ] Page title and text align `text-start`; numeric counters align `text-end`.
-- [ ] Breadcrumb separator icon flips in RTL.
+- [x] All layout uses logical properties: `ms-` / `me-`, `ps-` / `pe-`, `text-start` / `text-end`, `border-s` / `border-e`.
+- [x] Sidebar uses `border-e border-white/5`; in RTL the border appears on the left edge of the sidebar.
+- [x] Directional icons flip with `rtl:rotate-180`: chevrons, arrows, logout/log-in icons.
+- [x] Command palette and dropdowns align to the logical start/end of their triggers.
+- [x] Page title and text align `text-start`; numeric counters align `text-end`.
+- [x] Breadcrumb separator icon flips in RTL.
 
 ### Accessibility
 
-- [ ] Skip link to `#main-content` is the first focusable element in the dashboard layout.
-- [ ] All interactive elements show visible focus rings (`focus-visible:ring-2`).
-- [ ] Icon-only buttons have `aria-label` in the active locale.
-- [ ] Sidebar navigation uses `<nav aria-label="...">` and `aria-current="page"` for the active route.
-- [ ] Notification bell announces count changes via `aria-live="polite"`.
-- [ ] Search palette traps focus and closes on `Escape`.
-- [ ] Notification panel closes on `Escape` and returns focus to the bell.
-- [ ] Form fields have associated `<label>`; errors linked via `aria-describedby`.
-- [ ] Touch targets ≥ 44px on mobile.
-- [ ] `prefers-reduced-motion` disables hover lifts and skeleton pulse.
+- [x] Skip link to `#main-content` is the first focusable element in the dashboard layout.
+- [x] All interactive elements show visible focus rings (`focus-visible:ring-2`).
+- [x] Icon-only buttons have `aria-label` in the active locale.
+- [x] Sidebar navigation uses `<nav aria-label="...">` and `aria-current="page"` for the active route.
+- [x] Notification bell announces count changes via `aria-live="polite"`.
+- [x] Search palette traps focus and closes on `Escape`.
+- [x] Notification panel closes on `Escape` and returns focus to the bell.
+- [x] Form fields have associated `<label>`; errors linked via `aria-describedby`.
+- [x] Touch targets ≥ 44px on mobile.
+- [x] `prefers-reduced-motion` disables hover lifts and skeleton pulse.
 
 ### Animation
 
-- [ ] Card/surface hover: `transition-all duration-200`.
-- [ ] Button press: `active:scale-[0.98]`.
-- [ ] Mobile sidebar sheet: slide-in from start edge.
-- [ ] Command palette: `animate-in fade-in` overlay + `animate-in zoom-in-95` content.
-- [ ] Notification panel: `animate-in slide-in-from-top-2`.
-- [ ] Unread dot: subtle pulse when count increases.
-- [ ] Respect `prefers-reduced-motion` for all animations.
+- [x] Card/surface hover: `transition-all duration-200`.
+- [x] Button press: `active:scale-[0.98]`.
+- [x] Mobile sidebar sheet: slide-in from start edge.
+- [x] Command palette: `animate-in fade-in` overlay + `animate-in zoom-in-95` content.
+- [x] Notification panel: `animate-in slide-in-from-top-2`.
+- [x] Unread dot: subtle pulse when count increases.
+- [x] Respect `prefers-reduced-motion` for all animations.
 
 ---
 
@@ -299,19 +306,20 @@ search: {
 
 ### Performance
 
-- [ ] Heavy search palette component lazy-loaded with `next/dynamic`.
-- [ ] Notification count polled at 60s intervals; no real-time websocket in MVP.
-- [ ] `next/image` used for user avatar.
-- [ ] Brand color injection reads from localStorage via Zustand `persist`; no API call required.
-- [ ] Limit concurrent glass surfaces in the shell to the sidebar + top bar only.
+- [x] Heavy search palette component lazy-loaded with `next/dynamic`.
+- [x] Notification count fetched on page load (no polling) and refetched after `staleTime: 5min`; no real-time websocket in MVP.
+- [x] `next/image` used for user avatar.
+- [x] Brand color injection reads from localStorage via Zustand `persist`; no API call required.
+- [x] Limit concurrent glass surfaces in the shell to the sidebar + top bar only.
 
 ### Security
 
-- [ ] No auth tokens in `localStorage`/`sessionStorage`; rely on HttpOnly session cookie + Sanctum.
-- [ ] CSRF token fetched before login and included on mutating requests.
-- [ ] Tenant resolution via `X-Tenant` header on every request, extracted from browser hostname subdomain (`{tenant}.momentum.test` → send `mof` as `X-Tenant`). Falls back to `NEXT_PUBLIC_DEFAULT_TENANT` env var in development.
-- [ ] Capability checks hide admin nav item; server enforces 403 regardless.
-- [ ] No PII in URLs or console logs.
+- [x] No auth tokens in `localStorage`/`sessionStorage`; rely on HttpOnly session cookie + Sanctum.
+- [x] CSRF token fetched before login and included on mutating requests.
+- [x] Tenant resolution via `X-Tenant` header on every request, extracted from browser hostname subdomain (`{tenant}.momentum.test` → send `mof` as `X-Tenant`). Falls back to `NEXT_PUBLIC_DEFAULT_TENANT` env var in development.
+- [x] Locale sent via `X-Locale` header on every request (from `NEXT_LOCALE` cookie). Backend middleware `SetLocaleFromHeader` calls `app()->setLocale()`.
+- [x] Capability checks hide admin nav item; server enforces 403 regardless.
+- [x] No PII in URLs or console logs.
 
 ---
 
@@ -337,7 +345,7 @@ search: {
 - [x] **Theme & brand color:** Theme mode (Light/Dark/System) and primary brand color are both per-visitor preferences persisted locally; they are independent of tenant settings.
 - [x] **Capability list source:** Fetch capabilities from `GET /v1/iam/users/{user_public_id}/capabilities` after `useCurrentUser()` returns; populate `useCapabilityStore`.
 - [x] **Impersonation flow:** Platform admin impersonation uses `Authorization: Bearer` 1hr tokens, but the UI is out of scope for F1 / core shell.
-- [x] **Brand color palette:** The allowed set of primary brand colors is confirmed: emerald (default), blue, purple, teal, rose.
+- [x] **Brand color palette:** The allowed set of primary brand colors is confirmed: amber (default), blue, emerald, rose, slate.
 - [x] **Per-account vs. per-browser persistence:** Persistence will remain strictly per-browser via localStorage for MVP. A backend user-preference API is deferred to `004-user-settings-delegation`.
 ---
 

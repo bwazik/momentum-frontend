@@ -14,11 +14,15 @@ export const queryKeys = {
   },
   notifications: {
     all: ['notifications'] as const,
-    list: (filter?: string) => [...queryKeys.notifications.all, 'list', filter] as const,
+    lists: () => [...queryKeys.notifications.all, 'list'] as const,
+    list: (filters: Record<string, unknown>) => [...queryKeys.notifications.lists(), filters] as const,
     unreadCount: () => [...queryKeys.notifications.all, 'unread-count'] as const,
   },
   auth: {
     me: ['auth', 'me'] as const,
-    capabilities: ['auth', 'capabilities'] as const,
+    capabilities: (userPublicId: string) => ['auth', 'capabilities', userPublicId] as const,
+  },
+  tenant: {
+    info: ['tenant', 'info'] as const,
   },
 } as const;

@@ -58,7 +58,7 @@ This repo is **Next.js only**. Laravel API lives in `../backend/`.
 | Auth | Sanctum SPA cookies (same-origin) |
 | Forms | shadcn Field + InputGroup (nova) |
 | CI/CD | GitHub Actions → VPS on merge to `main` |
-| i18n | Arabic RTL (default) + English LTR |
+| i18n | next-intl v4 (messages/{locale}.json), cookie-based locale, X-Locale header for backend |
 
 ---
 
@@ -93,10 +93,10 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 
 ## Current Focus
 
-**Milestone F0 — Scaffold & Design System** (pre-implementation)
-**Next UI spec:** waits on backend `001-platform-tenancy` API stable for admin surfaces
+**Milestone F2 — Task board & task details** (in progress)
+**Active spec:** `003-task-board`
 
-No active frontend spec in progress until Next.js scaffold exists.
+**Next UI spec:** `004-task-details` (waits on backend `005-task-execution` API stable)
 
 ---
 

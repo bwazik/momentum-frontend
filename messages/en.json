@@ -1,0 +1,98 @@
+{
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "email_placeholder": "name@domain.com",
+      "password": "Password",
+      "password_placeholder": "********",
+      "email_invalid": "Invalid email",
+      "password_required": "Password is required",
+      "submit": "Login",
+      "submitting": "Logging in...",
+      "error": "Login failed. Check your email and password.",
+      "success": "Logged in successfully",
+      "forgot_password": "Forgot password?",
+      "forgot_password_toast": "Please contact your platform admin",
+      "no_account": "Don't have an account?",
+      "sign_up": "Sign up",
+      "terms_prefix": "By continuing, you agree to our",
+      "terms": "Terms of Service",
+      "terms_and": "and",
+      "privacy": "Privacy Policy"
+    },
+    "logout": "Log out",
+    "theme": "Theme",
+    "brand_color": "Brand Color"
+  },
+  "locale": {
+    "switch_to_english": "Switch to English",
+    "switch_to_arabic": "التبديل إلى العربية"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "tasks": "Tasks",
+    "blueprints": "Blueprints",
+    "analytics": "Analytics",
+    "follow_up": "Follow-up",
+    "organization": "Organization",
+    "admin": "Administration",
+    "no_permission": "You do not have permission",
+    "quick_create": "Quick Create",
+    "inbox": "Inbox"
+  },
+  "shell": {
+    "search_placeholder": "Search...",
+    "page_titles": {
+      "dashboard": "Dashboard",
+      "tasks": "Tasks",
+      "blueprints": "Blueprints",
+      "analytics": "Analytics",
+      "follow_up": "Follow-up",
+      "organization": "Organization",
+      "admin": "Administration"
+    },
+    "skip_to_main": "Skip to main content",
+    "brand_color": "Choose primary color",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "placeholder": {
+    "dashboard": "Dashboard — Under Development",
+    "tasks": "Tasks — Under Development",
+    "blueprints": "Blueprints — Under Development",
+    "analytics": "Analytics — Under Development",
+    "follow_up": "Follow-up — Under Development",
+    "organization": "Organization — Under Development",
+    "admin": "Administration — Under Development"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "mark_all_read": "Mark all as read",
+    "empty": "No notifications",
+    "empty_description": "Notifications will appear here",
+    "load_more": "Load more",
+    "loading": "Loading..."
+  },
+  "search": {
+    "trigger": "Search...",
+    "placeholder": "Search for a task...",
+    "recent": "Recent Activity",
+    "results": "Search Results",
+    "no_results": "No results",
+    "no_results_for": "No results for \"{query}\"",
+    "no_recent": "No recent activity"
+  },
+  "colors": {
+    "amber": "Amber",
+    "blue": "Blue",
+    "emerald": "Emerald",
+    "rose": "Rose",
+    "slate": "Slate"
+  },
+  "shared": {
+    "error": "An error occurred. Please try again.",
+    "retry": "Retry"
+  }
+}

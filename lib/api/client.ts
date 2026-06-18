@@ -1,4 +1,15 @@
-import type { ApiError } from '@/lib/generated/api-types';
+import { getTenantSlug } from '@/lib/utils/tenant';
+
+function getLocaleSlug(): string {
+  if (typeof document === 'undefined') return 'ar';
+  const match = document.cookie.match(/NEXT_LOCALE=([^;]+)/);
+  return match ? match[1] : 'ar';
+}
+
+interface ApiErrorResponse {
+  message: string;
+  errors?: Record<string, string[]>;
+}
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test';
 
@@ -31,6 +42,8 @@ async function request<T>(
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'X-Tenant': getTenantSlug(),
+    'X-Locale': getLocaleSlug(),
     ...options?.headers,
   };
 
@@ -47,7 +60,7 @@ async function request<T>(
   });
 
   if (!response.ok) {
-    const error: ApiError = await response.json().catch(() => ({
+    const error: ApiErrorResponse = await response.json().catch(() => ({
       message: response.statusText,
     }));
     throw new ApiRequestError(response.status, error);
@@ -74,7 +87,7 @@ export const apiClient = {
 export class ApiRequestError extends Error {
   constructor(
     public status: number,
-    public error: ApiError,
+    public error: ApiErrorResponse,
   ) {
     super(error.message);
     this.name = 'ApiRequestError';
