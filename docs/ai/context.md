@@ -94,9 +94,9 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 ## Current Focus
 
 **Milestone F2 — Task board & task details** (in progress)
-**Active spec:** `003-task-board`
+**Active spec:** `003-task-board` ✅
 
-**Next UI spec:** `004-task-details` (waits on backend `005-task-execution` API stable)
+**Next UI spec:** `004-task-details`
 
 ---
 

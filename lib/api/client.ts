@@ -33,9 +33,18 @@ async function request<T>(
 
   if (options?.params) {
     Object.entries(options.params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        url.searchParams.set(key, String(value));
+      if (value === undefined || value === null || value === '') return;
+
+      if (Array.isArray(value)) {
+        value.forEach((item) => {
+          if (item !== undefined && item !== null && item !== '') {
+            url.searchParams.append(key, String(item));
+          }
+        });
+        return;
       }
+
+      url.searchParams.set(key, String(value));
     });
   }
 

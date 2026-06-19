@@ -94,5 +94,77 @@
   "shared": {
     "error": "حدث خطأ. يرجى المحاولة مرة أخرى.",
     "retry": "إعادة المحاولة"
+  },
+  "tasks": {
+    "board": {
+      "title": "لوحة المهام",
+      "description": "تتبع العمل النشط، ومخاطر SLA، والمكلفين الحاليين.",
+      "error": "تعذر تحميل المهام.",
+      "empty_title": "لا توجد مهام",
+      "empty_description": "عدل الفلاتر أو أعد تعيين اللوحة.",
+      "load_more": "تحميل المزيد",
+      "loading_more": "جاري التحميل...",
+      "reset_filters": "إعادة تعيين الفلاتر",
+      "no_permission_title": "ليس لديك صلاحية",
+      "no_permission_description": "ليس لديك صلاحية لعرض لوحة المهام.",
+      "filters": {
+        "active": "نشط",
+        "mine": "مهامي",
+        "overdue": "متأخر",
+        "at_risk": "قريب من الموعد",
+        "suspended": "معلق",
+        "all": "الكل",
+        "reset": "إعادة تعيين",
+        "search": "بحث",
+        "search_placeholder": "ابحث عن مهمة...",
+        "sort_by": "ترتيب حسب",
+        "sort_time_at_stage": "الوقت في المرحلة",
+        "sort_priority": "الأولوية",
+        "sort_due_date": "تاريخ الاستحقاق",
+        "sort_created_at": "تاريخ الإنشاء",
+        "sort_department": "القسم",
+        "sort_stage_type": "نوع المرحلة",
+        "sort_asc": "تصاعدي",
+        "sort_desc": "تنازلي"
+      },
+      "columns": {
+        "task": "المهمة",
+        "status": "الحالة",
+        "priority": "الأولوية",
+        "stage": "المرحلة",
+        "assignees": "المكلفون",
+        "department": "القسم",
+        "sla": "SLA",
+        "due_date": "تاريخ الاستحقاق",
+        "time_in_stage": "الوقت في المرحلة",
+        "actions": "الإجراءات",
+        "table_label": "لوحة المهام",
+        "row_actions": "إجراءات الصف",
+        "open_details": "عرض التفاصيل",
+        "copy_link": "نسخ الرابط",
+        "link_copied": "تم نسخ الرابط",
+        "copy_failed": "فشل نسخ الرابط"
+      },
+      "sla": {
+        "green": "في الموعد",
+        "amber": "قريب من الموعد",
+        "red": "متأخر",
+        "grey": "معلق"
+      },
+      "status": {
+        "draft": "مسودة",
+        "active": "نشط",
+        "suspended": "معلق",
+        "completed": "مكتمل",
+        "cancelled": "ملغي"
+      },
+      "priority": {
+        "unknown": "غير معروف"
+      },
+      "classification": {
+        "internal": "داخلي",
+        "confidential": "سري"
+      }
+    }
   }
 }

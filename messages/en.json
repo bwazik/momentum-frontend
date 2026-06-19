@@ -94,5 +94,77 @@
   "shared": {
     "error": "An error occurred. Please try again.",
     "retry": "Retry"
+  },
+  "tasks": {
+    "board": {
+      "title": "Task Board",
+      "description": "Track active work, SLA risk, and current assignees.",
+      "error": "Unable to load tasks.",
+      "empty_title": "No tasks found",
+      "empty_description": "Adjust filters or reset the board.",
+      "load_more": "Load more",
+      "loading_more": "Loading...",
+      "reset_filters": "Reset filters",
+      "no_permission_title": "No permission",
+      "no_permission_description": "You do not have permission to view the task board.",
+      "filters": {
+        "active": "Active",
+        "mine": "My Tasks",
+        "overdue": "Overdue",
+        "at_risk": "At Risk",
+        "suspended": "Suspended",
+        "all": "All",
+        "reset": "Reset",
+        "search": "Search",
+        "search_placeholder": "Search tasks...",
+        "sort_by": "Sort by",
+        "sort_time_at_stage": "Time at stage",
+        "sort_priority": "Priority",
+        "sort_due_date": "Due date",
+        "sort_created_at": "Created date",
+        "sort_department": "Department",
+        "sort_stage_type": "Stage type",
+        "sort_asc": "Ascending",
+        "sort_desc": "Descending"
+      },
+      "columns": {
+        "task": "Task",
+        "status": "Status",
+        "priority": "Priority",
+        "stage": "Stage",
+        "assignees": "Assignees",
+        "department": "Department",
+        "sla": "SLA",
+        "due_date": "Due Date",
+        "time_in_stage": "Time In Stage",
+        "actions": "Actions",
+        "table_label": "Task board",
+        "row_actions": "Row actions",
+        "open_details": "Open Details",
+        "copy_link": "Copy Link",
+        "link_copied": "Link copied",
+        "copy_failed": "Failed to copy link"
+      },
+      "sla": {
+        "green": "On Track",
+        "amber": "At Risk",
+        "red": "Overdue",
+        "grey": "Suspended"
+      },
+      "status": {
+        "draft": "Draft",
+        "active": "Active",
+        "suspended": "Suspended",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "priority": {
+        "unknown": "Unknown"
+      },
+      "classification": {
+        "internal": "Internal",
+        "confidential": "Confidential"
+      }
+    }
   }
 }

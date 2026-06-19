@@ -6,8 +6,9 @@
 
 ## Current Focus
 
-**Phase:** F2 — Task board & task details (in progress)
-**Active spec:** `003-task-board`
+**Phase:** F2 — Task board & task details
+**Active spec:** `004-task-details`
+**Next:** `005-blueprint-builder`
 
 ---
 
@@ -17,7 +18,7 @@
 |-------|------|--------|------------------|
 | F0 | Scaffold & design system | ✅ Done | — |
 | F1 | App shell, auth, i18n/RTL | ✅ Done | M2 backend (IAM) |
-| F2 | Task board & task details | 🔄 In Progress | M4 backend |
+| F2 | Task board & task details | ✅ Done (003) / 🔄 In Progress (004) | M4 backend |
 | F3 | Blueprint builder | ⬜ Not Started | M3 backend |
 | F4 | Follow-up & workflow viz | ⬜ Not Started | M4–M5 backend |
 | F5 | Dashboards & analytics | ⬜ Not Started | M6 backend |
@@ -33,7 +34,7 @@
 |------|-----------|--------|------------------------|--------|
 | `001-core-shell` | F1 | Core | `003-iam-abac`, `008-notifications`, `011-search-discovery` | ✅ |
 | `002-executive-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
-| `003-task-board` | F2 | Tasks | `005-task-execution`, `014` | ⬜ |
+| `003-task-board` | F2 | Tasks | `005-task-execution`, `014` | ✅ |
 | `004-task-details` | F2 | Tasks | `005`, `006`, `012`, `013` | ⬜ |
 | `005-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ⬜ |
 | `006-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ⬜ |
@@ -107,6 +108,38 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Error states:** All data-fetching components handle loading (skeleton), error (retry button), empty (icon + message), success
 
 ---
+
+---
+
+## F2 — Task Board & Task Details
+
+**Status:** 🔄 In Progress (`003-task-board` ✅, `004-task-details` ⬜)
+
+**Active spec:** `004-task-details`
+
+**Completed (003):**
+- `/tasks` route with breadcrumb + description inside dashboard shell ✅
+- `useTaskBoardInfinite()` cursor-paginated board via `GET /v1/follow-up/board` ✅
+- URL-driven filters (ToggleGroup quick filters, search with 300ms debounce, sort Select + direction toggle) ✅
+- Hybrid enterprise table: SLA, rich Task cell, Stage+Department, stacked avatar assignees, Time In Stage+Due Date, Actions dropdown ✅
+- Mobile card list with matching information hierarchy ✅
+- SlaBadge, TaskStatusBadge, PriorityBadge (colored dot), ClassificationBadge (icon+text) ✅
+- Visual hierarchy: SLA owns color, everything else neutral/outline ✅
+- Row accent border derived from SLA health, not status ✅
+- All 4 states: loading skeleton, empty, error (with retry), 403, success ✅
+- RTL: logical properties, breadcrumb `rtl:rotate-180`, conditional dropdown alignment ✅
+- Dark mode: `dark:` variants on all badge colors and row borders ✅
+- Global `cursor-pointer` added to base components (button/toggle/select/dropdown-menu/command/sidebar) ✅
+- OpenAPI type regeneration on backend contract changes ✅
+- 69 tests across utils, badges, board states ✅
+
+**Established by 003:**
+- **Board layout:** 6-column hybrid enterprise table (SLA, Task, Stage+Dept, Assignees, Time In Stage, Actions) with SLA-derived row accents and stacked avatar assignees
+- **Visual hierarchy principle:** One row = one dominant color signal. SLA owns color; status/priority/classification use neutral/outline styles
+- **Cursor-pointer:** Handled globally in base UI components (`button.tsx`, `toggle.tsx`, `select.tsx`, `dropdown-menu.tsx`, `command.tsx`, `sidebar.tsx`) — no per-instance overrides needed
+- **Row borders on `<td>`:** Side borders (`border-s-4`) on `<td>` not `<tr>` — `<tr>` doesn't render side borders in standard table layout
+- **Select scroll lock:** Radix `Select.Content` with `position="popper"` applies `body[data-scroll-locked]` CSS — avoided by using default `item-aligned` positioning
+- **Badge color system:** SLA (emerald/amber/red/slate) keeps full color; Status (blue/orange/teal/rose/zinc) uses neutral outline; Priority (fuchsia/yellow) uses neutral bg + colored dot; Classification (lime/purple) uses plain text + icon
 
 ## Dependency Map
 

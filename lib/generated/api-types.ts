@@ -105,6 +105,8 @@ export interface paths {
                         "application/json": {
                             tenant: {
                                 public_id: string;
+                                name_ar: string;
+                                name_en: string;
                             };
                         };
                     };
@@ -2308,6 +2310,8 @@ export interface components {
                 public_id: string;
                 name_ar: string;
                 name_en: string;
+                severity_rank: string;
+                color_code: string;
             } | null;
             classification_level: string;
             current_stage: {
