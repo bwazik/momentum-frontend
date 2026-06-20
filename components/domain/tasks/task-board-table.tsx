@@ -2,7 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
+import { useQueryClient } from '@tanstack/react-query';
 import { Ellipsis, ExternalLink, Copy } from 'lucide-react';
+import { copyTaskLink, copyToClipboard } from '@/components/shared/copy-link-button';
 import {
   Table,
   TableBody,
@@ -19,7 +21,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
 import {
   Avatar,
   AvatarFallback,
@@ -32,6 +33,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+import { queryKeys } from '@/lib/api/query-keys';
+import { apiClient } from '@/lib/api/client';
 import type { BoardTaskResource } from './task-board-types';
 import {
   SlaBadge,
@@ -61,6 +64,14 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('tasks.board.columns');
+  const queryClient = useQueryClient();
+
+  function handleRowHover(publicId: string) {
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.tasks.detail(publicId),
+      queryFn: () => apiClient.get(`/v1/tasks/${publicId}`),
+    });
+  }
 
   function handleRowClick(publicId: string) {
     router.push(`/tasks/${publicId}`);
@@ -70,16 +81,6 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       router.push(`/tasks/${publicId}`);
-    }
-  }
-
-  function handleCopyLink(publicId: string) {
-    const url = `${window.location.origin}/tasks/${publicId}`;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url);
-      toast.success(t('link_copied'));
-    } else {
-      toast.error(t('copy_failed'));
     }
   }
 
@@ -107,9 +108,10 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
               className="cursor-pointer"
               onClick={() => handleRowClick(task.public_id)}
               onKeyDown={(event) => handleRowKeyDown(event, task.public_id)}
+              onMouseEnter={() => handleRowHover(task.public_id)}
             >
               <TableCell className={cn('text-start', borderColor)}>
-                <SlaBadge health={task.sla_health} />
+                <SlaBadge health={task.sla_health} status={task.status} />
               </TableCell>
               <TableCell className="text-start">
                 <div className="flex flex-col gap-0.5">
@@ -171,14 +173,14 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
               <TableCell className="text-start align-top">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm">
-                    {formatTimeInStage(task.time_at_current_stage_seconds)}
+                    {formatTimeInStage(task.time_at_current_stage_seconds, locale)}
                   </span>
                   {task.due_date && (
                     <span className={cn(
                       'text-xs text-muted-foreground',
-                      formatDueDate(task.due_date).includes('overdue') && 'font-semibold',
+                      formatDueDate(task.due_date, locale).includes('overdue') && 'font-semibold',
                     )}>
-                      {formatDueDate(task.due_date)}
+                      {formatDueDate(task.due_date, locale)}
                     </span>
                   )}
                 </div>
@@ -210,7 +212,7 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
                       className="whitespace-nowrap"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleCopyLink(task.public_id);
+                        copyToClipboard(copyTaskLink(task.public_id), t('link_copied'), t('copy_failed'));
                       }}
                     >
                       <Copy className="me-2 size-4" />

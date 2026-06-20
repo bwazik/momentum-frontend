@@ -183,4 +183,200 @@ export const handlers = [
       has_more: false,
     });
   }),
+
+  http.get('https://api.momentum.test/v1/tasks/:publicId', () => {
+    return HttpResponse.json({
+      public_id: 'TASK-001',
+      display_id: 'T-2026-0001',
+      title_ar: 'مهمة اختبار',
+      title_en: 'Test Task Detail',
+      description_ar: 'وصف المهمة',
+      description_en: 'Task description',
+      status: 'active',
+      priority: {
+        public_id: 'prio-1',
+        name_ar: 'عالية',
+        name_en: 'High',
+        severity_rank: 'critical',
+      },
+      classification_level: 'public',
+      initiator_id: 'user-init-1',
+      initiator_name_ar: 'المبادر',
+      initiator_name_en: 'Initiator',
+      created_at: '2026-06-01T10:00:00Z',
+      due_date: '2026-07-01T10:00:00Z',
+      blueprint: {
+        public_id: 'bp-1',
+        name_ar: 'نموذج اختبار',
+        name_en: 'Test Blueprint',
+      },
+      stages: [
+        {
+          instance_id: 'stage-inst-1',
+          blueprint_stage: {
+            public_id: 'bp-stage-1',
+            name_ar: 'مرحلة التقديم',
+            name_en: 'Submission Stage',
+          },
+          status: 'completed',
+          entered_at: '2026-06-01T10:00:00Z',
+          exited_at: '2026-06-03T10:00:00Z',
+          assignments: [
+            { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: '1', reassigned_at: null },
+          ],
+          sub_stages: [],
+          completion_note: 'Initial submission done',
+          return_reason: null,
+        },
+        {
+          instance_id: 'stage-inst-2',
+          blueprint_stage: {
+            public_id: 'bp-stage-2',
+            name_ar: 'مرحلة المراجعة',
+            name_en: 'Review Stage',
+          },
+          status: 'active',
+          entered_at: '2026-06-03T10:00:00Z',
+          exited_at: null,
+          assignments: [
+            { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: '0', reassigned_at: null },
+          ],
+          department_name_ar: 'تقنية المعلومات',
+          department_name_en: 'IT',
+          sub_stages: [
+            {
+              instance_id: 'sub-stage-inst-1',
+              blueprint_sub_stage: {
+                public_id: 'bp-sub-1',
+                name_ar: 'مراجعة أولية',
+                name_en: 'Initial Review',
+              },
+              status: 'completed',
+              entered_at: '2026-06-03T10:00:00Z',
+              exited_at: '2026-06-04T10:00:00Z',
+              assignments: [
+                { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: '1', reassigned_at: null },
+              ],
+              completion_note: 'Reviewed',
+              return_reason: null,
+            },
+            {
+              instance_id: 'sub-stage-inst-2',
+              blueprint_sub_stage: {
+                public_id: 'bp-sub-2',
+                name_ar: 'اعتماد نهائي',
+                name_en: 'Final Approval',
+              },
+              status: 'active',
+              entered_at: '2026-06-04T10:00:00Z',
+              exited_at: null,
+              assignments: [
+                { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: '0', reassigned_at: null },
+              ],
+              completion_note: null,
+              return_reason: null,
+            },
+          ],
+          completion_note: null,
+          return_reason: null,
+        },
+        {
+          instance_id: 'stage-inst-3',
+          blueprint_stage: {
+            public_id: 'bp-stage-3',
+            name_ar: 'مرحلة الاعتماد',
+            name_en: 'Approval Stage',
+          },
+          status: 'pending',
+          entered_at: null,
+          exited_at: null,
+          assignments: [],
+          sub_stages: [],
+          completion_note: null,
+          return_reason: null,
+        },
+      ],
+    });
+  }),
+
+  http.get('https://api.momentum.test/v1/tracking/sla/tasks/:publicId', () => {
+    return HttpResponse.json({
+      overall_health: 'on_track',
+      timers: [
+        {
+          stage_instance_id: 'stage-inst-2',
+          sub_stage_instance_id: '',
+          deadline_at: '2026-06-13T10:00:00Z',
+          warning_at: '2026-06-10T10:00:00Z',
+          status: '1',
+        },
+      ],
+    });
+  }),
+
+  http.get('https://api.momentum.test/v1/tasks/:publicId/timeline', () => {
+    return HttpResponse.json([
+      {
+        type: 'stage_entered',
+        user_name_ar: 'أحمد',
+        user_name_en: 'Ahmed',
+        stage_name_ar: 'مرحلة التقديم',
+        stage_name_en: 'Submission Stage',
+        parent_stage_name_ar: null,
+        parent_stage_name_en: null,
+        timestamp: '2026-06-01T10:00:00Z',
+        completion_note: null,
+        return_reason: null,
+        reassignment_reason: null,
+      },
+      {
+        type: 'stage_completed',
+        user_name_ar: 'أحمد',
+        user_name_en: 'Ahmed',
+        stage_name_ar: 'مرحلة التقديم',
+        stage_name_en: 'Submission Stage',
+        parent_stage_name_ar: null,
+        parent_stage_name_en: null,
+        timestamp: '2026-06-03T10:00:00Z',
+        completion_note: 'Initial submission done',
+        return_reason: null,
+        reassignment_reason: null,
+      },
+      {
+        type: 'stage_entered',
+        user_name_ar: 'أحمد',
+        user_name_en: 'Ahmed',
+        stage_name_ar: 'مرحلة المراجعة',
+        stage_name_en: 'Review Stage',
+        parent_stage_name_ar: null,
+        parent_stage_name_en: null,
+        timestamp: '2026-06-03T10:00:00Z',
+        completion_note: null,
+        return_reason: null,
+        reassignment_reason: null,
+      },
+    ]);
+  }),
+
+  http.get('https://api.momentum.test/v1/blueprints/:blueprintId/transitions', () => {
+    return HttpResponse.json([
+      {
+        transition_type: '2',
+        from_stage_id: 'bp-stage-2',
+        to_stage_id: 'bp-stage-1',
+        return_reason_required: true,
+      },
+    ]);
+  }),
+
+  http.get('https://api.momentum.test/v1/iam/users', () => {
+    return HttpResponse.json({
+      data: [
+        { public_id: 'user-2', name_ar: 'سارة', name_en: 'Sarah' },
+        { public_id: 'user-3', name_ar: 'محمد', name_en: 'Mohammed' },
+      ],
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
 ];

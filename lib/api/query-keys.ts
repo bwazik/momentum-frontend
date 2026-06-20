@@ -5,6 +5,9 @@ export const queryKeys = {
     list: (filters: Record<string, unknown>) => [...queryKeys.tasks.lists(), filters] as const,
     details: () => [...queryKeys.tasks.all, 'detail'] as const,
     detail: (publicId: string) => [...queryKeys.tasks.details(), publicId] as const,
+    slaHealth: (publicId: string) => [...queryKeys.tasks.detail(publicId), 'sla-health'] as const,
+    timeline: (publicId: string) => [...queryKeys.tasks.detail(publicId), 'timeline'] as const,
+    returns: (publicId: string) => [...queryKeys.tasks.detail(publicId), 'returns'] as const,
     priorities: () => [...queryKeys.tasks.all, 'priorities'] as const,
   },
   taskBoard: {
@@ -23,6 +26,8 @@ export const queryKeys = {
     lists: () => [...queryKeys.blueprints.all, 'list'] as const,
     list: (filters?: Record<string, unknown>) => [...queryKeys.blueprints.lists(), filters] as const,
     detail: (publicId: string) => [...queryKeys.blueprints.all, 'detail', publicId] as const,
+    transitions: (blueprintId: string) =>
+      [...queryKeys.blueprints.detail(blueprintId), 'transitions'] as const,
     categories: () => [...queryKeys.blueprints.all, 'categories'] as const,
     stageTypes: () => [...queryKeys.blueprints.all, 'stage-types'] as const,
   },
@@ -38,5 +43,11 @@ export const queryKeys = {
   },
   tenant: {
     info: ['tenant', 'info'] as const,
+  },
+  users: {
+    all: ['users'] as const,
+    lists: () => [...queryKeys.users.all, 'list'] as const,
+    list: (filters: { search: string; is_active?: number; per_page?: number }) =>
+      [...queryKeys.users.lists(), filters] as const,
   },
 } as const;

@@ -123,8 +123,8 @@ describe('getCurrentAssignees', () => {
 });
 
 describe('formatTimeInStage', () => {
-  it('returns < 1h for zero seconds', () => {
-    expect(formatTimeInStage('0')).toBe('< 1h');
+  it('returns < 1 hour for zero seconds', () => {
+    expect(formatTimeInStage('0')).toBe('< 1 hour');
   });
 
   it('returns dash for null', () => {
@@ -132,19 +132,19 @@ describe('formatTimeInStage', () => {
   });
 
   it('formats hours correctly', () => {
-    expect(formatTimeInStage('7200')).toBe('2h');
+    expect(formatTimeInStage('7200')).toBe('2 hours');
   });
 
   it('formats days and hours', () => {
-    expect(formatTimeInStage('90000')).toBe('1d 1h');
+    expect(formatTimeInStage('90000')).toBe('1 day, 1 hour');
   });
 
-  it('returns < 1h for less than an hour', () => {
-    expect(formatTimeInStage('1800')).toBe('< 1h');
+  it('returns < 1 hour for less than an hour', () => {
+    expect(formatTimeInStage('1800')).toBe('< 1 hour');
   });
 
   it('accepts numeric input', () => {
-    expect(formatTimeInStage(3600)).toBe('1h');
+    expect(formatTimeInStage(3600)).toBe('1 hour');
   });
 });
 

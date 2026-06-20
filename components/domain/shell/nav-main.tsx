@@ -23,7 +23,7 @@ export function NavMain({ items, pathname }: { items: NavItem[]; pathname: strin
         <SidebarMenu>
           {items.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.url;
+            const isActive = pathname === item.url || pathname.startsWith(item.url + '/');
             return (
               <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton asChild isActive={isActive} tooltip={item.title} className={isActive ? 'data-[active=true]:bg-primary data-[active=true]:text-primary-foreground' : ''}>

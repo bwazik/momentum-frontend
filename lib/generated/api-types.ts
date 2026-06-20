@@ -3060,6 +3060,7 @@ export interface components {
         /** TaskDetailResource */
         TaskDetailResource: {
             public_id: string;
+            display_id: string;
             blueprint?: components["schemas"]["BlueprintResource"];
             priority?: components["schemas"]["TaskPriorityResource"];
             title_ar: string;
@@ -3069,6 +3070,8 @@ export interface components {
             classification_level: string;
             status: string;
             initiator_id: string;
+            initiator_name_ar: string;
+            initiator_name_en: string;
             due_date: string;
             created_at: string;
             launched_at: string;
@@ -3111,6 +3114,7 @@ export interface components {
         /** TaskResource */
         TaskResource: {
             public_id: string;
+            display_id: string;
             blueprint_id: string;
             priority?: components["schemas"]["TaskPriorityResource"];
             title_ar: string;
@@ -3155,6 +3159,8 @@ export interface components {
         };
         /** TaskStageInstanceResource */
         TaskStageInstanceResource: {
+            instance_id: string;
+            public_id: string;
             blueprint_stage: {
                 public_id?: string;
                 name_ar?: string;
@@ -3162,6 +3168,8 @@ export interface components {
             };
             sequence_order: string;
             owning_department_id: string;
+            department_name_ar?: string;
+            department_name_en?: string;
             completion_rule: string;
             status: string;
             entered_at: string;
@@ -3178,6 +3186,7 @@ export interface components {
         TaskStatus: 1 | 2 | 3 | 4 | 5;
         /** TaskSubStageInstanceResource */
         TaskSubStageInstanceResource: {
+            instance_id: string;
             blueprint_sub_stage: {
                 public_id?: string;
                 name_ar?: string;
@@ -3199,6 +3208,8 @@ export interface components {
             timestamp: string;
             stage_name_ar: string | null;
             stage_name_en: string | null;
+            parent_stage_name_ar: string | null;
+            parent_stage_name_en: string | null;
             user_id: string | null;
             user_name_ar: string | null;
             user_name_en: string | null;
@@ -8306,7 +8317,13 @@ export interface operations {
     };
     "user.index": {
         parameters: {
-            query?: never;
+            query?: {
+                search?: string | null;
+                is_active?: boolean | null;
+                account_type?: components["schemas"]["AccountType"];
+                department_id?: string | null;
+                per_page?: number | null;
+            };
             header: {
                 /** @description Tenant slug or public ID for multi-tenant resolution. */
                 "X-Tenant": string;
@@ -8329,6 +8346,7 @@ export interface operations {
                 };
             };
             401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "user.store": {

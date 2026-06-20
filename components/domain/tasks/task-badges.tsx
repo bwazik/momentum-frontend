@@ -1,16 +1,17 @@
 'use client';
 
 import { useTranslations, useLocale } from 'next-intl';
-import { Shield, Lock } from 'lucide-react';
+import { Shield, Lock, Globe } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { localizeName } from './task-board-utils';
 
-const SLA_STYLES = {
+const SLA_STYLES: Record<string, string> = {
   green: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400',
   amber: 'bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400',
   red: 'bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-400',
   grey: 'bg-slate-50 text-slate-500 dark:bg-slate-900 dark:text-slate-400',
+  none: 'bg-muted text-muted-foreground',
 } as const;
 
 const STATUS_VARIANTS: Record<string, string> = {
@@ -27,10 +28,11 @@ const PRIORITY_DOT: Record<string, string> = {
   routine: 'bg-transparent',
 } as const;
 
-export function SlaBadge({ health }: { health?: string | null }) {
+export function SlaBadge({ health, status }: { health?: string | null; status?: string | null }) {
   const t = useTranslations('tasks.board.sla');
-  const raw = (health ?? '').toLowerCase();
-  const value = raw === 'amber' || raw === 'red' || raw === 'grey' ? raw : 'green';
+  const effective = status === 'completed' || status === 'cancelled' ? 'none' : health;
+  const raw = (effective ?? '').toLowerCase();
+  const value: string = raw === 'green' || raw === 'amber' || raw === 'red' || raw === 'grey' || raw === 'none' ? raw : 'none';
 
   return (
     <Badge
@@ -38,7 +40,9 @@ export function SlaBadge({ health }: { health?: string | null }) {
       role="status"
       className={cn('gap-1.5', SLA_STYLES[value])}
     >
-      <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
+      {value !== 'none' && (
+        <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
+      )}
       {t(value)}
     </Badge>
   );
@@ -77,19 +81,32 @@ export function PriorityBadge({ priority }: { priority?: { name_ar?: string; nam
   );
 }
 
-export function ClassificationBadge({ level }: { level?: string | null }) {
+const CLASSIFICATION_MAP: Record<string, string> = {
+  '1': 'public',
+  '2': 'internal',
+  '3': 'confidential',
+};
+
+export function ClassificationBadge({ level }: { level?: string | number | null }) {
   const t = useTranslations('tasks.board.classification');
 
-  if (level === 'public' || !level) return null;
+  const key = level != null ? (CLASSIFICATION_MAP[String(level)] ?? String(level)) : null;
+
+  const isPublic = !key || key === 'public';
 
   return (
-    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-      {level === 'confidential' ? (
+    <span className={cn(
+      'inline-flex items-center gap-1 text-xs',
+      isPublic ? 'text-muted-foreground/50' : 'text-muted-foreground',
+    )}>
+      {key === 'confidential' ? (
         <Lock className="size-3" aria-hidden="true" />
+      ) : isPublic ? (
+        <Globe className="size-3" aria-hidden="true" />
       ) : (
         <Shield className="size-3" aria-hidden="true" />
       )}
-      {t(level)}
+      {t(isPublic ? 'public' : key)}
     </span>
   );
 }

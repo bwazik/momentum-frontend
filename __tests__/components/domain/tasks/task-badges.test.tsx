@@ -51,14 +51,14 @@ describe('SlaBadge', () => {
     expect(screen.getByText('Suspended')).toBeInTheDocument();
   });
 
-  it('defaults to green for unknown health', () => {
+  it('defaults to none for unknown health', () => {
     render(<SlaBadge health="unknown" />);
-    expect(screen.getByText('On Track')).toBeInTheDocument();
+    expect(screen.getByText('none')).toBeInTheDocument();
   });
 
-  it('defaults to green for null health', () => {
+  it('defaults to none for null health', () => {
     render(<SlaBadge health={null} />);
-    expect(screen.getByText('On Track')).toBeInTheDocument();
+    expect(screen.getByText('none')).toBeInTheDocument();
   });
 });
 
@@ -117,9 +117,9 @@ describe('PriorityBadge', () => {
 });
 
 describe('ClassificationBadge', () => {
-  it('renders nothing for public level', () => {
-    const { container } = render(<ClassificationBadge level="public" />);
-    expect(container.firstChild).toBeNull();
+  it('renders public label for public level', () => {
+    render(<ClassificationBadge level="public" />);
+    expect(screen.getByText('public')).toBeInTheDocument();
   });
 
   it('renders internal label', () => {
@@ -132,8 +132,8 @@ describe('ClassificationBadge', () => {
     expect(screen.getByText('Confidential')).toBeInTheDocument();
   });
 
-  it('returns null for null level', () => {
-    const { container } = render(<ClassificationBadge level={null} />);
-    expect(container.firstChild).toBeNull();
+  it('renders public label for null level', () => {
+    render(<ClassificationBadge level={null} />);
+    expect(screen.getByText('public')).toBeInTheDocument();
   });
 });

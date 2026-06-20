@@ -2,7 +2,7 @@
 
 > **Number:** 001
 > **Date:** 2026-06-15
-> **Status:** `approved`
+> **Status:** `completed`
 > **Milestone:** F1 — Scaffold, Auth, Shell & Core
 > **Depends on:** F0 — Scaffold & Design System
 > **Backend spec:** `../backend/specs/003-iam-abac/` (auth/session), `../backend/specs/008-notifications/` (notifications center), `../backend/specs/011-search-discovery/` (global search + recent activity)

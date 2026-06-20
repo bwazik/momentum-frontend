@@ -6,9 +6,9 @@
 
 ## Current Focus
 
-**Phase:** F2 — Task board & task details
-**Active spec:** `004-task-details`
-**Next:** `005-blueprint-builder`
+**Phase:** F3 — Blueprint builder
+**Active spec:** `005-blueprint-builder`
+**Next:** `006-workflow-visualization`
 
 ---
 
@@ -18,7 +18,7 @@
 |-------|------|--------|------------------|
 | F0 | Scaffold & design system | ✅ Done | — |
 | F1 | App shell, auth, i18n/RTL | ✅ Done | M2 backend (IAM) |
-| F2 | Task board & task details | ✅ Done (003) / 🔄 In Progress (004) | M4 backend |
+| F2 | Task board & task details | ✅ Done | M4 backend |
 | F3 | Blueprint builder | ⬜ Not Started | M3 backend |
 | F4 | Follow-up & workflow viz | ⬜ Not Started | M4–M5 backend |
 | F5 | Dashboards & analytics | ⬜ Not Started | M6 backend |
@@ -35,7 +35,7 @@
 | `001-core-shell` | F1 | Core | `003-iam-abac`, `008-notifications`, `011-search-discovery` | ✅ |
 | `002-executive-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
 | `003-task-board` | F2 | Tasks | `005-task-execution`, `014` | ✅ |
-| `004-task-details` | F2 | Tasks | `005`, `006`, `012`, `013` | ⬜ |
+| `004-task-details` | F2 | Tasks | `005`, `006`, `012`, `013` | ✅ |
 | `005-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ⬜ |
 | `006-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ⬜ |
 | `007-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ⬜ |
@@ -113,9 +113,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 ## F2 — Task Board & Task Details
 
-**Status:** 🔄 In Progress (`003-task-board` ✅, `004-task-details` ⬜)
-
-**Active spec:** `004-task-details`
+**Status:** ✅ Done
 
 **Completed (003):**
 - `/tasks` route with breadcrumb + description inside dashboard shell ✅
@@ -140,6 +138,39 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Row borders on `<td>`:** Side borders (`border-s-4`) on `<td>` not `<tr>` — `<tr>` doesn't render side borders in standard table layout
 - **Select scroll lock:** Radix `Select.Content` with `position="popper"` applies `body[data-scroll-locked]` CSS — avoided by using default `item-aligned` positioning
 - **Badge color system:** SLA (emerald/amber/red/slate) keeps full color; Status (blue/orange/teal/rose/zinc) uses neutral outline; Priority (fuchsia/yellow) uses neutral bg + colored dot; Classification (lime/purple) uses plain text + icon
+
+**Completed (004):**
+- `/tasks/[publicId]` route with two-column stacked-card layout inside dashboard shell ✅
+- `useTaskDetail()`, `useTaskSlaHealth()`, `useTaskTimeline()`, `useBlueprintTransitions()`, `useUsersSearch()` hooks with generated types ✅
+- All 8 mutation hooks: `useCompleteStage`, `useCompleteSubStage`, `useReturnStage`, `useReturnSubStage`, `useOverrideAssignment`, `useSuspendTask`, `useResumeTask`, `useCancelTask` with cache invalidation + localized toast ✅
+- Query key factory extended: `tasks.slaHealth`, `tasks.timeline`, `tasks.returns`, `blueprints.transitions`, `users` namespace ✅
+- Title & Meta card with badge row (priority/classification/status/SLA), localized title, ref with `display_id`, description, copy button ✅
+- Stage Timeline: vertical `<ol>` with completed (emerald check), active (blue pulse + SLA inline + action buttons), pending (grey), returned (undo arrow + reason) nodes ✅
+- Sub-stage checklist with complete/override actions for active assignees ✅
+- Sidebar Details card with dual Hijri+Gregorian dates, stage progress by status, initiator/blueprint/department ✅
+- Sidebar Recent Activity card (last 5 events via `buildStageActivities`) + full audit trail Dialog ✅
+- CompleteStageDialog, ReturnStageDialog (pre-filtered transitions + stage name resolution), OverrideAssignmentDialog (current assignee Select + debounced user combobox) ✅
+- TaskLifecycleDialog (AlertDialog for suspend/cancel with required reason) ✅
+- TaskTopBarActions in PageHeader (suspend/resume/cancel/advance, capability-gated) ✅
+- Board row/card hover prefetch for task detail ✅
+- Breadcrumb moved to SiteHeader with pathname-based auto-resolution + `rtl:rotate-180` chevrons ✅
+- `PageHeader` shared component (title + description + actions) ✅
+- i18n: ~100 keys in `tasks.detail` namespace including toast messages, activity types, time formatting ✅
+- `TaskDetail` display store (Zustand) for sharing `display_id` between page and header breadcrumb ✅
+- 86 tests across task-detail (5), stage-timeline (7), recent-activity-card (5), plus board + badge + utils tests ✅
+- MSW handlers for task detail, SLA health, timeline, blueprint transitions, users search ✅
+- Regenerated OpenAPI types for `display_id` field ✅
+
+**Established by 004:**
+- **Stage timeline pattern:** Vertical `<ol>` inside a Card, sorted by `entered_at`. Connecting line is an `::before` pseudo-element at `start-[17px]`. Node icon is a `size-9 rounded-full border-2` with status-driven classes (emerald/blue/slate + corresponding border)
+- **Instance ID resolution:** Stage lifecycle endpoints expect `instance_id` (not `blueprint_stage.public_id`). Both `TaskStageInstanceResource` and `TaskSubStageInstanceResource` expose `instance_id`
+- **Return target filtering:** `GET /v1/blueprints/{blueprintId}/transitions` returns all transitions; client-side `filterReturnTargets()` filters `transition_type === '2'` and `from_stage_id === current`. Stage names resolved from task's `stages[]` via `resolveStageName()`
+- **SLA inline on active node:** Active stage node extracts its timer from `SlaTimerInstanceResource[]` by matching `stage_instance_id`; displayed via `formatSlaInline(timer, timeFmt)` with color coding (red=overdue, amber=at-risk, emerald=on-track)
+- **i18n time formatting:** `TimeFmt` interface + `timeFmtFromT(t)` factory for locale-aware duration/SLA/relative-time formatting with Arabic dual-plural support (`time_day_two`, `time_hour_two`, `time_minute_two`)
+- **Breadcrumb in shell header:** `SiteHeader` derives breadcrumb from pathname via `usePageBreadcrumb()` for task routes; falls back to static page title for other routes. Pages use `PageHeader` for title + description + actions
+- **Toast localization:** All mutation success/error toasts use `useTranslations('tasks.detail')` — no hardcoded strings
+- **Stage progress by task status:** Details card shows `status_label — current_stage of total` where label matches task status (Active/Completed/Cancelled/Suspended), not hardcoded to "Active"
+- **`display_id` breadcrumb:** Task detail breadcrumb shows `display_id` (e.g. `T-2026-0001`) from API via Zustand store, falling back to URL segment UUID
 
 ## Dependency Map
 

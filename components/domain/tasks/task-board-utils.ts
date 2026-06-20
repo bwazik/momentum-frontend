@@ -114,31 +114,46 @@ export function localizeName(locale: string, nameAr?: string | null, nameEn?: st
   return nameEn || nameAr || '';
 }
 
-export function formatTimeInStage(seconds: string | number | null | undefined): string {
+function unit(n: number, day: string, days: string): string {
+  return n === 1 ? day : days;
+}
+function unitAr(n: number): string {
+  if (n === 1) return 'يوم';
+  if (n === 2) return 'يومان';
+  return 'أيام';
+}
+
+export function formatTimeInStage(seconds: string | number | null | undefined, locale?: string): string {
   if (seconds === null || seconds === undefined) return '-';
   const totalSeconds = typeof seconds === 'string' ? parseInt(seconds, 10) : seconds;
-  if (totalSeconds <= 0) return '< 1h';
+  if (totalSeconds <= 0) return locale === 'ar' ? 'أقل من ساعة' : '< 1 hour';
 
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const ud = locale === 'ar' ? unitAr : (n: number) => unit(n, 'day', 'days');
+  const uh = locale === 'ar' ? (n: number) => n === 1 ? 'ساعة' : n === 2 ? 'ساعتان' : 'ساعات' : (n: number) => unit(n, 'hour', 'hours');
 
-  if (days > 0) return `${days}d ${hours}h`;
-  if (hours > 0) return `${hours}h`;
-  return '< 1h';
+  if (days > 0 && hours > 0) return `${days} ${ud(days)}, ${hours} ${uh(hours)}`;
+  if (days > 0) return `${days} ${ud(days)}`;
+  if (hours > 0) return `${hours} ${uh(hours)}`;
+  return locale === 'ar' ? 'أقل من ساعة' : '< 1 hour';
 }
 
-export function formatDueDate(dateStr: string | null | undefined): string {
+export function formatDueDate(dateStr: string | null | undefined, locale?: string): string {
   if (!dateStr) return '';
   const date = new Date(dateStr + 'T00:00:00');
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const diffMs = date.getTime() - today.getTime();
   const diffDays = Math.round(diffMs / 86400000);
+  const abs = Math.abs(diffDays);
+  const d = locale === 'ar' ? unitAr(abs) : unit(abs, 'day', 'days');
+  const overdue = locale === 'ar' ? 'متأخر' : 'overdue';
 
-  if (diffDays < 0) return `${Math.abs(diffDays)}d overdue`;
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return 'Tomorrow';
-  return `${diffDays}d`;
+  if (diffDays < 0) return `${abs} ${d} ${overdue}`;
+  if (diffDays === 0) return locale === 'ar' ? 'اليوم' : 'Today';
+  if (diffDays === 1) return locale === 'ar' ? 'غداً' : 'Tomorrow';
+  return `${diffDays} ${d}`;
 }
 
 export function getSlaSortValue(health?: string | null): number {

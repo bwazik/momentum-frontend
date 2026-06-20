@@ -2,6 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/api/query-keys';
+import { apiClient } from '@/lib/api/client';
 import { cn } from '@/lib/utils';
 import {
   Card,
@@ -32,6 +35,14 @@ interface TaskCardProps {
 export function TaskCard({ task }: TaskCardProps) {
   const router = useRouter();
   const locale = useLocale();
+  const queryClient = useQueryClient();
+
+  function handleHover() {
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.tasks.detail(task.public_id),
+      queryFn: () => apiClient.get(`/v1/tasks/${task.public_id}`),
+    });
+  }
   const assignees = getCurrentAssignees(task);
   const slaHealth = (task.sla_health ?? '').toLowerCase();
   const borderColor = SLA_BORDER[slaHealth] || 'border-s-4 border-s-zinc-300 dark:border-s-zinc-600';
@@ -53,6 +64,7 @@ export function TaskCard({ task }: TaskCardProps) {
       className={cn('cursor-pointer', borderColor)}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onMouseEnter={handleHover}
     >
       <CardHeader className="flex flex-row items-start justify-between gap-2 p-4 pb-2">
         <div className="flex flex-col gap-1">
@@ -67,7 +79,7 @@ export function TaskCard({ task }: TaskCardProps) {
             <PriorityBadge priority={task.priority} />
           </div>
         </div>
-        <SlaBadge health={task.sla_health} />
+        <SlaBadge health={task.sla_health} status={task.status} />
       </CardHeader>
       <CardContent className="flex flex-col gap-1 p-4 pt-0 text-sm text-muted-foreground">
         {task.current_stage && (
@@ -96,13 +108,13 @@ export function TaskCard({ task }: TaskCardProps) {
           </div>
         )}
         <div className="flex justify-between">
-          <span>{formatTimeInStage(task.time_at_current_stage_seconds)}</span>
+          <span>{formatTimeInStage(task.time_at_current_stage_seconds, locale)}</span>
           {task.due_date && (
             <span className={cn(
               'text-xs text-muted-foreground',
-              formatDueDate(task.due_date).includes('overdue') && 'font-semibold',
+              formatDueDate(task.due_date, locale).includes('overdue') && 'font-semibold',
             )}>
-              {formatDueDate(task.due_date)}
+              {formatDueDate(task.due_date, locale)}
             </span>
           )}
         </div>
