@@ -1,5 +1,6 @@
 "use client"
 
+import { useLocale } from 'next-intl';
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -13,9 +14,10 @@ import {
 
 export function ModeToggle() {
   const { setTheme } = useTheme()
+  const locale = useLocale()
 
   return (
-    <DropdownMenu>
+    <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="cursor-pointer">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />

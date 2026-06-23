@@ -99,9 +99,9 @@ export const handlers = [
         name_en: 'High',
         severity_rank: 'critical',
         color_code: '#dc2626',
-        is_default: '0',
-        is_active: '1',
-        display_order: '1',
+        is_default: false,
+        is_active: true,
+        display_order: 1,
         created_at: '2026-01-01',
         updated_at: '2026-01-01',
       },
@@ -111,9 +111,9 @@ export const handlers = [
         name_en: 'Medium',
         severity_rank: 'urgent',
         color_code: '#d97706',
-        is_default: '1',
-        is_active: '1',
-        display_order: '2',
+        is_default: true,
+        is_active: true,
+        display_order: 2,
         created_at: '2026-01-01',
         updated_at: '2026-01-01',
       },
@@ -126,8 +126,8 @@ export const handlers = [
         public_id: 'cat-1',
         name_ar: 'تقنية',
         name_en: 'Technical',
-        display_order: '1',
-        is_active: '1',
+        display_order: 1,
+        is_active: true,
         created_at: '2026-01-01',
         updated_at: '2026-01-01',
       },
@@ -140,9 +140,9 @@ export const handlers = [
         public_id: 'st-1',
         name_ar: 'مراجعة',
         name_en: 'Review',
-        is_system_default: '1',
-        is_active: '1',
-        display_order: '1',
+        is_system_default: true,
+        is_active: true,
+        display_order: 1,
         created_at: '2026-01-01',
         updated_at: '2026-01-01',
       },
@@ -157,7 +157,7 @@ export const handlers = [
           parent_department_id: '',
           name_ar: 'تقنية المعلومات',
           name_en: 'IT',
-          is_active: '1',
+          is_active: true,
           created_at: '2026-01-01',
           updated_at: '2026-01-01',
         },
@@ -166,7 +166,7 @@ export const handlers = [
           parent_department_id: '',
           name_ar: 'الموارد البشرية',
           name_en: 'HR',
-          is_active: '1',
+          is_active: true,
           created_at: '2026-01-01',
           updated_at: '2026-01-01',
         },
@@ -222,7 +222,7 @@ export const handlers = [
           entered_at: '2026-06-01T10:00:00Z',
           exited_at: '2026-06-03T10:00:00Z',
           assignments: [
-            { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: '1', reassigned_at: null },
+            { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: true, reassigned_at: null },
           ],
           sub_stages: [],
           completion_note: 'Initial submission done',
@@ -239,7 +239,7 @@ export const handlers = [
           entered_at: '2026-06-03T10:00:00Z',
           exited_at: null,
           assignments: [
-            { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: '0', reassigned_at: null },
+            { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: false, reassigned_at: null },
           ],
           department_name_ar: 'تقنية المعلومات',
           department_name_en: 'IT',
@@ -255,7 +255,7 @@ export const handlers = [
               entered_at: '2026-06-03T10:00:00Z',
               exited_at: '2026-06-04T10:00:00Z',
               assignments: [
-                { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: '1', reassigned_at: null },
+                { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: true, reassigned_at: null },
               ],
               completion_note: 'Reviewed',
               return_reason: null,
@@ -271,7 +271,7 @@ export const handlers = [
               entered_at: '2026-06-04T10:00:00Z',
               exited_at: null,
               assignments: [
-                { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: '0', reassigned_at: null },
+                { user_id: 'user-1', user_name_ar: 'أحمد', user_name_en: 'Ahmed', is_completed: false, reassigned_at: null },
               ],
               completion_note: null,
               return_reason: null,
@@ -361,7 +361,7 @@ export const handlers = [
   http.get('https://api.momentum.test/v1/blueprints/:blueprintId/transitions', () => {
     return HttpResponse.json([
       {
-        transition_type: '2',
+        transition_type: 'return',
         from_stage_id: 'bp-stage-2',
         to_stage_id: 'bp-stage-1',
         return_reason_required: true,
@@ -379,4 +379,301 @@ export const handlers = [
       has_more: false,
     });
   }),
+
+  // --- Blueprint handlers ---
+
+  http.get('https://api.momentum.test/v1/blueprints', ({ request }) => {
+    const url = new URL(request.url);
+    const search = url.searchParams.get('search');
+    const isActive = url.searchParams.get('is_active');
+    let data = [...mockBlueprints];
+    if (search) data = data.filter((bp) => bp.name_ar.includes(search) || bp.name_en.includes(search));
+    if (isActive === 'true') data = data.filter((bp) => bp.is_active === true);
+    if (isActive === 'false') data = data.filter((bp) => bp.is_active === false);
+    return HttpResponse.json({ data, next_cursor: null, has_more: false });
+  }),
+
+  http.get('https://api.momentum.test/v1/blueprints/:publicId', ({ params }) => {
+    const bp = mockBlueprints.find((b) => b.public_id === params.publicId);
+    if (!bp && params.publicId === 'bp-locked') return HttpResponse.json(mockBlueprintLocked);
+    if (!bp && params.publicId === 'bp-full') return HttpResponse.json(mockBlueprintFull);
+    if (!bp) return new HttpResponse(null, { status: 404 });
+    return HttpResponse.json(bp);
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'new-bp-uuid', name_ar: body.name_ar ?? '', name_en: body.name_en ?? '', description_ar: '', description_en: '',
+      category: null, scope: 'organization', department_id: '', is_locked: false, is_active: false, stages: [], transitions: [],
+      created_at: '2026-06-21T00:00:00Z', updated_at: '2026-06-21T00:00:00Z',
+    }, { status: 200 });
+  }),
+
+  http.put('https://api.momentum.test/v1/blueprints/:publicId', async ({ request, params }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({ ...mockBlueprints[0], ...body, public_id: params.publicId as string });
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints/:publicId/activate', ({ params }) => {
+    return HttpResponse.json({ ...mockBlueprints[0], is_active: true, public_id: params.publicId });
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints/:publicId/deactivate', ({ params }) => {
+    return HttpResponse.json({ ...mockBlueprints[0], is_active: false, public_id: params.publicId });
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints/:publicId/duplicate', ({ params }) => {
+    return HttpResponse.json({
+      ...mockBlueprints[0], public_id: 'copy-uuid', name_ar: 'نسخة من ' + mockBlueprints[0].name_ar,
+      name_en: 'Copy of ' + mockBlueprints[0].name_en, is_locked: false, is_active: false,
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints/:blueprintId/stages', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'new-stage-uuid', blueprint_id: String(request.url.split('/')[5]), stage_type: null, sla_policy: null,
+      name_ar: body.name_ar ?? '', name_en: body.name_en ?? '', description_ar: '', description_en: '',
+      sequence_order: 99, assignment_type: 'specific_position', assigned_position_id: '', assigned_department_id: '',
+      assignment_cardinality: 'single', completion_rule: 'any_assignee', escalation_position_id: '', sub_stages: [],
+      created_at: '2026-06-21T00:00:00Z', updated_at: '2026-06-21T00:00:00Z',
+    }, { status: 200 });
+  }),
+
+  http.put('https://api.momentum.test/v1/blueprints/:blueprintId/stages/:stageId', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({ ...mockStage, ...body });
+  }),
+
+  http.delete('https://api.momentum.test/v1/blueprints/:blueprintId/stages/:stageId', () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints/:blueprintId/stages/reorder', () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints/:blueprintId/stages/:stageId/sub-stages', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'new-sub-stage-uuid', stage_id: 'stage-1', sla_policy: null,
+      name_ar: body.name_ar ?? '', name_en: body.name_en ?? '', description_ar: '', description_en: '',
+      sequence_order: 1, is_required: false, assignment_type: 'specific_position', assigned_position_id: '', assigned_department_id: '',
+      assignment_cardinality: 'single', completion_rule: 'any_assignee',
+      created_at: '2026-06-21T00:00:00Z', updated_at: '2026-06-21T00:00:00Z',
+    }, { status: 200 });
+  }),
+
+  http.put('https://api.momentum.test/v1/blueprints/:blueprintId/stages/:stageId/sub-stages/:subStageId', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({ ...mockSubStage, ...body });
+  }),
+
+  http.delete('https://api.momentum.test/v1/blueprints/:blueprintId/stages/:stageId/sub-stages/:subStageId', () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints/:blueprintId/stages/:stageId/sub-stages/reorder', () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post('https://api.momentum.test/v1/blueprints/:blueprintId/transitions', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'new-transition-uuid', blueprint_id: String(request.url.split('/')[5]),
+      from_stage_id: body.from_stage_id ?? '', to_stage_id: body.to_stage_id ?? '',
+      transition_type: 'advance', return_reason_required: false,
+      created_at: '2026-06-21T00:00:00Z',
+    }, { status: 200 });
+  }),
+
+  http.delete('https://api.momentum.test/v1/blueprints/:blueprintId/transitions/:transitionId', () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.get('https://api.momentum.test/v1/organization/positions', () => {
+    return HttpResponse.json({
+      data: [
+        { public_id: 'pos-1', department: { public_id: 'dept-1', name_ar: 'تقنية المعلومات', name_en: 'IT' }, title_ar: 'مدير', title_en: 'Manager', reports_to_position_id: '', authority_grade: { public_id: 'ag-1', rank: '1', name_ar: 'درجة أولى', name_en: 'Grade 1' }, is_active: true, created_at: '2026-01-01', updated_at: '2026-01-01' },
+        { public_id: 'pos-2', department: { public_id: 'dept-2', name_ar: 'الموارد البشرية', name_en: 'HR' }, title_ar: 'موظف', title_en: 'Employee', reports_to_position_id: '', authority_grade: { public_id: 'ag-2', rank: '2', name_ar: 'درجة ثانية', name_en: 'Grade 2' }, is_active: true, created_at: '2026-01-01', updated_at: '2026-01-01' },
+      ],
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
 ];
+
+const mockStage = {
+  public_id: 'stage-1',
+  blueprint_id: 'bp-1',
+  stage_type: { public_id: 'st-1', name_ar: 'مراجعة', name_en: 'Review', is_system_default: true, is_active: true, display_order: 1, created_at: '2026-01-01', updated_at: '2026-01-01' },
+  sla_policy: null,
+  name_ar: 'مرحلة التقديم',
+  name_en: 'Submission Stage',
+  description_ar: '',
+  description_en: '',
+  sequence_order: 1,
+  assignment_type: 'specific_position',
+  assigned_position_id: 'pos-1',
+  assigned_department_id: '',
+  assignment_cardinality: 'single',
+  completion_rule: 'any_assignee',
+  escalation_position_id: '',
+  sub_stages: [],
+  created_at: '2026-06-01T00:00:00Z',
+  updated_at: '2026-06-01T00:00:00Z',
+};
+
+const mockStage2 = {
+  public_id: 'stage-2',
+  blueprint_id: 'bp-1',
+  stage_type: { public_id: 'st-1', name_ar: 'اعتماد', name_en: 'Approval', is_system_default: true, is_active: true, display_order: 2, created_at: '2026-01-01', updated_at: '2026-01-01' },
+  sla_policy: null,
+  name_ar: 'مرحلة الاعتماد',
+  name_en: 'Approval Stage',
+  description_ar: '',
+  description_en: '',
+  sequence_order: 2,
+  assignment_type: 'department_head',
+  assigned_position_id: '',
+  assigned_department_id: 'dept-1',
+  assignment_cardinality: 'single',
+  completion_rule: 'all_assignees',
+  escalation_position_id: '',
+  sub_stages: [
+    {
+      public_id: 'sub-1',
+      stage_id: 'stage-2',
+      sla_policy: null,
+      name_ar: 'مراجعة أولية',
+      name_en: 'Initial Review',
+      description_ar: '',
+      description_en: '',
+      sequence_order: 1,
+      is_required: true,
+      assignment_type: 'specific_position',
+      assigned_position_id: '',
+      assigned_department_id: '',
+      assignment_cardinality: 'single',
+      completion_rule: 'any_assignee',
+      created_at: '2026-06-01T00:00:00Z',
+      updated_at: '2026-06-01T00:00:00Z',
+    },
+  ],
+  created_at: '2026-06-01T00:00:00Z',
+  updated_at: '2026-06-01T00:00:00Z',
+};
+
+const mockStage3 = {
+  public_id: 'stage-3',
+  blueprint_id: 'bp-1',
+  stage_type: { public_id: 'st-1', name_ar: 'إغلاق', name_en: 'Closure', is_system_default: true, is_active: true, display_order: 3, created_at: '2026-01-01', updated_at: '2026-01-01' },
+  sla_policy: null,
+  name_ar: 'مرحلة الإغلاق',
+  name_en: 'Closure Stage',
+  description_ar: '',
+  description_en: '',
+  sequence_order: 3,
+  assignment_type: 'specific_position',
+  assigned_position_id: 'pos-2',
+  assigned_department_id: '',
+  assignment_cardinality: 'single',
+  completion_rule: 'any_assignee',
+  escalation_position_id: '',
+  sub_stages: [],
+  created_at: '2026-06-01T00:00:00Z',
+  updated_at: '2026-06-01T00:00:00Z',
+};
+
+const mockSubStage = {
+  public_id: 'sub-1',
+  stage_id: 'stage-2',
+  sla_policy: null,
+  name_ar: 'مراجعة أولية',
+  name_en: 'Initial Review',
+  description_ar: '',
+  description_en: '',
+  sequence_order: 1,
+  is_required: true,
+  assignment_type: 'specific_position',
+  assigned_position_id: '',
+  assigned_department_id: '',
+  assignment_cardinality: 'single',
+  completion_rule: 'any_assignee',
+  created_at: '2026-06-01T00:00:00Z',
+  updated_at: '2026-06-01T00:00:00Z',
+};
+
+const mockBlueprints = [
+  {
+    public_id: 'bp-1',
+    category: { public_id: 'cat-1', name_ar: 'تقنية', name_en: 'Technical', display_order: 1, is_active: true, created_at: '2026-01-01', updated_at: '2026-01-01' },
+    name_ar: 'نموذج اختبار',
+    name_en: 'Test Blueprint',
+    description_ar: 'نموذج اختبار للعمليات التقنية',
+    description_en: 'Test blueprint for technical processes',
+    scope: 'organization',
+    department_id: '',
+    is_locked: false,
+    is_active: true,
+    stages: [mockStage, mockStage2, mockStage3],
+    transitions: [],
+    created_at: '2026-06-01T00:00:00Z',
+    updated_at: '2026-06-01T00:00:00Z',
+  },
+  {
+    public_id: 'bp-2',
+    category: null,
+    name_ar: 'نموذج الموارد البشرية',
+    name_en: 'HR Blueprint',
+    description_ar: 'نموذج لعمليات الموارد البشرية',
+    description_en: 'HR process blueprint',
+    scope: 'department',
+    department_id: 'dept-2',
+    is_locked: false,
+    is_active: false,
+    stages: [mockStage],
+    transitions: [],
+    created_at: '2026-06-02T00:00:00Z',
+    updated_at: '2026-06-02T00:00:00Z',
+  },
+];
+
+const mockBlueprintLocked = {
+  public_id: 'bp-locked',
+  category: { public_id: 'cat-1', name_ar: 'تقنية', name_en: 'Technical', display_order: 1, is_active: true, created_at: '2026-01-01', updated_at: '2026-01-01' },
+  name_ar: 'نموذج مقفل',
+  name_en: 'Locked Blueprint',
+  description_ar: 'هذا النموذج مقفل لأن مهمة قد أطلقت منه',
+  description_en: 'This blueprint is locked because a task was launched from it',
+  scope: 'organization',
+  department_id: '',
+  is_locked: true,
+  is_active: true,
+  stages: [mockStage, mockStage2],
+  transitions: [],
+  created_at: '2026-05-01T00:00:00Z',
+  updated_at: '2026-05-15T00:00:00Z',
+};
+
+const mockBlueprintFull = {
+  public_id: 'bp-full',
+  category: { public_id: 'cat-1', name_ar: 'تقنية', name_en: 'Technical', display_order: 1, is_active: true, created_at: '2026-01-01', updated_at: '2026-01-01' },
+  name_ar: 'نموذج كامل',
+  name_en: 'Full Blueprint',
+  description_ar: 'نموذج كامل بجميع المراحل والانتقالات',
+  description_en: 'Full blueprint with all stages and transitions',
+  scope: 'organization',
+  department_id: '',
+  is_locked: false,
+  is_active: true,
+  stages: [mockStage, mockStage2, mockStage3],
+  transitions: [
+    { public_id: 'tr-1', blueprint_id: 'bp-full', from_stage_id: 'stage-1', to_stage_id: 'stage-2', transition_type: 'advance', return_reason_required: false, created_at: '2026-06-01T00:00:00Z' },
+    { public_id: 'tr-2', blueprint_id: 'bp-full', from_stage_id: 'stage-2', to_stage_id: 'stage-3', transition_type: 'advance', return_reason_required: false, created_at: '2026-06-01T00:00:00Z' },
+    { public_id: 'tr-3', blueprint_id: 'bp-full', from_stage_id: 'stage-2', to_stage_id: 'stage-1', transition_type: 'return', return_reason_required: true, created_at: '2026-06-01T00:00:00Z' },
+  ],
+  created_at: '2026-06-01T00:00:00Z',
+  updated_at: '2026-06-10T00:00:00Z',
+};

@@ -13,7 +13,7 @@ interface DetailsCardProps {
 export function DetailsCard({ task }: DetailsCardProps) {
   const locale = useLocale();
   const t = useTranslations('tasks.detail');
-  const totalStages = task.stages?.length ?? 0;
+  const totalStages = task.blueprint?.stages?.length ?? task.stages?.length ?? 0;
   const completedCount =
     task.stages?.filter((s) => s.status === 'completed').length ?? 0;
   const stageLabel =

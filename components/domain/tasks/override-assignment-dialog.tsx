@@ -82,7 +82,7 @@ export function OverrideAssignmentDialog({
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label>{t('current_assignee')}</Label>
-            <Select value={selectedAssigneeId} onValueChange={setSelectedAssigneeId}>
+            <Select dir={locale === 'ar' ? 'rtl' : 'ltr'} value={selectedAssigneeId} onValueChange={setSelectedAssigneeId}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder={t('select_assignee')} />
               </SelectTrigger>

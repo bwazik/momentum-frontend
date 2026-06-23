@@ -92,6 +92,9 @@ export function TaskTopBarActions({ publicId }: TaskTopBarActionsProps) {
           taskPublicId={publicId}
           stageInstancePublicId={activeStage.instance_id ?? ''}
           detailPublicId={publicId}
+          transitions={task.blueprint?.transitions}
+          currentStageBlueprintId={activeStage.blueprint_stage.public_id}
+          blueprintStages={task.blueprint?.stages}
         />
       )}
     </div>

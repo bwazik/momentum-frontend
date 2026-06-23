@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useQueryClient } from '@tanstack/react-query';
 import { Ellipsis, ExternalLink, Copy } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { copyTaskLink, copyToClipboard } from '@/components/shared/copy-link-button';
 import {
   Table,
@@ -133,9 +134,16 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
               <TableCell className="text-start align-top">
                 {task.current_stage ? (
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm">
-                      {localizeName(locale, task.current_stage.name_ar, task.current_stage.name_en)}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm">
+                        {localizeName(locale, task.current_stage.name_ar, task.current_stage.name_en)}
+                      </span>
+                      {task.current_stage.stage_type && (
+                        <Badge variant="outline" className="text-[10px] leading-none py-0.5">
+                          {localizeName(locale, task.current_stage.stage_type.name_ar, task.current_stage.stage_type.name_en)}
+                        </Badge>
+                      )}
+                    </div>
                     {task.department && (
                       <span className="text-xs text-muted-foreground">
                         {localizeName(locale, task.department.name_ar, task.department.name_en)}
@@ -186,7 +194,7 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
                 </div>
               </TableCell>
               <TableCell className="text-end align-top">
-                <DropdownMenu>
+                <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
@@ -197,7 +205,7 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
                       <Ellipsis className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side="bottom" align={locale === 'ar' ? 'start' : 'end'} className="min-w-36">
+                  <DropdownMenuContent align="end" side="bottom" className="min-w-36">
                     <DropdownMenuItem
                       className="whitespace-nowrap"
                       onClick={(e) => {

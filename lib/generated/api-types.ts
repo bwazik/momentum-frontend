@@ -2230,6 +2230,7 @@ export interface components {
             department_id: string;
             is_locked: string;
             is_active: string;
+            stages_count?: string | 0;
             stages?: components["schemas"]["BlueprintStageResource"][];
             transitions?: components["schemas"]["BlueprintTransitionResource"][];
             created_at: string;
@@ -2303,6 +2304,7 @@ export interface components {
         /** BoardTaskResource */
         BoardTaskResource: {
             public_id: string;
+            display_id: string;
             title_ar: string;
             title_en: string;
             status: string;
@@ -2373,6 +2375,7 @@ export interface components {
         /** CompleteStageRequest */
         CompleteStageRequest: {
             completion_note?: string | null;
+            target_stage_id?: string | null;
         };
         /**
          * CompletionRule
@@ -2470,6 +2473,7 @@ export interface components {
         EscalationDetailResource: {
             public_id: string;
             task_id: string;
+            task_display_id: string;
             stage_instance_id: string;
             sub_stage_instance_id: string;
             sla_timer: {
@@ -2506,6 +2510,7 @@ export interface components {
         EscalationResource: {
             public_id: string;
             task_id: string;
+            task_display_id: string;
             stage_instance_id: string;
             sub_stage_instance_id: string;
             escalation_type: string;
@@ -2762,14 +2767,14 @@ export interface components {
         /** ReorderStagesRequest */
         ReorderStagesRequest: {
             stages: {
-                public_id: number;
+                public_id: string;
                 sequence_order: number;
             }[];
         };
         /** ReorderSubStagesRequest */
         ReorderSubStagesRequest: {
             sub_stages: {
-                public_id: number;
+                public_id: string;
                 sequence_order: number;
             }[];
         };
@@ -2810,6 +2815,7 @@ export interface components {
         SlaTimerInstanceResource: {
             public_id: string;
             task_id: string;
+            task_display_id: string;
             stage_instance_id: string;
             sub_stage_instance_id: string;
             sla_policy: {
@@ -2884,9 +2890,9 @@ export interface components {
             name_en?: string | null;
             description_ar?: string | null;
             description_en?: string | null;
-            category_id: number;
+            category_id: string;
             scope: components["schemas"]["BlueprintScope"];
-            department_id?: number | null;
+            department_id?: string | null;
         };
         /** StoreBlueprintStageRequest */
         StoreBlueprintStageRequest: {
@@ -2894,15 +2900,15 @@ export interface components {
             name_en?: string | null;
             description_ar?: string | null;
             description_en?: string | null;
-            stage_type_id: number;
-            sla_policy_id?: number | null;
+            stage_type_id: string;
+            sla_policy_id?: string | null;
             sequence_order?: number | null;
             assignment_type: components["schemas"]["AssignmentType"];
-            assigned_position_id?: number | null;
-            assigned_department_id?: number | null;
+            assigned_position_id?: string | null;
+            assigned_department_id?: string | null;
             assignment_cardinality?: components["schemas"]["AssignmentCardinality"];
             completion_rule?: components["schemas"]["CompletionRule"];
-            escalation_position_id?: number | null;
+            escalation_position_id?: string | null;
         };
         /** StoreBlueprintSubStageRequest */
         StoreBlueprintSubStageRequest: {
@@ -2910,19 +2916,19 @@ export interface components {
             name_en?: string | null;
             description_ar?: string | null;
             description_en?: string | null;
-            sla_policy_id?: number | null;
+            sla_policy_id?: string | null;
             sequence_order?: number | null;
             is_required?: boolean | null;
             assignment_type: components["schemas"]["AssignmentType"];
-            assigned_position_id?: number | null;
-            assigned_department_id?: number | null;
+            assigned_position_id?: string | null;
+            assigned_department_id?: string | null;
             assignment_cardinality?: components["schemas"]["AssignmentCardinality"];
             completion_rule?: components["schemas"]["CompletionRule"];
         };
         /** StoreBlueprintTransitionRequest */
         StoreBlueprintTransitionRequest: {
-            from_stage_id: number;
-            to_stage_id: number;
+            from_stage_id: string;
+            to_stage_id: string;
             transition_type: components["schemas"]["TransitionType"];
             return_reason_required?: boolean | null;
         };
@@ -3086,6 +3092,7 @@ export interface components {
         /** TaskListItemResource */
         TaskListItemResource: {
             task_public_id: string;
+            display_id: string;
             title_ar: string;
             title_en: string;
             status: string;
@@ -3137,6 +3144,7 @@ export interface components {
         /** TaskSlaHealthResource */
         TaskSlaHealthResource: {
             task_id: string;
+            display_id: string;
             /** @enum {string} */
             overall_health: "none" | "on_track" | "warning" | "breached";
             timers: components["schemas"]["SlaTimerInstanceResource"][];
@@ -3165,6 +3173,11 @@ export interface components {
                 public_id?: string;
                 name_ar?: string;
                 name_en?: string;
+                stage_type?: {
+                    public_id: string;
+                    name_ar: string;
+                    name_en: string;
+                } | null;
             };
             sequence_order: string;
             owning_department_id: string;
@@ -3275,8 +3288,8 @@ export interface components {
             name_en?: string | null;
             description_ar?: string | null;
             description_en?: string | null;
-            category_id?: number | null;
-            department_id?: number | null;
+            category_id?: string | null;
+            department_id?: string | null;
         };
         /** UpdateBlueprintStageRequest */
         UpdateBlueprintStageRequest: {
@@ -3284,14 +3297,14 @@ export interface components {
             name_en?: string | null;
             description_ar?: string | null;
             description_en?: string | null;
-            stage_type_id?: number | null;
-            sla_policy_id?: number | null;
+            stage_type_id?: string | null;
+            sla_policy_id?: string | null;
             assignment_type?: components["schemas"]["AssignmentType"];
-            assigned_position_id?: number | null;
-            assigned_department_id?: number | null;
+            assigned_position_id?: string | null;
+            assigned_department_id?: string | null;
             assignment_cardinality?: components["schemas"]["AssignmentCardinality"];
             completion_rule?: components["schemas"]["CompletionRule"];
-            escalation_position_id?: number | null;
+            escalation_position_id?: string | null;
         };
         /** UpdateBlueprintSubStageRequest */
         UpdateBlueprintSubStageRequest: {
@@ -3299,19 +3312,19 @@ export interface components {
             name_en?: string | null;
             description_ar?: string | null;
             description_en?: string | null;
-            sla_policy_id?: number | null;
+            sla_policy_id?: string | null;
             sequence_order?: number | null;
             is_required?: boolean | null;
             assignment_type?: components["schemas"]["AssignmentType"];
-            assigned_position_id?: number | null;
-            assigned_department_id?: number | null;
+            assigned_position_id?: string | null;
+            assigned_department_id?: string | null;
             assignment_cardinality?: components["schemas"]["AssignmentCardinality"];
             completion_rule?: components["schemas"]["CompletionRule"];
         };
         /** UpdateBlueprintTransitionRequest */
         UpdateBlueprintTransitionRequest: {
-            from_stage_id?: number | null;
-            to_stage_id?: number | null;
+            from_stage_id?: string | null;
+            to_stage_id?: string | null;
             transition_type?: components["schemas"]["TransitionType"];
             return_reason_required?: boolean | null;
         };

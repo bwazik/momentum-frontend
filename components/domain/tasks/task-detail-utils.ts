@@ -5,14 +5,7 @@ import type {
   BlueprintTransitionResource,
 } from './task-detail-types';
 
-export function localizeName(
-  locale: string,
-  nameAr?: string | null,
-  nameEn?: string | null,
-): string {
-  if (locale === 'ar') return nameAr || nameEn || '';
-  return nameEn || nameAr || '';
-}
+export { localizeName } from '@/lib/utils/localize';
 
 export function getActiveStage(
   stages: TaskStageInstanceResource[] | undefined,

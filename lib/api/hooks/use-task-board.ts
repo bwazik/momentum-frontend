@@ -31,21 +31,7 @@ export function useTaskPriorities() {
   });
 }
 
-export function useBlueprintCategories() {
-  return useQuery({
-    queryKey: queryKeys.blueprints.categories(),
-    queryFn: () => apiClient.get<BlueprintCategoryResource[]>('/v1/blueprints/categories'),
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
-export function useStageTypes() {
-  return useQuery({
-    queryKey: queryKeys.blueprints.stageTypes(),
-    queryFn: () => apiClient.get<StageTypeResource[]>('/v1/blueprints/stage-types'),
-    staleTime: 5 * 60 * 1000,
-  });
-}
+export { useBlueprintCategories, useBlueprintStageTypes as useStageTypes } from './use-blueprints';
 
 export function useDepartmentsInfinite() {
   return useInfiniteQuery({

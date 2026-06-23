@@ -12,6 +12,7 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import type { BoardTaskResource } from './task-board-types';
+import { Badge } from '@/components/ui/badge';
 import { SlaBadge, TaskStatusBadge, PriorityBadge, ClassificationBadge } from './task-badges';
 import {
   Avatar,
@@ -85,9 +86,16 @@ export function TaskCard({ task }: TaskCardProps) {
         {task.current_stage && (
           <div className="flex justify-between">
             <span>{localizeName(locale, task.current_stage.name_ar, task.current_stage.name_en)}</span>
-            {task.department && (
-              <span className="text-xs">{localizeName(locale, task.department.name_ar, task.department.name_en)}</span>
-            )}
+            <div className="flex items-center gap-1.5">
+              {task.current_stage.stage_type && (
+                <Badge variant="outline" className="text-[10px] leading-none py-0.5">
+                  {localizeName(locale, task.current_stage.stage_type.name_ar, task.current_stage.stage_type.name_en)}
+                </Badge>
+              )}
+                {task.department && (
+                <span className="text-xs">{localizeName(locale, task.department.name_ar, task.department.name_en)}</span>
+              )}
+            </div>
           </div>
         )}
         {assignees.length > 0 && (

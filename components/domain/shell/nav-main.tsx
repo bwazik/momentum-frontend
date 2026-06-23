@@ -14,6 +14,7 @@ interface NavItem {
   title: string;
   url: string;
   icon: LucideIcon;
+  isActive?: (pathname: string) => boolean;
 }
 
 export function NavMain({ items, pathname }: { items: NavItem[]; pathname: string }) {
@@ -23,7 +24,7 @@ export function NavMain({ items, pathname }: { items: NavItem[]; pathname: strin
         <SidebarMenu>
           {items.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.url || pathname.startsWith(item.url + '/');
+            const isActive = item.isActive ? item.isActive(pathname) : pathname === item.url || pathname.startsWith(item.url + '/');
             return (
               <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton asChild isActive={isActive} tooltip={item.title} className={isActive ? 'data-[active=true]:bg-primary data-[active=true]:text-primary-foreground' : ''}>

@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { RtlSelect } from '@/components/shared/rtl-select';
 import { Label } from '@/components/ui/label';
 import {
   useBlueprintTransitions,
@@ -108,21 +109,21 @@ export function ReturnStageDialog({
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="return-target">{t('target_stage')}</Label>
-            <Select
+            <RtlSelect
               value={targetStageId}
               onValueChange={setTargetStageId}
             >
               <SelectTrigger id="return-target">
                 <SelectValue placeholder={t('select_target_stage')} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position="popper">
                 {validTargets.map((tr) => (
                   <SelectItem key={tr.to_stage_id} value={tr.to_stage_id}>
                     {resolveStageName(tr.to_stage_id)}
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+            </RtlSelect>
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="return-reason">{t('reason')}</Label>

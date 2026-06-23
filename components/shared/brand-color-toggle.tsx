@@ -1,7 +1,7 @@
 'use client';
 
 import { Palette } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -15,10 +15,11 @@ const colors: BrandColor[] = ['amber', 'blue', 'emerald', 'rose', 'slate'];
 
 export function BrandColorToggle() {
   const { color, setColor } = useBrandColorStore();
+  const locale = useLocale();
   const t = useTranslations('colors');
 
   return (
-    <DropdownMenu>
+    <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="cursor-pointer" aria-label={t('amber')}>
           <Palette data-slot="icon" />

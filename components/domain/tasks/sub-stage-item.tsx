@@ -120,6 +120,18 @@ export function SubStageItem({
             )}
           </div>
         )}
+        {status === 'active' && !isAssignee && canOverride && (
+          <div className="mt-1">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-6 text-xs"
+              onClick={() => setShowOverride(true)}
+            >
+              {t('override_assignment')}
+            </Button>
+          </div>
+        )}
       </div>
 
       <CompleteStageDialog

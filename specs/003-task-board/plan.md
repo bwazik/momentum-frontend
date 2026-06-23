@@ -2,9 +2,7 @@
 
 > **Spec:** `specs/003-task-board/spec.md`
 > **Date:** 2026-06-19
-> **Status:** `completed`
-> **Target branch:** `feat/003-task-board`
-> **Base branch:** `main`
+> **Status:** `implemented`
 
 ---
 

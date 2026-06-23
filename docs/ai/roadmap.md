@@ -6,9 +6,9 @@
 
 ## Current Focus
 
-**Phase:** F3 — Blueprint builder
-**Active spec:** `005-blueprint-builder`
-**Next:** `006-workflow-visualization`
+**Phase:** F4 — Follow-up & Workflow Viz
+**Active spec:** `006-workflow-visualization`
+**Next:** `007-follow-up-center`
 
 ---
 
@@ -19,7 +19,7 @@
 | F0 | Scaffold & design system | ✅ Done | — |
 | F1 | App shell, auth, i18n/RTL | ✅ Done | M2 backend (IAM) |
 | F2 | Task board & task details | ✅ Done | M4 backend |
-| F3 | Blueprint builder | ⬜ Not Started | M3 backend |
+| F3 | Blueprint builder | ✅ Done | M3 backend |
 | F4 | Follow-up & workflow viz | ⬜ Not Started | M4–M5 backend |
 | F5 | Dashboards & analytics | ⬜ Not Started | M6 backend |
 | F6 | Admin, org, help, onboarding | ⬜ Not Started | M1–M2, M7 backend |
@@ -36,7 +36,7 @@
 | `002-executive-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
 | `003-task-board` | F2 | Tasks | `005-task-execution`, `014` | ✅ |
 | `004-task-details` | F2 | Tasks | `005`, `006`, `012`, `013` | ✅ |
-| `005-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ⬜ |
+| `005-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ✅ |
 | `006-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ⬜ |
 | `007-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ⬜ |
 | `008-organization-structure` | F6 | Organization | `002-organization-structure` | ⬜ |
@@ -171,6 +171,51 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Toast localization:** All mutation success/error toasts use `useTranslations('tasks.detail')` — no hardcoded strings
 - **Stage progress by task status:** Details card shows `status_label — current_stage of total` where label matches task status (Active/Completed/Cancelled/Suspended), not hardcoded to "Active"
 - **`display_id` breadcrumb:** Task detail breadcrumb shows `display_id` (e.g. `T-2026-0001`) from API via Zustand store, falling back to URL segment UUID
+
+## F3 — Blueprint Builder
+
+**Status:** ✅ Done
+
+**Completed (005):**
+- `/blueprints` library with cursor-paginated table, URL filters, create/duplicate/activate/deactivate/delete ✅
+- `/blueprints/[publicId]` builder with split view (canvas + properties panel), stage/sub-stage CRUD, transitions ✅
+- `/blueprints/catalog` with tabs (Categories, Stage Types, SLA Policies) and CRUD dialogs ✅
+- `useBlueprintsInfinite`, `useBlueprint`, `useBlueprintCategories`, `useBlueprintStageTypes`, `useBlueprintSlaPolicies` hooks ✅
+- All mutation hooks: create/update/activate/deactivate/duplicate/delete blueprint; stage/sub-stage CRUD + reorder; transition CRUD; category/stage-type/sla-policy CRUD ✅
+- Stage canvas with vertical stage list, flow connectors, expand/collapse sub-stage preview ✅
+- Sub-stage preview on canvas with reorder + delete (hover-only actions) ✅
+- Stage properties panel with 3 sections: StageForm, TransitionEditor, SubStageList ✅
+- StageForm with 12 fields (name AR/EN, description AR/EN, stage type, assignment, SLA, cardinality, completion rule, escalation) ✅
+- SubStageForm with 11 fields (name AR/EN, description AR/EN, SLA, assignment, cardinality, completion rule, required) ✅
+- Panel mode: idle/add/edit with stateful StageForm (unsaved changes preserved across sub-stage edit) ✅
+- Builder top bar: status badge, Settings, Activate/Deactivate, Duplicate (capability-gated) ✅
+- Locked/read-only mode with lock banner and disabled editing ✅
+- Blueprint settings dialog (edit metadata: name, category, scope, department, description) ✅
+- Zustand store for builder UI state: selectedStageId, blueprintName, panelOpen, metadataDirty ✅
+- Shell breadcrumb for blueprint routes with blueprint name via Zustand store ✅
+- CompleteStageDialog with multi-target advance transition picker ✅
+- DetailsCard stage progress uses blueprint total stage count ✅
+- Sub-stage override button for non-assignees with capability ✅
+- Dark mode on all blueprint badges ✅
+- Shared components extracted: BilingualNameFields, BilingualDescriptionFields, RtlSelect, RtlTable, ConfirmDeleteDialog, CatalogTable ✅
+- Utilities extracted: localizeName/localizeTitle to lib/utils/localize.ts, enum maps and getStagesCount/buildAssignmentFields to blueprint-utils.ts ✅
+- i18n: ~120 keys in blueprints namespace + ~25 toast keys, both locales ✅
+- MSW handlers for all blueprint endpoints ✅
+
+**Established by 005:**
+- **Granular mutations pattern:** Stage/sub-stage/transition CRUD is immediate API call + invalidate `detail(publicId)`; no batch save endpoint
+- **Zustand for builder UI state only:** `selectedStageId`, `panelOpen`, `metadataDirty`, `blueprintName` — never API data in Zustand
+- **Panel mode pattern:** `idle`/`add`/`edit` derived from `selectedStageId`; `subStageEditId` for sub-stage editing
+- **Controlled form pattern:** StageForm state lifted to parent (`StagePropertiesPanel`) to preserve unsaved changes across content swaps
+- **Sentinel values for nullable selects:** `'no-sla'` for SLA policy, `'none'` for escalation position — avoids Select placeholder/value conflict with empty strings
+- **Inline sub-stage editing:** Sub-stage form renders in the properties panel (not a dialog), with "Back to stage" navigation
+- **Canvas sub-stage preview:** Expandable ordered list with hover-only reorder/delete actions; visual hierarchy (no border/card, `group-hover:visible` actions)
+- **Shared bilingual field components:** `BilingualNameFields` and `BilingualDescriptionFields` reused across 7 forms
+- **RTL wrappers:** `RtlSelect` and `RtlTable` eliminate duplicate `dir={locale === 'ar' ? 'rtl' : 'ltr'}` in ~25 locations
+- **Enum maps centralized:** `ASSIGNMENT_TYPE_MAP`, `CARDINALITY_MAP`, `COMPLETION_RULE_MAP`, `SLA_UNIT_MAP` in `blueprint-utils.ts`
+- **`localizeName`/`localizeTitle` in shared lib:** Moved from domain utils to `lib/utils/localize.ts`
+- **Mobile sheet:** Builder panel collapses to a Sheet on mobile, with `matchMedia` detection
+- **SLA + escalation reset:** Selecting "No SLA" resets escalation position to "No escalation"
 
 ## Dependency Map
 

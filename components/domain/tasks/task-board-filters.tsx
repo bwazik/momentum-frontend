@@ -109,13 +109,14 @@ export function TaskBoardFilters({ filters }: TaskBoardFiltersProps) {
 
         <div className="flex items-center gap-2">
           <Select
+            dir={locale === 'ar' ? 'rtl' : 'ltr'}
             value={filters.sortBy ?? 'time_at_stage'}
             onValueChange={(value) => setParam('sortBy', value)}
           >
             <SelectTrigger className="flex-1" aria-label={t('sort_by')}>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent position="popper" align={locale === 'ar' ? 'start' : 'end'}>
+            <SelectContent position="popper">
               <SelectGroup>
                 <SelectItem value="time_at_stage">{t('sort_time_at_stage')}</SelectItem>
                 <SelectItem value="priority">{t('sort_priority')}</SelectItem>

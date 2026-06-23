@@ -3,27 +3,21 @@
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import {
-  LayoutDashboard,
-  ListTodo,
-  FolderKanban,
-  BarChart3,
-  GitMerge,
-  Building2,
-  Shield,
-  Zap,
-  Plus,
-  Mail,
-} from 'lucide-react';
+import { LayoutDashboard, ListTodo, FolderKanban, BarChart3, GitMerge, Building2, Shield, Zap, Plus, Mail, Settings2 } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from '@/components/ui/sidebar';
+import { VersionSwitcher } from '@/components/version-switcher';
 import { NavMain } from '@/components/domain/shell/nav-main';
 import { NavUser } from '@/components/domain/shell/nav-user';
 import { Button } from '@/components/ui/button';
@@ -35,17 +29,25 @@ import { useBrandName } from '@/lib/utils/use-brand-name';
 export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typeof Sidebar> & { locale?: 'ar' | 'en' }) {
   const pathname = usePathname();
   const tnav = useTranslations('nav');
+  const tver = useTranslations('version');
   const { data: user, isLoading } = useCurrentUser();
   const canAdmin = useCapability('iam.manage_users');
+  const canManageBlueprints = useCapability('blueprint.manage');
   const appName = useBrandName();
 
   useCapabilities(user?.public_id);
 
-  const navItems = [
+  const mainItems = [
     { title: tnav('dashboard'), url: '/', icon: LayoutDashboard },
     { title: tnav('tasks'), url: '/tasks', icon: ListTodo },
-    { title: tnav('blueprints'), url: '/blueprints', icon: FolderKanban },
     { title: tnav('analytics'), url: '/analytics', icon: BarChart3 },
+  ];
+
+  const catalogItems = canManageBlueprints
+    ? [{ title: tnav('blueprints'), url: '/blueprints', icon: FolderKanban, isActive: (p: string) => p === '/blueprints' || (p.startsWith('/blueprints/') && !p.startsWith('/blueprints/catalog')) }, { title: tnav('blueprint_catalog'), url: '/blueprints/catalog', icon: Settings2 }]
+    : [{ title: tnav('blueprints'), url: '/blueprints', icon: FolderKanban, isActive: (p: string) => p === '/blueprints' || (p.startsWith('/blueprints/') && !p.startsWith('/blueprints/catalog')) }];
+
+  const workflowItems = [
     { title: tnav('follow_up'), url: '/follow-up', icon: GitMerge },
     { title: tnav('organization'), url: '/organization', icon: Building2 },
   ];
@@ -53,14 +55,7 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
   return (
     <Sidebar collapsible="offcanvas" side={locale === 'ar' ? 'right' : 'left'} {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="data-[slot=sidebar-menu-button]:p-1.5! cursor-pointer">
-              <Zap className="size-5!" />
-              <span className="text-base font-semibold">{appName}</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <VersionSwitcher versions={['1.0.0-beta']} defaultVersion="1.0.0-beta" appName={appName} icon={Zap} locale={locale} versionLabel={tver('label')} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
@@ -79,12 +74,35 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
             </Button>
           </SidebarMenuItem>
         </SidebarMenu>
-        <NavMain items={navItems} pathname={pathname} />
+
+        <SidebarGroup>
+          <SidebarGroupLabel>{tnav('label_main')}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <NavMain items={mainItems} pathname={pathname} />
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>{tnav('label_blueprints')}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <NavMain items={catalogItems} pathname={pathname} />
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>{tnav('label_workflow')}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <NavMain items={workflowItems} pathname={pathname} />
+          </SidebarGroupContent>
+        </SidebarGroup>
+
         {canAdmin && (
-          <NavMain
-            items={[{ title: tnav('admin'), url: '/admin', icon: Shield }]}
-            pathname={pathname}
-          />
+          <SidebarGroup>
+            <SidebarGroupLabel>{tnav('label_admin')}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <NavMain items={[{ title: tnav('admin'), url: '/admin', icon: Shield }]} pathname={pathname} />
+            </SidebarGroupContent>
+          </SidebarGroup>
         )}
       </SidebarContent>
       <SidebarFooter>
@@ -100,6 +118,7 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
           <NavUser user={user} locale={locale} />
         )}
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

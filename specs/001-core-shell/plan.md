@@ -1,9 +1,8 @@
 # Implementation Plan: 001 Core Shell
 
 > **Spec:** `specs/001-core-shell/spec.md`
-> **Status:** `completed`
-> **Branch:** `feat/001-core-shell` from `main`
-> **Strategy:** Create domain components alongside installed @shadcn ready blocks (`login-03`, `dashboard-01`) — keep block files untouched as reference for comparison.
+> **Date:** 2026-06-15
+> **Status:** `implemented`
 
 ---
 

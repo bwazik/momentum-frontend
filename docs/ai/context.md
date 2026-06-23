@@ -93,8 +93,8 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 
 ## Current Focus
 
-**Milestone F3 — Blueprint builder**
-**Active spec:** `005-blueprint-builder`
+**Milestone F4 — Follow-up & Workflow Viz**
+**Active spec:** `006-workflow-visualization`
 
 ---
 

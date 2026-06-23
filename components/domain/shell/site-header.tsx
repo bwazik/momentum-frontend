@@ -17,6 +17,7 @@ import { NotificationBell } from '@/components/domain/shell/notification-bell';
 import { LocaleToggle } from '@/components/shared/locale-toggle';
 import { useBrandName } from '@/lib/utils/use-brand-name';
 import { useTaskDisplayStore } from '@/lib/stores/use-task-display-store';
+import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
 
 const GlobalSearch = dynamic(() => import('@/components/domain/search/global-search').then(m => m.GlobalSearch), { ssr: false });
 
@@ -30,13 +31,14 @@ function usePageBreadcrumb(): Crumb[] | null {
   const nav = useTranslations('nav');
 
   const displayId = useTaskDisplayStore((s) => s.displayId);
+  const blueprintName = useBlueprintBuilderStore((s) => s.blueprintName);
 
   const taskDetail = pathname.match(/^\/tasks\/(.+)$/);
   if (taskDetail) {
     return [
       { label: nav('dashboard'), href: '/' },
       { label: nav('tasks'), href: '/tasks' },
-      { label: displayId || taskDetail[1] },
+      { label: displayId || '...' },
     ];
   }
 
@@ -44,6 +46,23 @@ function usePageBreadcrumb(): Crumb[] | null {
     return [
       { label: nav('dashboard'), href: '/' },
       { label: nav('tasks') },
+    ];
+  }
+
+  const blueprintDetail = pathname.match(/^\/blueprints\/([^/]+)$/);
+  if (blueprintDetail && blueprintDetail[1] !== 'catalog') {
+    return [
+      { label: nav('dashboard'), href: '/' },
+      { label: nav('blueprints'), href: '/blueprints' },
+      { label: blueprintName || '...' },
+    ];
+  }
+
+  if (pathname === '/blueprints/catalog') {
+    return [
+      { label: nav('dashboard'), href: '/' },
+      { label: nav('blueprints'), href: '/blueprints' },
+      { label: nav('blueprint_catalog') },
     ];
   }
 
@@ -81,6 +100,7 @@ export function SiteHeader() {
     '/': t('page_titles.dashboard'),
     '/tasks': t('page_titles.tasks'),
     '/blueprints': t('page_titles.blueprints'),
+    '/blueprints/catalog': t('page_titles.blueprints'),
     '/analytics': t('page_titles.analytics'),
     '/follow-up': t('page_titles.follow_up'),
     '/organization': t('page_titles.organization'),

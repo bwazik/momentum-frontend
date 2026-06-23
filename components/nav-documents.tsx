@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useLocale } from 'next-intl';
 import { MoreHorizontalIcon, FolderIcon, ShareIcon, Trash2Icon } from "lucide-react"
 
 export function NavDocuments({
@@ -28,6 +29,7 @@ export function NavDocuments({
   }[]
 }) {
   const { isMobile } = useSidebar()
+  const locale = useLocale()
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -41,7 +43,7 @@ export function NavDocuments({
                 <span>{item.name}</span>
               </a>
             </SidebarMenuButton>
-            <DropdownMenu>
+            <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction
                   showOnHover
@@ -55,7 +57,7 @@ export function NavDocuments({
               <DropdownMenuContent
                 className="w-24 rounded-lg"
                 side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
+                align="end"
               >
                 <DropdownMenuItem>
                   <FolderIcon

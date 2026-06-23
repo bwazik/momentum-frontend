@@ -34,7 +34,10 @@ export function TaskBoardSkeleton() {
               </div>
             </div>
             <div className="flex w-36 flex-col gap-1">
-              <Skeleton className="h-4 w-24" />
+              <span className="flex items-center gap-1.5">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-12 rounded-full" />
+              </span>
               <Skeleton className="h-3 w-16" />
             </div>
             <div className="flex w-28 items-start gap-0.5">

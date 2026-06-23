@@ -20,6 +20,8 @@ export const queryKeys = {
     all: ['organization'] as const,
     departments: (filters?: Record<string, unknown>) =>
       [...queryKeys.organization.all, 'departments', filters] as const,
+    positions: (filters?: Record<string, unknown>) =>
+      [...queryKeys.organization.all, 'positions', filters] as const,
   },
   blueprints: {
     all: ['blueprints'] as const,
@@ -30,6 +32,10 @@ export const queryKeys = {
       [...queryKeys.blueprints.detail(blueprintId), 'transitions'] as const,
     categories: () => [...queryKeys.blueprints.all, 'categories'] as const,
     stageTypes: () => [...queryKeys.blueprints.all, 'stage-types'] as const,
+    slaPolicies: () => [...queryKeys.blueprints.all, 'sla-policies'] as const,
+    stages: (blueprintId: string) => [...queryKeys.blueprints.detail(blueprintId), 'stages'] as const,
+    subStages: (blueprintId: string, stageId: string) =>
+      [...queryKeys.blueprints.stages(blueprintId), stageId, 'sub-stages'] as const,
   },
   notifications: {
     all: ['notifications'] as const,

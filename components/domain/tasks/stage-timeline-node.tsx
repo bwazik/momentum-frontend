@@ -118,15 +118,22 @@ export function StageTimelineNode({
 
       <div className="flex-1 pb-2">
         <div className="flex items-center justify-between gap-2">
-          <p
-            className={cn(
-              'text-sm font-medium',
-              (status === 'pending' || status === 'skipped') &&
-                'text-muted-foreground',
+          <div className="flex items-center gap-1.5">
+            <p
+              className={cn(
+                'text-sm font-medium',
+                (status === 'pending' || status === 'skipped') &&
+                  'text-muted-foreground',
+              )}
+            >
+              {stageName}
+            </p>
+            {stage.blueprint_stage.stage_type && (
+              <Badge variant="outline" className="text-[10px] leading-none py-0.5">
+                {localizeName(locale, stage.blueprint_stage.stage_type.name_ar, stage.blueprint_stage.stage_type.name_en)}
+              </Badge>
             )}
-          >
-            {stageName}
-          </p>
+          </div>
           {status === 'completed' && (
             <Badge
               variant="outline"
@@ -251,6 +258,8 @@ export function StageTimelineNode({
           taskPublicId={taskPublicId}
           stageInstancePublicId={stage.instance_id ?? ''}
           detailPublicId={taskPublicId}
+          blueprintId={blueprintId}
+          currentStageBlueprintId={stage.blueprint_stage.public_id}
         />
         <ReturnStageDialog
           open={showReturn}
