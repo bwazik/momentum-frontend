@@ -22,35 +22,129 @@ CORS is required and configured on the Laravel side. All API calls use absolute 
 
 ```
 frontend/
-├── app/                        # Next.js App Router
-│   ├── (auth)/             # Unauthenticated layout (login)
-│   ├── (dashboard)/        # Authenticated shell (sidebar + topbar)
-│   ├── layout.tsx          # Root layout (reads NEXT_LOCALE cookie for dir/lang)
+├── app/                           # Next.js App Router
+│   ├── (auth)/                    # Unauthenticated layout (login)
+│   ├── (dashboard)/               # Authenticated shell (sidebar + topbar)
+│   │   ├── tasks/                 # Task board (spec 003)
+│   │   │   └── [publicId]/        # Task details (spec 004)
+│   │   ├── blueprints/            # Blueprint library (spec 005)
+│   │   │   ├── [publicId]/        # Blueprint builder (spec 005)
+│   │   │   └── catalog/           # Blueprint catalog (spec 005)
+│   │   ├── follow-up/             # Follow-up center (spec 007)
+│   │   ├── analytics/             # Analytics (spec 009)
+│   │   ├── organization/          # Org structure (spec 008)
+│   │   └── admin/                 # Admin panel
+│   ├── layout.tsx                 # Root layout (reads NEXT_LOCALE, fonts, providers)
 │   ├── not-found.tsx
-│   ├── login-block/        # shadcn login block demo (reference)
-│   └── dashboard-block/    # shadcn dashboard block demo (reference)
+│   ├── login-block/               # shadcn login block demo (reference)
+│   ├── dashboard-block/           # shadcn dashboard block demo (reference)
+│   └── proxy.ts                   # Security headers + cache control
 ├── components/
-│   ├── ui/                     # shadcn/ui primitives (CLI-managed)
-│   ├── domain/                 # Business domain components
-│   │   ├── tasks/
-│   │   ├── blueprints/
-│   │   ├── follow-up/
-│   │   ├── analytics/
-│   │   └── organization/
-│   └── shared/                 # Cross-domain reusable components
+│   ├── ui/                        # shadcn/ui primitives (CLI-managed; hand-edited for RTL: input-group, sidebar, dropdown-menu, command)
+│   ├── domain/                    # Business domain components
+│   │   ├── auth/                  # Login form
+│   │   ├── tasks/                 # Task board + task details (~28 files)
+│   │   ├── blueprints/            # Blueprint library + builder + catalog (~25 files)
+│   │   ├── shell/                 # AppSidebar, SiteHeader, nav, notifications (~8 files)
+│   │   ├── search/                # Global search (command palette)
+│   │   ├── follow-up/             # (not yet populated)
+│   │   ├── analytics/             # (not yet populated)
+│   │   └── organization/          # (not yet populated)
+│   ├── shared/                    # Cross-domain reusable components (~13 files)
+│   │   ├── empty-state.tsx
+│   │   ├── error-state.tsx
+│   │   ├── page-header.tsx
+│   │   ├── locale-toggle.tsx
+│   │   ├── active-badge.tsx
+│   │   ├── bilingual-name-fields.tsx
+│   │   ├── bilingual-description-fields.tsx
+│   │   ├── rtl-select.tsx
+│   │   ├── rtl-table.tsx
+│   │   ├── catalog-table.tsx
+│   │   ├── confirm-delete-dialog.tsx
+│   │   ├── brand-color-toggle.tsx
+│   │   └── copy-link-button.tsx
+│   ├── providers.tsx              # Root-wide providers (QueryClient, HydrationBoundary, 401 redirect)
+│   ├── locale-provider.tsx        # Zustand locale sync
+│   ├── version-switcher.tsx       # Sidebar header (app name + version)
+│   └── theme-toggle.tsx           # Light/Dark/System toggle
 ├── lib/
 │   ├── api/
-│   │   ├── client.ts           # Fetch wrapper (credentials, CSRF, errors)
-│   │   ├── query-keys.ts       # Centralized query key factory
-│   │   └── hooks/              # TanStack Query hooks per domain
+│   │   ├── client.ts              # Fetch wrapper (credentials, CSRF, X-Tenant, X-Locale, array params)
+│   │   ├── query-keys.ts          # Centralized query key factory
+│   │   ├── query-keys-extra.ts    # Extra namespaces (search, notifications)
+│   │   └── hooks/                 # TanStack Query hooks per domain
+│   │       ├── use-auth.ts
+│   │       ├── use-capabilities.ts
+│   │       ├── use-notifications.ts
+│   │       ├── use-search.ts
+│   │       ├── use-tenant.ts
+│   │       ├── use-tasks.ts
+│   │       ├── use-task-board.ts
+│   │       ├── use-task-detail.ts
+│   │       └── use-blueprints.ts
+│   ├── auth/
+│   │   └── server.ts              # Server-only auth utility (prefetchAuthenticatedUser)
 │   ├── generated/
-│   │   └── api-types.ts        # OpenAPI → TypeScript (auto-generated)
-│   ├── stores/                 # Zustand stores
-│   └── utils/                  # Pure utility functions
+│   │   └── api-types.ts           # OpenAPI → TypeScript (auto-generated, never edit)
+│   ├── stores/                    # Zustand stores
+│   │   ├── use-locale-store.ts
+│   │   ├── use-capability-store.ts
+│   │   ├── use-brand-color-store.ts
+│   │   ├── use-sidebar-store.ts
+│   │   ├── use-filter-store.ts
+│   │   ├── use-task-display-store.ts
+│   │   └── use-blueprint-builder-store.ts
+│   ├── hooks/
+│   │   ├── use-debounce.ts
+│   │   └── use-mobile.ts          # (from shadcn scaffold)
+│   ├── tenant/
+│   │   └── server.ts              # Server-only tenant prefetch
+│   └── utils/
+│       ├── utils.ts               # cn(), etc.
+│       ├── localize.ts            # localizeName, localizeTitle (shared locale-aware pickers)
+│       ├── tenant.ts              # extract tenant slug from hostname
+│       └── use-brand-name.ts      # useBrandName() hook + getBrandDescription()
+├── i18n/
+│   └── request.ts                 # next-intl request config (reads NEXT_LOCALE cookie)
+├── hooks/
+│   └── use-mobile.ts              # shadcn sidebar mobile detection
+├── messages/
+│   ├── ar.json
+│   └── en.json
+├── proxy.ts                       # Security headers + cache control (root)
+├── next.config.ts                 # Wrapped with createNextIntlPlugin
+├── vitest.config.ts
+├── __tests__/
+│   ├── setup.ts
+│   ├── utils/test-utils.tsx
+│   ├── mocks/
+│   │   ├── server.ts
+│   │   └── handlers.ts
+│   └── components/
+│       ├── shared/
+│       │   └── empty-state.test.tsx
+│       ├── domain/
+│       │   ├── shell/
+│       │   │   ├── notification-panel.test.tsx
+│       │   │   └── notification-item.test.tsx
+│       │   └── tasks/
+│       │       ├── task-board.test.tsx
+│       │       ├── task-board-utils.test.ts
+│       │       ├── task-badges.test.tsx
+│       │       ├── task-detail.test.tsx
+│       │       ├── stage-timeline.test.tsx
+│       │       └── recent-activity-card.test.tsx
 ├── docs/
-│   ├── ai/                     # AI agent documentation (this folder)
-│   └── design-system/          # Design system documentation
-└── specs/                      # Frontend feature specs
+│   ├── ai/
+│   └── design-system/
+└── specs/
+    ├── 001-core-shell/
+    ├── 003-task-board/
+    ├── 004-task-details/
+    ├── 005-blueprint-builder/
+    ├── 007-follow-up-center/
+    └── ...
 ```
 
 ---
@@ -89,6 +183,8 @@ Browser
 - **Never** use `useEffect` + `fetch` for API calls — use query hooks
 - **Never** use React context for frequently changing global state — use Zustand
 - **Always** colocate query keys in `lib/api/query-keys.ts`
+- **Store query key extensions** in `lib/api/query-keys-extra.ts` (e.g. search, notifications)
+- **Always** use `useInfiniteQuery` for cursor-paginated lists, `useQuery` for bounded lists
 
 ---
 
@@ -173,9 +269,10 @@ See `security-policy.md` for full security details.
 - **RTL regressions** on new components — test both locales on every PR
 - **Stale generated types** after backend API changes — CI must catch
 - **Permission UI divergence** — client capability checks drift from server ABAC
-- **Blueprint builder state complexity** — use Zustand, save in one API call
+- **Blueprint builder state complexity** — use Zustand for UI/selection only (never API data); granular per-entity mutations (no batch save — backend has no batch endpoint)
 - **Large bundle size** — dynamic import heavy components (charts, blueprint canvas)
 - **Cursor pagination UX** — no total count available; design for "load more" not page numbers
+- **ui/ hand-edits drift** — 4 shadcn files modified for RTL (`input-group.tsx`, `sidebar.tsx`, `dropdown-menu.tsx`, `command.tsx`); track changes in specs/plan.md — re-add after CLI reinstall
 
 ---
 

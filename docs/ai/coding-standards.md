@@ -73,15 +73,15 @@ app/
 ├── (dashboard)/            # Authenticated shell (sidebar + topbar)
 │   ├── layout.tsx          # Dashboard shell with auth guard
 │   ├── page.tsx            # Dashboard home
-│   ├── tasks/page.tsx      # Task board (spec 002)
-│   ├── blueprints/page.tsx # Blueprint builder (spec 003)
-│   ├── analytics/page.tsx  # Analytics (spec 005)
-│   ├── follow-up/page.tsx  # Follow-up center (spec 004)
-│   ├── organization/page.tsx # Org structure (spec 006)
-│   └── admin/page.tsx      # Admin panel (capability-gated)
+│   ├── tasks/              # Task board (spec 003) + [publicId] task details (spec 004)
+│   ├── blueprints/         # Blueprint library + [publicId] builder + catalog (spec 005)
+│   ├── follow-up/          # Follow-up center (spec 007)
+│   ├── analytics/          # Analytics (spec 009)
+│   ├── organization/       # Org structure (spec 008)
+│   └── admin/              # Admin panel (capability-gated)
 ├── login-block/            # shadcn login block demo (reference)
 ├── dashboard-block/        # shadcn dashboard block demo (reference)
-├── layout.tsx              # Root layout (reads NEXT_LOCALE cookie)
+├── layout.tsx              # Root layout (reads NEXT_LOCALE cookie, fonts, providers)
 ├── not-found.tsx           # 404 page
 └── proxy.ts                # Security headers + cache control
 ```
@@ -91,26 +91,41 @@ app/
 ```
 lib/
 ├── api/
-│   ├── client.ts           # Fetch wrapper (credentials, headers, error handling)
-│   ├── query-keys.ts       # Centralized query key factory
+│   ├── client.ts              # Fetch wrapper (credentials, headers, error handling, array params)
+│   ├── query-keys.ts          # Centralized query key factory
+│   ├── query-keys-extra.ts    # Extra namespaces (search, notifications)
 │   └── hooks/
-│       ├── use-tasks.ts    # Task query/mutation hooks
-│       ├── use-auth.ts     # Current user, login, logout
-│       ├── use-capabilities.ts  # Capability checks
-│       ├── use-notifications.ts # Notifications list, count, mark-read
-│       ├── use-search.ts   # Global search + recent activity
-│       └── use-tenant.ts   # Tenant info hook
+│       ├── use-auth.ts        # Current user, login, logout
+│       ├── use-capabilities.ts    # Capability checks
+│       ├── use-notifications.ts   # Notifications list, count, mark-read
+│       ├── use-search.ts      # Global search + recent activity
+│       ├── use-tenant.ts      # Tenant info hook
+│       ├── use-tasks.ts       # Generic task hooks (unused by board; exists for future)
+│       ├── use-task-board.ts  # Board + lookup hooks (board, priorities, categories, stage types)
+│       ├── use-task-detail.ts # Task detail + SLA + timeline + mutation hooks
+│       └── use-blueprints.ts  # Blueprint list/detail + all mutation hooks + catalog + positions
+├── auth/
+│   └── server.ts              # Server-only auth utility (prefetchAuthenticatedUser)
 ├── generated/
-│   └── api-types.ts        # OpenAPI → TypeScript (auto-generated, never edit)
+│   └── api-types.ts           # OpenAPI → TypeScript (auto-generated, never edit)
 ├── stores/
-│   ├── use-locale-store.ts       # Locale state (used by LocaleToggle)
-│   ├── use-capability-store.ts   # Capability strings for permission UI
-│   ├── use-brand-color-store.ts  # Persisted brand color (Zustand persist)
-│   └── use-sidebar-store.ts      # Pre-existing scaffold — currently unused
+│   ├── use-locale-store.ts         # Locale state (used by LocaleToggle)
+│   ├── use-capability-store.ts     # Capability strings array for permission UI
+│   ├── use-brand-color-store.ts    # Persisted brand color (Zustand persist: amber/blue/emerald/rose/slate)
+│   ├── use-sidebar-store.ts        # Pre-existing scaffold — currently unused
+│   ├── use-filter-store.ts         # Pre-existing scaffold — unused (filters use URL params)
+│   ├── use-task-display-store.ts   # Shares display_id between task page and breadcrumb
+│   └── use-blueprint-builder-store.ts  # UI/selection only: selectedStageId, panelOpen, metadataDirty, blueprintName
+├── hooks/
+│   ├── use-debounce.ts        # Debounce hook for search input
+│   └── use-mobile.ts          # shadcn sidebar mobile detection
+├── tenant/
+│   └── server.ts              # Server-only tenant prefetch (getTenant)
 └── utils/
-    ├── date-utils.ts       # planned — Hijri conversion, relative time
-    ├── sla-utils.ts        # planned — SLA health color/label mapping
-    └── utils.ts            # Utility functions (cn, etc.)
+    ├── utils.ts               # Utility functions (cn, etc.)
+    ├── localize.ts            # localizeName / localizeTitle — shared locale-aware field pickers
+    ├── tenant.ts              # extract tenant slug from browser hostname subdomain
+    └── use-brand-name.ts      # useBrandName() hook + getBrandDescription()
 ```
 
 ---
@@ -426,6 +441,19 @@ export function useLogin() {
 ---
 
 ## State Management
+
+### Tool Decision Matrix
+
+| Concern | Tool | When |
+|---------|------|------|
+| API data (tasks, blueprints, users) | TanStack Query (`useQuery`, `useMutation`) | Always |
+| Paginated lists | TanStack Query (`useInfiniteQuery`) | Cursor-paginated endpoints |
+| Auth session / current user | TanStack Query + Sanctum cookie | Always |
+| Filter/sort state (shareable) | URL search params (`useSearchParams`) | Bookmarkable views |
+| UI preferences | Zustand (persist middleware) | Sidebar, theme, brand color, locale |
+| Wizard/builder selection state | Zustand | Blueprint builder (`selectedStageId`, `panelOpen`) |
+| Single-component toggle | `useState` | Dialog open/close, expand/collapse |
+| Form input values | Local state (controlled) | Never in Zustand |
 
 ### Decision Tree
 
@@ -911,13 +939,13 @@ SLA colors: emerald (on track), amber (at risk), red (overdue), slate (suspended
 
 ### Pattern: Hide or Disable Based on Capabilities
 
-The server is the source of truth. The frontend uses capabilities from the current user's session to optimistically show/hide actions:
+The server is the source of truth. Capabilities are fetched from `GET /v1/iam/users/{user_public_id}/capabilities` and stored in `useCapabilityStore`. The `useCapability()` hook reads from the store synchronously:
 
 ```tsx
 // lib/api/hooks/use-capabilities.ts
 export function useCapability(capability: string): boolean {
-  const { data: user } = useCurrentUser();
-  return user?.capabilities?.includes(capability) ?? false;
+  const caps = useCapabilityStore((s) => s.capabilities);
+  return caps.includes(capability);
 }
 
 // Usage in component
@@ -941,6 +969,18 @@ export function TaskActions({ task }: { task: Task }) {
 ```
 
 **Rule:** Never trust client-side capability checks for security. The server returns 403 regardless. These checks are for UX only — hiding actions the user cannot perform.
+
+### Global cursor-pointer on Base Components
+
+`cursor-pointer` is handled globally on trigger/interactive elements inside these shadcn base components: `button.tsx`, `toggle.tsx`, `select.tsx`, `dropdown-menu.tsx`, `command.tsx`, `sidebar.tsx`. Do not add per-instance `cursor-pointer` overrides for these primitives. Only non-primitive elements (e.g., `TableRow`, custom cards) need explicit `cursor-pointer`.
+
+### Exception: shadcn ui/ Hand-Edits
+
+While `components/ui/` is CLI-managed, the following files were **hand-edited** for RTL fixes and project-specific behavior. Changes are documented in `specs/001-core-shell/plan.md`. Re-apply after CLI reinstall:
+- `input-group.tsx` — replaced physical `pl`/`pr`/`ml`/`mr` with logical `ps`/`pe`/`ms`/`me`
+- `dropdown-menu.tsx` — added `ms-auto` and `rtl:rotate-180` on sub-trigger chevron
+- `sidebar.tsx` — replaced `ml-0`/`ml-2` with `ms-0`/`ms-2` in inset variant selectors
+- `command.tsx` — wrapped `CommandDialog` children in `<Command>`, added `shouldFilter={false}`
 
 ---
 

@@ -11,7 +11,9 @@
 | primary | `#9A3B00` | `bg-primary` | `--color-primary` | CTAs, active nav, buttons |
 | primary-foreground | `#ffffff` | `text-primary-foreground`| `--color-primary-foreground` | Text on primary buttons |
 
-**Tenant Override:** `--color-primary` is injected from `/api/v1/tenant/branding` when the branding API is available. Default to amber until then.
+**Default palette:** Amber (`#9A3B00`). User can select from 5 colors via Preferences submenu: amber (default), blue, emerald, rose, slate. Persisted via Zustand `persist` middleware (localStorage).
+
+**Tenant Override (future):** `--color-primary` will be injected from `/api/v1/tenant/branding` when the branding API is available.
 
 ---
 
@@ -123,19 +125,16 @@ See `globals.css:root` and `globals.css .dark` for light/dark values.
 
 ---
 
-## Tenant Override
+## Brand Color Persistence
 
-The `--color-primary` CSS variable is injected from `/api/v1/tenant/branding` at runtime:
+Brand color is persisted per-browser via Zustand `persist` middleware (localStorage). A blocking `<script>` in `app/layout.tsx` reads the stored color and sets `--color-primary` on `<html>` before React hydrates—eliminating color flash:
 
 ```tsx
-// Fetch branding and apply
-const branding = useBranding(); // TanStack Query hook
-
-  useEffect(() => {
-    if (branding?.primary_color) {
-      document.documentElement.style.setProperty('--color-primary', branding.primary_color);
-    }
-  }, [branding]);
+// Injected inline <script> in root layout body:
+// const stored = localStorage.getItem('brand-color');
+// if (stored) document.documentElement.style.setProperty('--color-primary', stored);
 ```
 
-Default to amber (`#f59e0b`) until branding API is available.
+The `BrandColorProvider` component also reads the store and applies CSS variables for React-managed updates. Default color is `#9A3B00` (amber).
+
+**Tenant Override (future):** `--color-primary` will be injected from `/api/v1/tenant/branding` when the branding API is available. The blocking-script pattern will need to be extended to read from both localStorage and the branding API response.

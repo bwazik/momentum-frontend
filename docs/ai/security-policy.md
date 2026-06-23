@@ -28,11 +28,13 @@
 ### Implementation Rules
 
 ```tsx
-// ✅ Correct — credentials included, browser handles cookies
-const response = await fetch('https://api.momentum.test/v1/tasks', {
-  credentials: 'include',
-  headers: { 'Accept': 'application/json' },
-});
+// ✅ Correct — use apiClient (credentials included, CSRF handled, X-Tenant + X-Locale added)
+import { apiClient } from '@/lib/api/client';
+
+const tasks = await apiClient.get<Task[]>('/v1/tasks', { params: { status: 'active' } });
+
+// ❌ Wrong — manual fetch without credentials/headers
+const response = await fetch('https://api.momentum.test/v1/tasks');
 
 // ❌ Wrong — manual token management
 const token = localStorage.getItem('auth_token');
@@ -43,23 +45,20 @@ fetch('https://api.momentum.test/v1/tasks', {
 
 ### CSRF Protection
 
-Sanctum requires the `X-XSRF-TOKEN` header on mutating requests. The browser reads from the `XSRF-TOKEN` cookie (non-HttpOnly) and the fetch wrapper should include it:
+Sanctum requires the `X-XSRF-TOKEN` header on mutating requests. The `apiClient` handles this automatically — extracts the `XSRF-TOKEN` cookie (non-HttpOnly) and includes it on POST/PUT/PATCH/DELETE requests:
 
 ```ts
-// lib/api/client.ts — CSRF header extraction
-function getXsrfToken(): string | null {
-  const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
-  return match ? decodeURIComponent(match[1]) : null;
-}
+// lib/api/client.ts — CSRF handled automatically by apiClient
+// No manual extraction needed in component code.
 
-// Include in mutating requests (POST, PUT, PATCH, DELETE)
-const headers: Record<string, string> = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-};
-const xsrf = getXsrfToken();
-if (xsrf && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
-  headers['X-XSRF-TOKEN'] = xsrf;
+// Login flow: CSRF cookie must be fetched FIRST
+export function useLogin() {
+  return useMutation({
+    mutationFn: async (credentials) => {
+      await getCsrfCookie();  // GET /sanctum/csrf-cookie — sets XSRF-TOKEN cookie
+      return apiClient.post<AuthResponse>('/v1/iam/auth/login', credentials);
+    },
+  });
 }
 ```
 
@@ -89,9 +88,19 @@ const queryClient = new QueryClient({
 
 ## Route Protection
 
-### Middleware Pattern (Planned)
+### proxy.ts (Security Headers)
 
-Next.js middleware to protect authenticated routes — not yet implemented. The intended pattern checks for session cookie presence and redirects unauthenticated requests to `/login`. See `architecture.md` for details.
+The root `proxy.ts` file (Next.js 16 Proxy) applies security headers and cache control to all routes:
+
+- `X-Frame-Options: DENY`
+- `X-Content-Type-Options: nosniff`
+- `Cache-Control: no-store` (prevents bfcache on authenticated pages)
+
+No auth logic in `proxy.ts` — auth protection is done server-side in the dashboard layout via `prefetchAuthenticatedUser()` which returns 401 before shell HTML renders.
+
+### Dashboard Layout Auth Guard
+
+The `(dashboard)/layout.tsx` uses `dynamic = 'force-dynamic'` and calls `prefetchAuthenticatedUser()` server-side. On 401, it redirects to `/login` before any shell HTML is sent to the browser. Client-side 401s are handled globally via `QueryCache.onError`.
 
 ---
 

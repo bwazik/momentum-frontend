@@ -9,13 +9,18 @@
 
 | Term | Definition | In Backend | In Frontend |
 |------|------------|------------|-------------|
-| **Blueprint** | Reusable workflow template (stages, SLAs, assignments) | `Blueprint` model | Blueprint builder screen, read-only after lock |
+| **Blueprint** | Reusable workflow template (stages, SLAs, assignments) | `Blueprint` model | Blueprint builder screen (`/blueprints`), read-only after lock |
+| **Blueprint Stage** | A named phase within a blueprint definition | `BlueprintStage` | Stage card on the builder canvas, editable in properties panel |
+| **Blueprint Sub-stage** | An internal step within a blueprint stage | `BlueprintSubStage` | Sub-stage form in builder properties panel, ordered list |
+| **Blueprint Transition** | Advance or return path between blueprint stages | `BlueprintTransition` | TransitionEditor component, integer codes (1=advance, 2=return) |
 | **Task** | Single work instance launched from a Blueprint | `Task` model | Task board row, task details page |
-| **Stage** | Named phase in a task lifecycle | `TaskStageInstance` | Stage timeline node, active stage indicator |
-| **Sub-stage** | Internal step within a stage | `TaskSubStageInstance` | Sub-stage checklist within stage detail |
-| **SLA Policy** | Reusable timer definition (hours/days) | `SlaPolicy` | SLA badge, duration display in blueprint builder |
+| **Stage Instance** | A runtime instance of a blueprint stage on a task | `TaskStageInstance` | Stage timeline node (`instance_id` for API calls) |
+| **Sub-stage Instance** | A runtime instance of a blueprint sub-stage on a task | `TaskSubStageInstance` | Sub-stage checklist item within stage detail |
+| **SLA Policy** | Reusable timer definition (hours/days) | `SlaPolicy` | SLA badge, duration display in blueprint builder catalog |
+| **SLA Health** | Status of an SLA timer (on track, at risk, overdue, suspended) | `SlaTimerInstance` | SlaBadge (color + text), inline on active stage node |
 | **Escalation** | SLA breach or manual elevation to manager | `Escalation` | Escalation alert, follow-up center action |
 | **External reference** | Link to correspondence/contract number | `TaskExternalReference` | Reference tag on task card, search filter |
+| **Display ID** | Human-readable task identifier (e.g. `T-2026-0001`) | `Task.display_id` | Task detail breadcrumb, Title & Meta card; shared via `useTaskDisplayStore` |
 
 ---
 
@@ -100,13 +105,22 @@
 |------|---------|
 | **Task board** | Filterable table of tasks (SLA, assignee, stage) |
 | **Follow-up center** | Monitoring hub for follow-up specialists |
-| **Blueprint builder** | Visual workflow template editor |
+| **Blueprint builder** | Visual workflow template editor (split view: canvas + properties panel) |
+| **Blueprint canvas** | Left pane of builder showing stage cards in sequence with flow connectors |
+| **Properties panel** | Right pane of builder showing the selected stage's editable fields |
 | **Stage timeline** | Vertical history of stage progression on task details |
 | **SLA badge** | Color-coded health indicator with text label |
 | **RAG status** | Red-Amber-Green department health (executive dashboard) |
 | **Stat card** | KPI card with number + trend on dashboards |
 | **Empty state** | Illustration + headline + CTA when no data |
 | **Skeleton** | Animated placeholder matching content shape during loading |
+| **PageHeader** | Reusable shared component: title + description + optional actions |
+| **BilingualNameFields** | Reusable pair of Arabic (required, `dir="rtl"`) and English (optional, `dir="ltr"`) name inputs |
+| **RtlSelect** | Wrapper around shadcn `Select` with automatic `dir` per locale |
+| **RtlTable** | Wrapper around shadcn `Table` with automatic `dir` for RTL columns |
+| **ConfirmDeleteDialog** | Reusable `AlertDialog` wrapper for destructive confirmations |
+| **CatalogTable** | Shared building blocks: `ActionsDropdown`, `FormDialog`, `CatalogSkeleton` |
+| **ActiveBadge** | Green/grey colored text span for active/inactive status |
 
 ---
 
@@ -114,14 +128,25 @@
 
 | UI Concept | shadcn Component | Domain Component |
 |------------|-----------------|-----------------|
-| Data table | `Table` | `DataTable` (with sorting, filtering) |
-| Filter chips | `Badge` + `Button` | `FilterChipGroup` |
+| Data table | `Table` | `TaskBoardTable`, `BlueprintTable` |
+| Filter chips | `ToggleGroup` + `Button` | `TaskBoardFilters`, `BlueprintFilters` |
 | SLA indicator | `Badge` | `SlaBadge` |
 | Priority pill | `Badge` | `PriorityBadge` |
-| Stage node | Custom | `StageTimelineNode` |
+| Classification badge | `Badge` | `ClassificationBadge` |
+| Task status badge | `Badge` | `TaskStatusBadge` |
+| Active/inactive badge | `span` | `ActiveBadge` (shared) |
+| Stage node | Custom | `StageTimelineNode`, `StageCard` |
+| Stage/sub-stage form | `Field` + `Select` | `StageForm`, `SubStageForm` |
+| Bilingual inputs | `Field` + `Input` | `BilingualNameFields`, `BilingualDescriptionFields` (shared) |
 | Stat metric | `Card` | `StatCard` |
-| Confirmation | `AlertDialog` | — (use shadcn directly) |
+| Confirmation | `AlertDialog` | `ConfirmDeleteDialog` (shared) |
 | Form fields | `Field` + `InputGroup` + `Select` | — (use shadcn directly) |
+| RTL-aware Select | `Select` | `RtlSelect` (shared, auto-dir) |
+| RTL-aware Table | `Table` | `RtlTable` (shared, auto-dir) |
+| Catalog CRUD | `Dialog` + `DropdownMenu` | `CatalogTable`, `ActionsDropdown`, `FormDialog` (shared) |
+| Page header | Custom | `PageHeader` (shared: title + description + actions) |
+| Empty state | Custom | `EmptyState` (shared: icon + headline + CTA) |
+| Error state | Custom | `ErrorState` (shared: message + retry) |
 | Toast | `Sonner` | — (use sonner directly) |
 
 ---
@@ -156,7 +181,9 @@
 | Login | `/login` |
 | Task board | `/tasks` |
 | Task details | `/tasks/[publicId]` |
+| Blueprint library | `/blueprints` |
 | Blueprint builder | `/blueprints/[publicId]` |
+| Blueprint catalog | `/blueprints/catalog?tab=categories` |
 | Follow-up center | `/follow-up` |
 | Analytics | `/analytics` |
 | Organization | `/organization` |

@@ -39,7 +39,10 @@ Uses shadcn `SidebarProvider` + `AppSidebar` + `SiteHeader` — see the dashboar
 | Background | solid (shadcn `SiteHeader`) |
 | Position | `sticky top-0` |
 | Border | `border-b border-border/50` |
-| Content | Page title, search, theme toggle (Light/Dark/System), notifications, primary CTA |
+| Content | SidebarTrigger hamburger, breadcrumb (auto-resolved from pathname), global search trigger, notification bell, locale toggle |
+| Theme & brand color | **Moved to user menu dropdown** (NavUser → Preferences submenu) |
+| Breadcrumb | Derived from `usePageBreadcrumb()` — renders known routes (Dashboard › Tasks › display_id) with `rtl:rotate-180` chevrons; falls back to static title for unknown routes |
+| RTL | Breadcrumb chevrons flip via `rtl:rotate-180` |
 
 ---
 
@@ -63,18 +66,32 @@ Uses shadcn `SidebarProvider` + `AppSidebar` + `SiteHeader` — see the dashboar
 
 ### Detail Page (Task Details)
 
+Two-column stacked-card layout (matching `_blueprints/ui-concepts/03-task-details.html`):
+
 ```
 ┌──────────────────────────┬────────────────┐
-│ Main Column (2/3)        │ Side Panel     │
-│ ┌──────────────────────┐ │ (1/3)         │
-│ │ Title + status       │ │ ┌────────────┐│
-│ │ Description          │ │ │ Meta info  ││
-│ │ Stage Timeline       │ │ │ Assignees  ││
-│ │ Comments (future)    │ │ │ References ││
-│ └──────────────────────┘ │ │ Actions    ││
+│ Main Column (2/3)        │ Sidebar (1/3)  │
+│ ┌──────────────────────┐ │ ┌────────────┐│
+│ │ Title & Meta Card    │ │ │ Details    ││
+│ │ (badges, title, ref, │ │ │ Card       ││
+│ │  description)        │ │ │ (metadata) ││
+│ ├──────────────────────┤ │ ├────────────┤│
+│ │ Stage Timeline Card  │ │ │ Attachments││
+│ │ (vertical <ol>,      │ │ │ (future)   ││
+│ │  completed/active/   │ │ ├────────────┤│
+│ │  pending/returned,   │ │ │ Ext. Refs  ││
+│ │  sub-stages, SLA     │ │ │ (future)   ││
+│ │  inline, actions)    │ │ ├────────────┤│
+│ ├──────────────────────┤ │ │ Recent     ││
+│ │ Comments (future)    │ │ │ Activity   ││
+│ └──────────────────────┘ │ │ Card       ││
 │                          │ └────────────┘│
 └──────────────────────────┴────────────────┘
 ```
+
+- Desktop (`≥1024px`): `grid-cols-1 lg:grid-cols-3`, main col spans 2, sidebar spans 1 (sticky on scroll)
+- Tablet/mobile: single column, sidebar cards stack below main column
+- PageHeader at top: title + description + TaskTopBarActions (capability-gated lifecycle buttons)
 
 ### Dashboard Page (Executive, Department Manager)
 
@@ -110,16 +127,29 @@ Uses shadcn `SidebarProvider` + `AppSidebar` + `SiteHeader` — see the dashboar
 ### Blueprint Builder (Split View)
 
 ```
-┌─────────────────────────┬───────────────┐
-│ Canvas (stage nodes)    │ Properties    │
-│ ┌───┐   ┌───┐   ┌───┐ │ Panel         │
-│ │ 1 │──▶│ 2 │──▶│ 3 │ │ ┌───────────┐ │
-│ └───┘   └───┘   └───┘ │ │ Stage Name│ │
-│                         │ │ SLA Policy│ │
-│   ◀── Return ──         │ │ Assignees │ │
-│                         │ └───────────┘ │
-└─────────────────────────┴───────────────┘
+┌──────────────────────────────────┬──────────────────┐
+│ Canvas (flexible)                │ Properties Panel │
+│ ┌─────────────────────────┐     │ (~320px, sticky) │
+│ │ Blueprint header        │     │ ┌──────────────┐ │
+│ │ (title, desc, badges)   │     │ │ StageForm    │ │
+│ ├─────────────────────────┤     │ │ (12 fields)  │ │
+│ │ [Stage 1] → [Stage 2]  │     │ ├──────────────┤ │
+│ │   ├ sub-stage 1         │     │ │ Transitions  │ │
+│ │   └ sub-stage 2        │     │ │ (advance/    │ │
+│ │ [Stage 3]               │     │ │  return)     │ │
+│ │ [ + Add Stage ]        │     │ ├──────────────┤ │
+│ └─────────────────────────┘    │ │ SubStages    │ │
+│                                │ │ (add/edit/   │ │
+│                                │ │  delete)     │ │
+│                                │ └──────────────┘ │
+└──────────────────────────────────┴──────────────────┘
 ```
+
+- Desktop (`≥1024px`): split view — canvas flex + panel ~320px (panel sticky, independently scrollable)
+- Mobile: single column, panel collapses to Sheet (triggered by selecting a stage / "Edit Stage" button)
+- Top bar: breadcrumb + lock/status badge + Settings + Activate/Deactivate + Duplicate
+- Read-only when locked or view-only (all fields disabled)
+- Catalog page (`/blueprints/catalog`): three-tab layout (Categories / Stage Types / SLA Policies) with URL `?tab=` param, per-tab CRUD dialogs
 
 ---
 
@@ -133,11 +163,17 @@ Uses shadcn `SidebarProvider` + `AppSidebar` + `SiteHeader` — see the dashboar
 
 ### Breadcrumbs
 
-Detail pages show breadcrumb below top bar:
+Breadcrumb is rendered by `SiteHeader` (shell layout) via `usePageBreadcrumb()` — derived from `usePathname()` with route-specific display logic:
 
 ```
-Task Board / T-2026-0412
+(task routes)      Dashboard / Tasks / T-2026-0412
+(blueprint routes) Dashboard / Blueprints / Blueprint Name
 ```
+
+- Chevrons use `rtl:rotate-180` for RTL
+- Task detail breadcrumb reads `display_id` from `useTaskDisplayStore` (Zustand), falling back to URL segment UUID
+- Blueprint builder breadcrumb reads `blueprintName` from `useBlueprintBuilderStore`
+- No breadcrumb in page content area — pages use `PageHeader` for title + description + actions
 
 ---
 
@@ -239,10 +275,20 @@ Every new screen: verify layout in both `ar` (RTL) and `en` (LTR) before PR merg
 
 ### Task Board Filters
 
-- Chip buttons: All, My Tasks, Overdue, At Risk, Suspended
-- Dropdown selects: Department, Priority, Blueprint via shadcn `Select`
-- Sticky below top bar on scroll
+- Quick filter `ToggleGroup`: Active (default), My Tasks, Overdue, At Risk, Suspended, All
+- Dropdown selects: Department, Priority, Blueprint via shadcn `Select` or `RtlSelect`
+- Search input with 300ms debounce (manual `setTimeout`/`clearTimeout` in `useEffect`)
+- Sort: `Select` (field) + direction toggle button (`ArrowUpDown`)
+- URL-driven: all filter state in search params (bookmarkable)
 - Reset button to clear all filters
+
+### Blueprint Library Filters
+
+- Active ToggleGroup: Active / Inactive / All
+- Search input with 300ms debounce
+- Category `RtlSelect`
+- Scope `RtlSelect` (Organization / Department)
+- URL-driven: `search`, `category_id`, `scope`, `is_active` in search params
 
 See `npx shadcn@latest docs select` for the Select API.
 
@@ -266,16 +312,20 @@ Use shadcn `AlertDialog` for destructive actions:
 | Dashboard metrics | Skeleton stat cards (number + label shape) |
 | Mutation in progress | Button loading spinner, disabled state |
 | Search | Debounce 300ms, inline loading indicator |
+| Detail page (task/blueprint) | Full-page skeleton matching two-column/canvas+panel layout |
+| "Load More" pagination | Manual button (disabled while fetching next page); no infinite scroll on tables |
 
 ---
 
 ## Search
 
-- Global search in top bar: tasks, references, people
-- Debounce: 300ms before API call
-- Results: dropdown with task title, SLA badge, department
-- Keyboard: `Cmd+K` / `Ctrl+K` to focus search
-- Empty: "No results" with suggestion text
+- Global search: `Cmd+K` / `Ctrl+K` opens command palette (`cmdk` `CommandDialog` with `shouldFilter={false}`)
+- Debounce: 300ms before API call (`GET /v1/search`)
+- Recent activity (`GET /v1/search/recent`) shown by default when palette opens with no query
+- Results: task title, SLA health dot, blueprint name, department name
+- Navigation: selecting a result navigates to `/tasks/[publicId]`
+- Empty: "No results" in active locale
+- Lazy-loaded via `next/dynamic` (`GlobalSearch` component)
 
 ---
 

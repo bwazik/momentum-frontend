@@ -55,10 +55,6 @@ Main content areas need `p-6` standard page padding.
 
 Check `components/ui/` before building custom. Use shadcn primitives (Button, Card, Badge, etc.) directly.
 
-### ❌ Hand-editing shadcn ui/ files
-
-Never edit files in `components/ui/` — they're CLI-managed. Customize via CSS variables in `globals.css` or wrapper components in `components/domain/`.
-
 ### ❌ Domain imports in shared components
 
 Shared components (`components/shared/`) must not import domain types. Use generic props or generics instead.

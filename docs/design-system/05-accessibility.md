@@ -92,7 +92,7 @@ Skip links for keyboard users:
   href="#main-content"
   className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:start-4 focus:z-[999] focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded-lg"
 >
-  تخطي إلى المحتوى الرئيسي
+  {t('skip_to_main')}
 </a>
 {/* ... */}
 <main id="main-content" className="flex-1 overflow-y-auto bg-background p-6">
@@ -175,16 +175,16 @@ Toast notifications and dynamic content updates should use ARIA live regions:
 ### Navigation
 
 ```tsx
-<nav aria-label="القائمة الرئيسية">
+<nav aria-label={t('main_navigation')}>
   <ul role="list">
     <li>
       <Link
         href="/tasks"
         aria-current={isActive ? 'page' : undefined}
-        className={cn(isActive && 'bg-amber-600/20 text-amber-300')}
+        className={cn(isActive && 'data-[active=true]:bg-primary data-[active=true]:text-primary-foreground')}
       >
-        <ListTodo className="w-5 h-5" aria-hidden="true" />
-        لوحة المهام
+        <ListTodo className="size-5" aria-hidden="true" />
+        {t('tasks')}
       </Link>
     </li>
   </ul>
