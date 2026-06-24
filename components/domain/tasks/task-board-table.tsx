@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useQueryClient } from '@tanstack/react-query';
-import { Ellipsis, ExternalLink, Copy } from 'lucide-react';
+import { Ellipsis, ExternalLink, Copy, GitBranch } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { copyTaskLink, copyToClipboard } from '@/components/shared/copy-link-button';
 import {
@@ -18,6 +18,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -65,6 +66,7 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('tasks.board.columns');
+  const nav = useTranslations('nav');
   const queryClient = useQueryClient();
 
   function handleRowHover(publicId: string) {
@@ -206,6 +208,17 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" side="bottom" className="min-w-36">
+                    <DropdownMenuItem
+                      className="whitespace-nowrap"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(`/tasks/${task.public_id}/workflow`);
+                      }}
+                    >
+                      <GitBranch className="me-2 size-4" />
+                      {nav('label_workflow')}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="whitespace-nowrap"
                       onClick={(e) => {

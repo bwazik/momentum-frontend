@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { GitBranch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTaskDetail } from '@/lib/api/hooks/use-task-detail';
 import { useCurrentUser } from '@/lib/api/hooks/use-auth';
@@ -17,6 +19,7 @@ interface TaskTopBarActionsProps {
 
 export function TaskTopBarActions({ publicId }: TaskTopBarActionsProps) {
   const t = useTranslations('tasks.detail');
+  const nav = useTranslations('nav');
   const { data: task } = useTaskDetail(publicId);
   const { data: user } = useCurrentUser();
   const canSuspend = useCapability('task.suspend_resume');
@@ -38,6 +41,12 @@ export function TaskTopBarActions({ publicId }: TaskTopBarActionsProps) {
 
   return (
     <div className="flex items-center gap-2">
+      <Button variant="outline" size="sm" asChild>
+        <Link href={`/tasks/${publicId}/workflow`}>
+          <GitBranch data-icon="inline-start" className="size-4" />
+          {nav('label_workflow')}
+        </Link>
+      </Button>
       {status === 'active' && canSuspend && (
         <Button
           variant="outline"

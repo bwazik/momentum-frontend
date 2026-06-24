@@ -25,12 +25,14 @@ import {
 import type {
   TaskStageInstanceResource,
   SlaTimerInstanceResource,
+  BlueprintStageResource,
 } from './task-detail-types';
 
 interface StageTimelineNodeProps {
   stage: TaskStageInstanceResource;
   index: number;
   slaTimers?: SlaTimerInstanceResource[];
+  blueprintStages?: BlueprintStageResource[];
   taskPublicId: string;
   blueprintId?: string;
 }
@@ -77,11 +79,13 @@ export function StageTimelineNode({
   stage,
   index,
   slaTimers,
+  blueprintStages,
   taskPublicId,
   blueprintId,
 }: StageTimelineNodeProps) {
   const locale = useLocale();
   const t = useTranslations('tasks.detail');
+  const tw = useTranslations('tasks.workflow');
   const timeFmt = timeFmtFromT(t);
   const { data: user } = useCurrentUser();
   const canOverride = useCapability('task.override_assignment');
@@ -97,16 +101,24 @@ export function StageTimelineNode({
     stage.blueprint_stage.name_ar,
     stage.blueprint_stage.name_en,
   );
-  const timer =
-    status === 'active'
-      ? getStageTimer(slaTimers, stage)
-      : undefined;
-  const slaInline = formatSlaInline(timer, timeFmt);
+  const timer = getStageTimer(slaTimers, stage);
+  const slaInline = status === 'active' ? formatSlaInline(timer, timeFmt) : null;
+  const blueprintSlaPolicy = (blueprintStages ?? []).find(
+    (bp) => bp.public_id === stage.blueprint_stage.public_id,
+  )?.sla_policy;
+  const slaPolicy = timer?.sla_policy
+    ? { sla_value: timer.sla_policy.sla_value, sla_unit: timer.sla_policy.sla_unit }
+    : blueprintSlaPolicy
+      ? { sla_value: blueprintSlaPolicy.sla_value, sla_unit: blueprintSlaPolicy.sla_unit }
+      : null;
+  const slaPolicyLabel = slaPolicy
+    ? `${t('sla')}: ${slaPolicy.sla_value} ${slaPolicy.sla_unit === 'hours' || slaPolicy.sla_unit === '1' ? t('time_hour_many') : t('time_day_many')}`
+    : null;
 
   const nodeStyle = NODE_STYLES[status] || NODE_STYLES.pending;
 
   return (
-    <li className="flex gap-4">
+    <li id={stage.instance_id ? `stage-${stage.instance_id}` : undefined} className="flex gap-4">
       <div
         className={cn(
           'relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full border-2',
@@ -175,7 +187,7 @@ export function StageTimelineNode({
 
         {stage.entered_at && (
           <p className="mt-0.5 text-xs text-muted-foreground">
-            {formatDuration(stage.entered_at, stage.exited_at || null, timeFmt)}
+            {tw('tooltip_duration')}: {formatDuration(stage.entered_at, stage.exited_at || null, timeFmt)}
           </p>
         )}
 
@@ -183,18 +195,20 @@ export function StageTimelineNode({
           <p
             className={cn(
               'mt-0.5 text-xs font-medium',
-              slaInline.includes('Overdue') &&
-                'text-red-600 dark:text-red-400',
-              slaInline.includes('At risk') &&
-                'text-amber-600 dark:text-amber-400',
-              !slaInline.includes('Overdue') &&
-                !slaInline.includes('At risk') &&
-                'text-emerald-600 dark:text-emerald-400',
+              slaInline.includes(timeFmt.overduePrefix)
+                ? 'text-red-600 dark:text-red-400'
+                : slaInline.includes(timeFmt.atRisk)
+                  ? 'text-amber-600 dark:text-amber-400'
+                  : 'text-emerald-600 dark:text-emerald-400',
             )}
             aria-live="polite"
           >
+            {slaPolicyLabel && <span className="text-muted-foreground font-normal">{slaPolicyLabel} — </span>}
             {slaInline}
           </p>
+        )}
+        {slaPolicyLabel && status !== 'active' && (
+          <p className="mt-0.5 text-xs text-muted-foreground">{slaPolicyLabel}</p>
         )}
 
         {stage.completion_note && (
@@ -212,6 +226,7 @@ export function StageTimelineNode({
         {stage.sub_stages && stage.sub_stages.length > 0 && (
           <SubStageList
             subStages={stage.sub_stages}
+            slaTimers={slaTimers}
             taskPublicId={taskPublicId}
           />
         )}

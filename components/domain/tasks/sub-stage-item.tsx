@@ -15,21 +15,25 @@ import {
   isUserAssignee,
   localizeName,
   formatDuration,
+  formatSlaInline,
   timeFmtFromT,
 } from './task-detail-utils';
-import type { TaskSubStageInstanceResource } from './task-detail-types';
+import type { TaskSubStageInstanceResource, SlaTimerInstanceResource } from './task-detail-types';
 
 interface SubStageItemProps {
   subStage: TaskSubStageInstanceResource;
+  slaTimers?: SlaTimerInstanceResource[];
   taskPublicId: string;
 }
 
 export function SubStageItem({
   subStage,
+  slaTimers,
   taskPublicId,
 }: SubStageItemProps) {
   const locale = useLocale();
   const t = useTranslations('tasks.detail');
+  const tw = useTranslations('tasks.workflow');
   const timeFmt = timeFmtFromT(t);
   const { data: user } = useCurrentUser();
   const canOverride = useCapability('task.override_assignment');
@@ -39,6 +43,22 @@ export function SubStageItem({
   const status = subStage.status;
   const assignees = getStageAssignees(subStage.assignments);
   const isAssignee = isUserAssignee(subStage.assignments, user?.public_id);
+  const subStageTimer = slaTimers?.find(
+    (t) => t.sub_stage_instance_id === subStage.instance_id,
+  );
+  const subStageSlaText = status === 'active' && subStageTimer
+    ? formatSlaInline(subStageTimer, timeFmt)
+    : null;
+  const subStageSlaPolicyRaw = subStageTimer?.sla_policy
+    ?? (subStage.blueprint_sub_stage as Record<string, unknown>)?.sla_policy
+    ?? null;
+  const subStageSlaPolicy = subStageSlaPolicyRaw
+    ? { sla_value: (subStageSlaPolicyRaw as Record<string, string>).sla_value, sla_unit: (subStageSlaPolicyRaw as Record<string, string>).sla_unit }
+    : null;
+  const subStageSlaPolicyLabel = subStageSlaPolicy
+    ? `${t('sla')}: ${subStageSlaPolicy.sla_value} ${subStageSlaPolicy.sla_unit === 'hours' || subStageSlaPolicy.sla_unit === '1' ? t('time_hour_many') : t('time_day_many')}`
+    : null;
+  const showSla = subStageSlaText || (subStageSlaPolicyLabel && status !== 'pending');
   const subStageName = localizeName(
     locale,
     subStage.blueprint_sub_stage?.name_ar,
@@ -90,7 +110,26 @@ export function SubStageItem({
         )}
         {subStage.entered_at && (
           <p className="mt-0.5 text-[10px] text-muted-foreground">
-            {formatDuration(subStage.entered_at, subStage.exited_at || null, timeFmt)}
+{tw('tooltip_duration')}: {formatDuration(subStage.entered_at, subStage.exited_at || null, timeFmt)}
+          </p>
+        )}
+        {showSla && (
+          <p
+            className={cn(
+              'mt-0.5 text-[10px]',
+              subStageSlaText ? 'font-medium' : 'text-muted-foreground',
+              subStageSlaText?.includes(timeFmt.overduePrefix)
+                ? 'text-red-600 dark:text-red-400'
+                : subStageSlaText?.includes(timeFmt.atRisk)
+                  ? 'text-amber-600 dark:text-amber-400'
+                  : subStageSlaText
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : undefined,
+            )}
+            aria-live="polite"
+          >
+            {subStageSlaPolicyLabel && <span className={cn(subStageSlaText && 'text-muted-foreground')}>{subStageSlaPolicyLabel}{subStageSlaText ? ' — ' : ''}</span>}
+            {subStageSlaText}
           </p>
         )}
         {subStage.completion_note && (

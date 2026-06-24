@@ -7,11 +7,13 @@ import { StageTimelineNode } from './stage-timeline-node';
 import type {
   TaskStageInstanceResource,
   SlaTimerInstanceResource,
+  BlueprintStageResource,
 } from './task-detail-types';
 
 interface StageTimelineProps {
   stages?: TaskStageInstanceResource[];
   slaTimers?: SlaTimerInstanceResource[];
+  blueprintStages?: BlueprintStageResource[];
   taskPublicId: string;
   blueprintId?: string;
 }
@@ -19,6 +21,7 @@ interface StageTimelineProps {
 export function StageTimeline({
   stages,
   slaTimers,
+  blueprintStages,
   taskPublicId,
   blueprintId,
 }: StageTimelineProps) {
@@ -59,6 +62,7 @@ export function StageTimeline({
               stage={stage}
               index={i}
               slaTimers={slaTimers}
+              blueprintStages={blueprintStages}
               taskPublicId={taskPublicId}
               blueprintId={blueprintId}
             />

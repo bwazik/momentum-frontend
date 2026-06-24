@@ -1,15 +1,17 @@
 'use client';
 
 import { SubStageItem } from './sub-stage-item';
-import type { TaskSubStageInstanceResource } from './task-detail-types';
+import type { TaskSubStageInstanceResource, SlaTimerInstanceResource } from './task-detail-types';
 
 interface SubStageListProps {
   subStages: TaskSubStageInstanceResource[];
+  slaTimers?: SlaTimerInstanceResource[];
   taskPublicId: string;
 }
 
 export function SubStageList({
   subStages,
+  slaTimers,
   taskPublicId,
 }: SubStageListProps) {
   if (!subStages || subStages.length === 0) return null;
@@ -20,6 +22,7 @@ export function SubStageList({
         <SubStageItem
           key={`${subStage.blueprint_sub_stage?.public_id ?? i}-${i}`}
           subStage={subStage}
+          slaTimers={slaTimers}
           taskPublicId={taskPublicId}
         />
       ))}

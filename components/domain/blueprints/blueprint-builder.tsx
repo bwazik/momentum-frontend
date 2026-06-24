@@ -70,6 +70,14 @@ export function BlueprintBuilder({ publicId }: BlueprintBuilderProps) {
   const panelMode = selectedStageId === 'new' ? 'add' : selectedStageId ? 'edit' : 'idle';
   const selectedStage = panelMode === 'edit' ? stages.find((s) => s.public_id === selectedStageId) ?? null : null;
 
+  const handleEditSubStage = (id: string | null) => {
+    setSubStageEditId(id);
+    if (id) {
+      const parentStage = stages.find((s) => s.sub_stages?.some((ss) => ss.public_id === id));
+      if (parentStage) setSelectedStage(parentStage.public_id);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <BuilderTopBar blueprint={blueprint} readOnly={readOnly} canManage={canManage} />
@@ -88,7 +96,7 @@ export function BlueprintBuilder({ publicId }: BlueprintBuilderProps) {
             selectedStageId={selectedStageId}
             onSelectStage={handleSelectStage}
             subStageEditId={subStageEditId}
-            onEditSubStage={setSubStageEditId}
+            onEditSubStage={handleEditSubStage}
           />
         </div>
         <aside className="hidden w-96 shrink-0 lg:block">
@@ -99,7 +107,7 @@ export function BlueprintBuilder({ publicId }: BlueprintBuilderProps) {
               mode={panelMode}
               readOnly={readOnly}
             subStageEditId={subStageEditId}
-            onEditSubStage={setSubStageEditId}
+            onEditSubStage={handleEditSubStage}
             onSubStageBack={() => setSubStageEditId(null)}
             />
           </div>

@@ -33,6 +33,16 @@ function usePageBreadcrumb(): Crumb[] | null {
   const displayId = useTaskDisplayStore((s) => s.displayId);
   const blueprintName = useBlueprintBuilderStore((s) => s.blueprintName);
 
+  const taskWorkflow = pathname.match(/^\/tasks\/([^/]+)\/workflow$/);
+  if (taskWorkflow) {
+    return [
+      { label: nav('dashboard'), href: '/' },
+      { label: nav('tasks'), href: '/tasks' },
+      { label: displayId || '...', href: `/tasks/${taskWorkflow[1]}` },
+      { label: nav('label_workflow') },
+    ];
+  }
+
   const taskDetail = pathname.match(/^\/tasks\/(.+)$/);
   if (taskDetail) {
     return [

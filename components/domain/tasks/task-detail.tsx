@@ -94,6 +94,7 @@ export function TaskDetail({ publicId }: TaskDetailProps) {
         <StageTimeline
           stages={task.stages}
           slaTimers={slaQuery.data?.timers}
+          blueprintStages={task.blueprint?.stages}
           taskPublicId={publicId}
           blueprintId={task.blueprint?.public_id}
         />

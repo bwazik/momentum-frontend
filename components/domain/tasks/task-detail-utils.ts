@@ -39,12 +39,12 @@ export function isUserAssignee(
 
 export function getStageTimer(
   timers: SlaTimerInstanceResource[] | undefined,
-  stage: { public_id?: string } | undefined,
+  stage: { instance_id?: string } | undefined,
 ): SlaTimerInstanceResource | undefined {
-  if (!timers || !stage?.public_id) return undefined;
+  if (!timers || !stage?.instance_id) return undefined;
   return timers.find(
     (t) =>
-      t.stage_instance_id === stage.public_id && t.sub_stage_instance_id === '',
+      t.stage_instance_id === stage.instance_id && !t.sub_stage_instance_id,
   );
 }
 
@@ -54,7 +54,7 @@ export function filterReturnTargets(
 ): BlueprintTransitionResource[] {
   if (!transitions || !currentStageBlueprintId) return [];
   return transitions.filter(
-    (t) => t.transition_type === '2' && t.from_stage_id === currentStageBlueprintId,
+    (t) => t.transition_type === 'return' && t.from_stage_id === currentStageBlueprintId,
   );
 }
 
@@ -130,10 +130,10 @@ export function formatSlaInline(timer: SlaTimerInstanceResource | undefined, fmt
   const diffDays = Math.round(diffMs / 86400000);
   const abs = Math.abs(diffDays);
 
-  if (timer.status === '4') return fmt.paused;
-  if (timer.status === '5') return fmt.completed;
-  if (timer.status === '3' || diffDays < 0) return `${fmt.overduePrefix}${abs} ${fmt.unitDay(abs)}`;
-  if (timer.status === '2') return `${fmt.atRisk} — ${diffDays} ${fmt.unitDay(diffDays)}${fmt.remaining}`;
+  if (timer.status === 'paused') return fmt.paused;
+  if (timer.status === 'completed') return fmt.completed;
+  if (timer.status === 'breached' || diffDays < 0) return `${fmt.overduePrefix}${abs} ${fmt.unitDay(abs)}`;
+  if (timer.status === 'warning') return `${fmt.atRisk} — ${diffDays} ${fmt.unitDay(diffDays)}${fmt.remaining}`;
   if (diffDays === 0) return fmt.dueToday;
   return `${diffDays} ${fmt.unitDay(diffDays)}${fmt.remaining}`;
 }

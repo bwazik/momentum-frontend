@@ -209,10 +209,42 @@ export const handlers = [
         public_id: 'bp-1',
         name_ar: 'نموذج اختبار',
         name_en: 'Test Blueprint',
+        stages: [
+          {
+            public_id: 'bp-stage-1',
+            name_ar: 'مرحلة التقديم',
+            name_en: 'Submission Stage',
+            sequence_order: '1',
+            stage_type: { public_id: 'st-1', name_ar: 'مراجعة', name_en: 'Review' },
+            sla_policy: null,
+          },
+          {
+            public_id: 'bp-stage-2',
+            name_ar: 'مرحلة المراجعة',
+            name_en: 'Review Stage',
+            sequence_order: '2',
+            stage_type: { public_id: 'st-1', name_ar: 'مراجعة', name_en: 'Review' },
+            sla_policy: null,
+          },
+          {
+            public_id: 'bp-stage-3',
+            name_ar: 'مرحلة الاعتماد',
+            name_en: 'Approval Stage',
+            sequence_order: '3',
+            stage_type: { public_id: 'st-1', name_ar: 'اعتماد', name_en: 'Approval' },
+            sla_policy: null,
+          },
+        ],
+        transitions: [
+          { public_id: 'tr-1', blueprint_id: 'bp-1', from_stage_id: 'bp-stage-1', to_stage_id: 'bp-stage-2', transition_type: 'advance', return_reason_required: false, created_at: '2026-06-01T00:00:00Z' },
+          { public_id: 'tr-2', blueprint_id: 'bp-1', from_stage_id: 'bp-stage-2', to_stage_id: 'bp-stage-3', transition_type: 'advance', return_reason_required: false, created_at: '2026-06-01T00:00:00Z' },
+          { public_id: 'tr-3', blueprint_id: 'bp-1', from_stage_id: 'bp-stage-2', to_stage_id: 'bp-stage-1', transition_type: 'return', return_reason_required: true, created_at: '2026-06-01T00:00:00Z' },
+        ],
       },
       stages: [
         {
           instance_id: 'stage-inst-1',
+          public_id: 'stage-inst-1',
           blueprint_stage: {
             public_id: 'bp-stage-1',
             name_ar: 'مرحلة التقديم',
@@ -230,6 +262,7 @@ export const handlers = [
         },
         {
           instance_id: 'stage-inst-2',
+          public_id: 'stage-inst-2',
           blueprint_stage: {
             public_id: 'bp-stage-2',
             name_ar: 'مرحلة المراجعة',
@@ -282,6 +315,7 @@ export const handlers = [
         },
         {
           instance_id: 'stage-inst-3',
+          public_id: 'stage-inst-3',
           blueprint_stage: {
             public_id: 'bp-stage-3',
             name_ar: 'مرحلة الاعتماد',
@@ -308,7 +342,7 @@ export const handlers = [
           sub_stage_instance_id: '',
           deadline_at: '2026-06-13T10:00:00Z',
           warning_at: '2026-06-10T10:00:00Z',
-          status: '1',
+          status: 'running',
         },
       ],
     });

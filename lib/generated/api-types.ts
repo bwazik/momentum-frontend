@@ -3200,10 +3200,16 @@ export interface components {
         /** TaskSubStageInstanceResource */
         TaskSubStageInstanceResource: {
             instance_id: string;
+            public_id: string;
             blueprint_sub_stage: {
                 public_id?: string;
                 name_ar?: string;
                 name_en?: string;
+                sla_policy?: {
+                    public_id: string;
+                    sla_value: string;
+                    sla_unit: string;
+                } | null;
             };
             sequence_order: string;
             owning_department_id: string;

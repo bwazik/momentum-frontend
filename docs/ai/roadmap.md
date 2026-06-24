@@ -7,8 +7,8 @@
 ## Current Focus
 
 **Phase:** F4 — Follow-up & Workflow Viz
-**Active spec:** `006-workflow-visualization`
-**Next:** `007-follow-up-center`
+**Active spec:** `007-follow-up-center`
+**Next:** `008-organization-structure`
 
 ---
 
@@ -20,7 +20,7 @@
 | F1 | App shell, auth, i18n/RTL | ✅ Done | M2 backend (IAM) |
 | F2 | Task board & task details | ✅ Done | M4 backend |
 | F3 | Blueprint builder | ✅ Done | M3 backend |
-| F4 | Follow-up & workflow viz | ⬜ Not Started | M4–M5 backend |
+| F4 | Follow-up & workflow viz | 🔄 In Progress | M4–M5 backend |
 | F5 | Dashboards & analytics | ⬜ Not Started | M6 backend |
 | F6 | Admin, org, help, onboarding | ⬜ Not Started | M1–M2, M7 backend |
 
@@ -37,7 +37,7 @@
 | `003-task-board` | F2 | Tasks | `005-task-execution`, `014` | ✅ |
 | `004-task-details` | F2 | Tasks | `005`, `006`, `012`, `013` | ✅ |
 | `005-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ✅ |
-| `006-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ⬜ |
+| `006-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ✅ |
 | `007-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ⬜ |
 | `008-organization-structure` | F6 | Organization | `002-organization-structure` | ⬜ |
 | `009-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
@@ -216,6 +216,43 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **`localizeName`/`localizeTitle` in shared lib:** Moved from domain utils to `lib/utils/localize.ts`
 - **Mobile sheet:** Builder panel collapses to a Sheet on mobile, with `matchMedia` detection
 - **SLA + escalation reset:** Selecting "No SLA" resets escalation position to "No escalation"
+
+## F4 — Follow-up & Workflow Viz
+
+**Status:** 🔄 In Progress
+
+**Completed (006):**
+- `/tasks/[publicId]/workflow` route inside dashboard shell ✅
+- Workflow graph with nodes per blueprint stage, sorted by `sequence_order` ✅
+- Node cards showing status badges, assignees, SLA summary, sub-stage mini-list ✅
+- CSS border-triangle advance arrows + SVG dashed return edges ✅
+- `WorkflowTerminalNode` checkmark circle at end of flow ✅
+- Legend with stage status dots, SLA health indicators, path icons, stats ✅
+- `WorkflowTimelineBar` day-view timeline with colored segments and deadline markers ✅
+- SLA policy display on non-active stages via blueprint fallback ✅
+- Sub-stage SLA on task details page (active timer + completed policy) ✅
+- Auto-scroll to active stage on mount (replaces Fit to Screen) ✅
+- Horizontal `ScrollArea` from shadcn for scrollable workflow ✅
+- RTL support across all components (`ltr:block`/`rtl:block`, logical properties) ✅
+- Breadcrumb for workflow route in `SiteHeader` ✅
+- Workflow entry buttons in `task-top-bar-actions.tsx` and `task-board-table.tsx` ✅
+- Loading skeleton (3 sections: graph + legend + timeline bar), empty, error, 403, 404 states ✅
+- 5 tests (3 visualization, 2 node) ✅
+- i18n: `tasks.workflow` namespace in both locales (~55 keys) ✅
+
+**Established by 006:**
+- **Graph model as pure utility:** `buildWorkflowNodes()` and `buildWorkflowEdges()` are pure functions with no React dependencies; memoized via `useMemo`.
+- **Two-tier SLA policy fallback:** Live timer's `sla_policy` checked first; blueprint stage's `sla_policy` as fallback when no timer exists (completed stages).
+- **Sub-stage SLA matching:** Look up `slaTimers` by `t.sub_stage_instance_id === subStage.instance_id` using auto-increment IDs (not UUID) after backend resource fix.
+- **API value matching:** Enum fields from backend use `apiValue()` which returns lowercase strings (`'return'`, `'breached'`, `'warning'`) — frontend compares against these, not raw integer values.
+- **CSS border-triangle arrows:** Replace Lucide icons with pure CSS `border-l-*`/`border-r-*` triangles for advance/return arrows, with separate LTR/RTL elements swapped via `ltr:block`/`rtl:block` utilities.
+- **Bidirectional return indicator:** When return transitions exist, show `ArrowLeftRight` icon instead of advance arrow between affected node pairs.
+- **ScrollArea for horizontal overflow:** Use shadcn `ScrollArea` with `dir` prop for RTL-aware horizontal scrolling instead of raw `overflow-x-auto`.
+- **Auto-scroll to active stage:** `useEffect` with `scrollIntoView` on mount, replacing fit-to-screen button.
+- **Skeleton as 3-section layout:** Graph card + legend card + timeline bar card, each matching the real component's shape and dimensions.
+- **Legend documenting state model:** All 5 stage statuses + 3 SLA health states + path icons + optional stats, grouped by category with separators.
+- **Timeline bar as client-side computation:** Day ranges, duration labels, deadline markers all computed from existing `task.stages`, `blueprint.stages`, and `slaTimers` — no new endpoints.
+- **Entry points for workflow navigation:** Workflow button in task top-bar actions and dropdown menu in task board table row actions.
 
 ## Dependency Map
 
