@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { useBlueprintSlaPolicies, useCreateSlaPolicy, useUpdateSlaPolicy, useDeleteSlaPolicy } from '@/lib/api/hooks/use-blueprints';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { EmptyState } from '@/components/shared/empty-state';
@@ -37,7 +37,16 @@ export function SlaPolicyManager({ openCreate, onOpenCreateChange }: SlaPolicyMa
   const [form, setForm] = useState({ name_ar: '', name_en: '', sla_value: '1', sla_unit: 'hours', warning_threshold_percentage: '75' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  useEffect(() => { if (openCreate) openCreateDialog(); }, [openCreate]);
+  function normalizeUnit(unit: string): string {
+    if (unit === 'hours' || unit === 'days') return unit;
+    return unit === '1' ? 'hours' : 'days';
+  }
+
+  function openCreateDialog() {
+    setEditItem(null); setForm({ name_ar: '', name_en: '', sla_value: '1', sla_unit: 'hours', warning_threshold_percentage: '75' }); setErrors({}); setDialogOpen(true);
+  }
+
+  useEffect(() => { if (openCreate) setTimeout(() => openCreateDialog(), 0); }, [openCreate]);
 
   if (isLoading) return <CatalogSkeleton />;
   if (isError) {
@@ -48,15 +57,6 @@ export function SlaPolicyManager({ openCreate, onOpenCreateChange }: SlaPolicyMa
   }
 
   const items = data ?? [];
-
-  function normalizeUnit(unit: string): string {
-    if (unit === 'hours' || unit === 'days') return unit;
-    return unit === '1' ? 'hours' : 'days';
-  }
-
-  function openCreateDialog() {
-    setEditItem(null); setForm({ name_ar: '', name_en: '', sla_value: '1', sla_unit: 'hours', warning_threshold_percentage: '75' }); setErrors({}); setDialogOpen(true);
-  }
 
   function openEdit(item: SlaPolicyResource) {
     setEditItem(item); setForm({ name_ar: item.name_ar, name_en: item.name_en ?? '', sla_value: item.sla_value, sla_unit: normalizeUnit(item.sla_unit), warning_threshold_percentage: item.warning_threshold_percentage }); setErrors({}); setDialogOpen(true);

@@ -857,6 +857,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/follow-up/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["followUpAction.recent"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/follow-up/tasks/{task}/actions": {
         parameters: {
             query?: never;
@@ -2556,6 +2572,7 @@ export interface components {
             action_type: string;
             note_ar: string;
             note_en: string;
+            task_display_id: string;
             contact_name: string;
             created_by: {
                 public_id: string;
@@ -5565,6 +5582,36 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["TaskListItemResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "followUpAction.recent": {
+        parameters: {
+            query?: {
+                per_page?: number | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["FollowUpActionResource"][];
                         next_cursor: string;
                         has_more: boolean;
                     };

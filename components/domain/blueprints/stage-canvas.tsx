@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { ChevronDown, Plus, Check, Lock, MoreVertical, ArrowUp, ArrowDown, Trash2 } from 'lucide-react';
+import { ChevronDown, Plus, Check, Lock, MoreVertical, ArrowUp, ArrowDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -19,7 +19,7 @@ import { apiClient } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
 import type { BlueprintResource, BlueprintStageResource, BlueprintTransitionResource, BlueprintSubStageResource } from './blueprint-types';
 
-function CanvasSubStageCard({ subStage, index, total, stagePublicId, blueprintPublicId, readOnly, subStageEditId, locale, onEditSubStage, onReorder, t }: {
+function CanvasSubStageCard({ subStage, index, total, stagePublicId, blueprintPublicId, readOnly, locale, onEditSubStage, onReorder, t }: {
   subStage: BlueprintSubStageResource;
   index: number;
   total: number;
@@ -30,7 +30,7 @@ function CanvasSubStageCard({ subStage, index, total, stagePublicId, blueprintPu
   locale: string;
   onEditSubStage?: (id: string | 'new') => void;
   onReorder?: (subStageId: string, direction: 'up' | 'down') => void;
-  t: any;
+  t: (key: string) => string;
 }) {
   const tSub = useTranslations('blueprints.builder.panel.sub_stages');
   const deleteSubStage = useDeleteSubStage(blueprintPublicId);
@@ -84,27 +84,6 @@ function CanvasSubStageCard({ subStage, index, total, stagePublicId, blueprintPu
         onConfirm={() => { deleteSubStage.mutate({ stageId: stagePublicId, subStageId: subStage.public_id }); setConfirmDelete(false); }}
       />
     </div>
-  );
-}
-
-function SubStageRowActions({ subStageId, stageId, blueprintId, locale }: { subStageId: string; stageId: string; blueprintId: string; locale: string }) {
-  const deleteSubStage = useDeleteSubStage(blueprintId);
-  return (
-    <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-6 shrink-0" aria-label="Sub-stage actions">
-          <MoreVertical className="size-3.5" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={() => deleteSubStage.mutate({ stageId, subStageId })}
-          className="text-destructive"
-        >
-          <Trash2 className="size-3.5 me-1.5" /> Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
 

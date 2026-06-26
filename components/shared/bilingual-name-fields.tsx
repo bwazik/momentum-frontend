@@ -1,12 +1,11 @@
 'use client';
 
-import { useLocale } from 'next-intl';
 import { Input } from '@/components/ui/input';
 import { Field, FieldLabel, FieldError } from '@/components/ui/field';
 
-interface BilingualNameFieldsProps {
-  form: Record<string, any>;
-  setForm: React.Dispatch<React.SetStateAction<any>>;
+interface BilingualNameFieldsProps<T extends Record<string, unknown>> {
+  form: T;
+  setForm: React.Dispatch<React.SetStateAction<T>>;
   errors: Record<string, string>;
   t: (key: string) => string;
   readOnly?: boolean;
@@ -15,7 +14,7 @@ interface BilingualNameFieldsProps {
   nameEnKey?: string;
 }
 
-export function BilingualNameFields({
+export function BilingualNameFields<T extends Record<string, unknown>>({
   form,
   setForm,
   errors,
@@ -24,9 +23,7 @@ export function BilingualNameFields({
   arRequired = true,
   nameArKey = 'name_ar',
   nameEnKey = 'name_en',
-}: BilingualNameFieldsProps) {
-  const locale = useLocale();
-
+}: BilingualNameFieldsProps<T>) {
   return (
     <>
       <Field>
@@ -35,8 +32,8 @@ export function BilingualNameFields({
           dir="rtl"
           placeholder={t(`${nameArKey}_placeholder`)}
           disabled={readOnly}
-          value={form[nameArKey] ?? ''}
-          onChange={(e) => setForm((prev: Record<string, string>) => ({ ...prev, [nameArKey]: e.target.value }))}
+          value={String(form[nameArKey] ?? '')}
+          onChange={(e) => setForm((prev) => ({ ...prev, [nameArKey]: e.target.value }))}
         />
         {errors[nameArKey] && <FieldError>{errors[nameArKey]}</FieldError>}
       </Field>
@@ -46,8 +43,8 @@ export function BilingualNameFields({
           dir="ltr"
           placeholder={t(`${nameEnKey}_placeholder`)}
           disabled={readOnly}
-          value={form[nameEnKey] ?? ''}
-          onChange={(e) => setForm((prev: Record<string, string>) => ({ ...prev, [nameEnKey]: e.target.value }))}
+          value={String(form[nameEnKey] ?? '')}
+          onChange={(e) => setForm((prev) => ({ ...prev, [nameEnKey]: e.target.value }))}
         />
       </Field>
     </>

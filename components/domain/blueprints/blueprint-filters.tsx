@@ -7,7 +7,7 @@ import { SearchIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Field, FieldLabel } from '@/components/ui/field';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RtlSelect } from '@/components/shared/rtl-select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useBlueprintCategories } from '@/lib/api/hooks/use-blueprints';
@@ -38,7 +38,7 @@ export function BlueprintFilters({ filters }: BlueprintFiltersProps) {
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchInput, pathname, router, filters.search]);
+  }, [searchInput, pathname, router, filters.search, searchParams]);
 
   function setParam(key: string, value?: string | null) {
     const params = new URLSearchParams(searchParams.toString());

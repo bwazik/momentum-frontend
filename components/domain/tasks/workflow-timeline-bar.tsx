@@ -31,7 +31,6 @@ function buildSegments(
   locale: string,
   t: (key: string) => string,
 ): Segment[] {
-  const blueprintMap = new Map((blueprintStages ?? []).map((s) => [s.public_id, s]));
   const timerMap = new Map(
     (slaTimers ?? []).filter((t) => !t.sub_stage_instance_id).map((t) => [t.stage_instance_id, t]),
   );
@@ -44,12 +43,10 @@ function buildSegments(
   const startDate = new Date(sorted[0].entered_at).getTime();
 
   const segments: Segment[] = [];
-  let lastEndDay = 0;
   const durDays = (s: number, e: number) =>
     Math.floor(e - s) < 1 ? `${Math.round((e - s) * 24)} ${t('legend_hours')}` : `${Math.floor(e - s)} ${t('legend_days')}`;
 
   for (const stage of sorted) {
-    const bpStage = stage.blueprint_stage.public_id ? blueprintMap.get(stage.blueprint_stage.public_id) : undefined;
     const timer = timerMap.get(stage.instance_id);
     const name = localizeName(locale, stage.blueprint_stage.name_ar ?? '', stage.blueprint_stage.name_en ?? '');
 
@@ -62,7 +59,6 @@ function buildSegments(
         label: `${t('timeline_day')} ${Math.round(start)}-${Math.round(end)}`,
         durationLabel: durDays(start, end), isOverdue: false,
       });
-      lastEndDay = end;
     } else if (stage.status === 'active' && stage.entered_at) {
       const start = (new Date(stage.entered_at).getTime() - startDate) / 86400000;
       const now = (Date.now() - startDate) / 86400000;
@@ -76,7 +72,6 @@ function buildSegments(
         label: `${t('timeline_day')} ${Math.round(start)}-${Math.round(now)}`,
         durationLabel: durDays(start, now), isOverdue,
       });
-      lastEndDay = now;
     } else if (stage.status === 'returned' && stage.entered_at && stage.exited_at) {
       const start = (new Date(stage.entered_at).getTime() - startDate) / 86400000;
       const end = (new Date(stage.exited_at).getTime() - startDate) / 86400000;
@@ -86,7 +81,6 @@ function buildSegments(
         label: `${t('timeline_day')} ${Math.round(start)}-${Math.round(end)}`,
         durationLabel: durDays(start, end), isOverdue: false,
       });
-      lastEndDay = end;
     }
   }
 
@@ -102,11 +96,11 @@ export function WorkflowTimelineBar({ stages, blueprintStages, slaTimers }: Time
     [stages, blueprintStages, slaTimers, locale, t],
   );
 
+  const todayDay = segments.length > 0 ? Math.max(...segments.map((s) => s.endDay)) : NaN;
+
   if (segments.length === 0) return null;
 
   const totalDays = Math.max(...segments.map((s) => s.endDay), 1);
-  const firstDate = stages?.[0]?.entered_at;
-  const todayDay = firstDate ? (Date.now() - new Date(firstDate).getTime()) / 86400000 : NaN;
 
   return (
     <div className="rounded-xl border bg-card p-5">

@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { LockBadge, ScopeBadge } from './blueprint-badges';
 import { ActiveBadge } from '@/components/shared/active-badge';
 import { localizeName } from '@/lib/utils/localize';

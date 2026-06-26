@@ -6,9 +6,8 @@
 
 ## Current Focus
 
-**Phase:** F4 — Follow-up & Workflow Viz
-**Active spec:** `007-follow-up-center`
-**Next:** `008-organization-structure`
+**Phase:** F6 — Admin, org, help, onboarding
+**Active spec:** `008-organization-structure`
 
 ---
 
@@ -18,9 +17,9 @@
 |-------|------|--------|------------------|
 | F0 | Scaffold & design system | ✅ Done | — |
 | F1 | App shell, auth, i18n/RTL | ✅ Done | M2 backend (IAM) |
-| F2 | Task board & task details | ✅ Done | M4 backend |
+| F2 | Task board & task details | 🔄 In Progress | M4 backend |
 | F3 | Blueprint builder | ✅ Done | M3 backend |
-| F4 | Follow-up & workflow viz | 🔄 In Progress | M4–M5 backend |
+| F4 | Follow-up & workflow viz | ✅ Done | M4–M5 backend |
 | F5 | Dashboards & analytics | ⬜ Not Started | M6 backend |
 | F6 | Admin, org, help, onboarding | ⬜ Not Started | M1–M2, M7 backend |
 
@@ -38,10 +37,10 @@
 | `004-task-details` | F2 | Tasks | `005`, `006`, `012`, `013` | ✅ |
 | `005-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ✅ |
 | `006-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ✅ |
-| `007-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ⬜ |
+| `007-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ✅ |
 | `008-organization-structure` | F6 | Organization | `002-organization-structure` | ⬜ |
 | `009-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
-| `010-system-administration` | F6 | Platform | `001`, `003`, `015` | ⬜ |
+| `010-system-administration` | F6 | Platform | `001`, `003`, `005` (priorities), `015` | ⬜ |
 | `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
 | `013-pending-approvals` | F2 | Tasks | `006-stage-lifecycle` | ⬜ |
@@ -49,6 +48,10 @@
 | `015-staff-performance-hub` | V2 | Analytics | `009` (V2) | ⬜ Deferred V2 |
 | `016-notifications-search` | F1 | Core | `008`, `011` | ✅ (merged into `001`) |
 | `017-user-settings-delegation` | F6 | Settings | `016` | ⬜ |
+| `018-task-creation-launch` | F2 | Tasks | `005-task-execution` | ⬜ |
+| `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ⬜ |
+| `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ⬜ |
+| `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
 
 Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API dependencies. `015` and `016` were removed as orphaned specs with no backend counterpart.
 
@@ -219,7 +222,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 ## F4 — Follow-up & Workflow Viz
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Done
 
 **Completed (006):**
 - `/tasks/[publicId]/workflow` route inside dashboard shell ✅
@@ -240,6 +243,28 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - 5 tests (3 visualization, 2 node) ✅
 - i18n: `tasks.workflow` namespace in both locales (~55 keys) ✅
 
+**Completed (007):**
+- `/follow-up` route with `PageHeader` + `FollowUpCenter` orchestrator ✅
+- `useFollowUpBoardInfinite` with 60s polling, cursor-paginated board ✅
+- `useFollowUpOverdueInfinite`, `useFollowUpAtRiskInfinite`, `useFollowUpBottlenecks` hooks ✅
+- `useAllFollowUpActions`, `useFollowUpActions`, `useCreateFollowUpAction` hooks ✅
+- `useEscalationsInfinite`, `useCreateEscalation`, `useResolveEscalation` hooks ✅
+- Query key factory extended: `followUp` + `escalations` namespaces ✅
+- 4 stat cards (Scope, At Risk, Overdue, Today) with page-local counts + tinted borders ✅
+- Dismissible overdue alert banner with "View All" action ✅
+- URL-driven filters (quick chips, debounced search, sort, advanced Sheet) ✅
+- Desktop 6-column follow-up board with SLA accent + actions dropdown ✅
+- Mobile card list with matching information hierarchy ✅
+- Bottleneck panel (top 3 preview + "View All" Dialog, clickable items -> URL filters) ✅
+- Recent actions panel (cross-task endpoint, 3-line ActionEntry, "View All" Dialog) ✅
+- Escalations panel (timeline feed, Open/Resolved tab, resolve action) ✅
+- LogFollowUpDialog, EscalateDialog, ResolveEscalationDialog ✅
+- All 4 states per component (loading skeleton, empty, error, no-permission) ✅
+- 8 mutation hooks with `ApiRequestError` handling showing backend error messages ✅
+- Dark mode on all panels and cards ✅
+- i18n: `followUp.*` namespace in both locales (~80 keys) ✅
+- MSW handlers for all follow-up and escalation endpoints ✅
+
 **Established by 006:**
 - **Graph model as pure utility:** `buildWorkflowNodes()` and `buildWorkflowEdges()` are pure functions with no React dependencies; memoized via `useMemo`.
 - **Two-tier SLA policy fallback:** Live timer's `sla_policy` checked first; blueprint stage's `sla_policy` as fallback when no timer exists (completed stages).
@@ -253,6 +278,15 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Legend documenting state model:** All 5 stage statuses + 3 SLA health states + path icons + optional stats, grouped by category with separators.
 - **Timeline bar as client-side computation:** Day ranges, duration labels, deadline markers all computed from existing `task.stages`, `blueprint.stages`, and `slaTimers` — no new endpoints.
 - **Entry points for workflow navigation:** Workflow button in task top-bar actions and dropdown menu in task board table row actions.
+
+**Established by 007:**
+- **Follow-up center as orchestrator pattern:** `FollowUpCenter` composes independent panels that each own their query lifecycle; no shared query state between panels.
+- **Stats from loaded data only:** Stats derive from currently-loaded board rows (page-local counts), not a separate summary endpoint.
+- **Cross-task actions endpoint:** `GET /v1/follow-up/actions` replaces per-task aggregation for the recent actions panel.
+- **Escalation error handling:** Mutations check for `ApiRequestError` and display the backend's localized error message instead of a generic translation.
+- **Board query key reuse:** Follow-up board reuses `taskBoard.list` query key (shared cache with `/tasks`) but adds its own 60s polling via `refetchInterval`.
+- **Unknown narrowing adapters:** `getBottleneckEntities()` narrows `BottleneckResource.stage_type`/`.department` from `unknown` to typed entities where OpenAPI schemas are incorrect.
+- **Action type normalization:** `actionTypeKey()` handles both integer (1-5) and string (`phonecall`, `message`, etc.) action type formats.
 
 ## Dependency Map
 

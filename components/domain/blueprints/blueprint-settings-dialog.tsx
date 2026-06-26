@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Field, FieldLabel, FieldError } from '@/components/ui/field';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { RtlSelect } from '@/components/shared/rtl-select';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
@@ -108,7 +108,6 @@ interface BlueprintSettingsDialogProps {
 }
 
 export function BlueprintSettingsDialog({ blueprint, open, onOpenChange }: BlueprintSettingsDialogProps) {
-  const t = useTranslations('blueprints.library.create');
   const tb = useTranslations('blueprints.builder.top_bar');
 
   return (

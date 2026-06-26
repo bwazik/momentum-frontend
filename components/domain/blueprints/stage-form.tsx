@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
-import type { Dispatch, SetStateAction } from 'react';
+
 import { Field, FieldGroup, FieldLabel, FieldError } from '@/components/ui/field';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { RtlSelect } from '@/components/shared/rtl-select';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
@@ -15,7 +15,7 @@ import type { BlueprintStageResource, StageTypeResource, SlaPolicyResource, Posi
 
 interface StageFormProps {
   form: Record<string, string>;
-  setForm: Dispatch<SetStateAction<any>>;
+  setForm: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   errors: Record<string, string>;
   selectedSla: SlaPolicyResource | null;
   onSave: () => void;
@@ -24,16 +24,16 @@ interface StageFormProps {
   slaPolicies: SlaPolicyResource[];
   positions: PositionResource[];
   departments: DepartmentResource[];
-  stage: BlueprintStageResource | null;
+  stage: BlueprintStageResource | null | undefined;
   readOnly: boolean;
   locale: string;
-  t: any;
+  t: (key: string) => string;
 }
 
 export function StageForm({
   form, setForm, errors, selectedSla, onSave, isPending,
   stageTypes, slaPolicies, positions, departments,
-  stage, readOnly, locale, t,
+  readOnly, locale, t,
 }: StageFormProps) {
   return (
     <FieldGroup>

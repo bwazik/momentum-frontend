@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Field, FieldGroup, FieldLabel, FieldError } from '@/components/ui/field';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus } from 'lucide-react';
 import { RtlSelect } from '@/components/shared/rtl-select';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
@@ -30,8 +30,6 @@ export function CreateBlueprintDialog() {
   const departments = deptPages?.pages.flatMap((p) => p.data) ?? [];
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name_ar: '', name_en: '', description_ar: '', description_en: '', category_id: '', scope: '1', department_id: '' });
-
-  useEffect(() => { if (!open) setForm({ name_ar: '', name_en: '', description_ar: '', description_en: '', category_id: '', scope: '1', department_id: '' }); }, [open]);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   if (!canCreate) return null;
@@ -58,7 +56,7 @@ export function CreateBlueprintDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setForm({ name_ar: '', name_en: '', description_ar: '', description_en: '', category_id: '', scope: '1', department_id: '' }); }}>
       <DialogTrigger asChild>
         <Button size="sm"><Plus className="size-4" /> {t('trigger')}</Button>
       </DialogTrigger>

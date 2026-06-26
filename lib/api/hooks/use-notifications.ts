@@ -1,5 +1,7 @@
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '../client';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
+import { apiClient, ApiRequestError } from '../client';
 import { queryKeys } from '../query-keys';
 
 export interface Notification {
@@ -49,6 +51,7 @@ export function useNotificationsCount() {
 
 export function useMarkNotificationRead() {
   const queryClient = useQueryClient();
+  const t = useTranslations('notifications');
 
   return useMutation({
     mutationFn: (notificationId: string) =>
@@ -57,17 +60,32 @@ export function useMarkNotificationRead() {
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.unreadCount() });
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
     },
+    onError: (error) => {
+      if (error instanceof ApiRequestError) {
+        toast.error(error.error.message);
+      } else {
+        toast.error(t('mark_read_error'));
+      }
+    },
   });
 }
 
 export function useMarkAllNotificationsRead() {
   const queryClient = useQueryClient();
+  const t = useTranslations('notifications');
 
   return useMutation({
     mutationFn: () => apiClient.post('/v1/notifications/read-all'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.unreadCount() });
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
+    },
+    onError: (error) => {
+      if (error instanceof ApiRequestError) {
+        toast.error(error.error.message);
+      } else {
+        toast.error(t('mark_read_error'));
+      }
     },
   });
 }

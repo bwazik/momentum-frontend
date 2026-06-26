@@ -80,6 +80,7 @@ Create a new frontend feature spec for the following screen/feature:
 **You can access any files you need from the blueprint folder at `../_blueprints/`**
 **You can access the backend project at `../backend/` for specs, plans, and API contracts**
 **You can access any plan.md or spec.md from older specs as a reference if you needed to**
+**Take D:\Projects\momentum\_blueprints\ui-concepts\06-follow-up-center.html as a reference for the UI design (Reference only, not has to be the same cuz our api might not support all of the ui design, and also u can make totally a new design if u think it is better than the reference or not compitable with our current setup)**
 ```
 
 ---

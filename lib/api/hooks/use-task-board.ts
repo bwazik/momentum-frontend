@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
-import type { BoardTaskResource, TaskPriorityResource, BlueprintCategoryResource, StageTypeResource, DepartmentResource } from '@/components/domain/tasks/task-board-types';
+import type { BoardTaskResource, TaskPriorityResource, DepartmentResource } from '@/components/domain/tasks/task-board-types';
 import type { BoardQuery } from '@/components/domain/tasks/task-board-types';
 
 interface CursorPage<T> {

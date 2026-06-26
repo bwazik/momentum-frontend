@@ -20,5 +20,19 @@
       ],
       "enabled": true
     }
+  },
+  "provider": {
+    "bynara": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Bynara",
+      "options": {
+        "baseURL": "https://router.bynara.id/v1"
+      },
+      "models": {
+        "mimo-v2.5-pro-free": {
+          "name": "Mimo v2.5 Pro Free"
+        }
+      }
+    }
   }
 }

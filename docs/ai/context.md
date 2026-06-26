@@ -93,8 +93,8 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 
 ## Current Focus
 
-**Milestone F4 — Follow-up & Workflow Viz**
-**Active spec:** `007-follow-up-center`
+**Milestone F5 — Admin, org, help, onboarding**
+**Active spec:** `008-organization-structure`
 
 ---
 

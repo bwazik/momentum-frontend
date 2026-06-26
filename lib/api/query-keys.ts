@@ -56,4 +56,26 @@ export const queryKeys = {
     list: (filters: { search: string; is_active?: number; per_page?: number }) =>
       [...queryKeys.users.lists(), filters] as const,
   },
+  followUp: {
+    all: ['follow-up'] as const,
+    overdueLists: () => [...queryKeys.followUp.all, 'overdue'] as const,
+    overdueList: (filters: Record<string, unknown>) =>
+      [...queryKeys.followUp.overdueLists(), filters] as const,
+    atRiskLists: () => [...queryKeys.followUp.all, 'at-risk'] as const,
+    atRiskList: (filters: Record<string, unknown>) =>
+      [...queryKeys.followUp.atRiskLists(), filters] as const,
+    bottlenecks: (filters: Record<string, unknown>) =>
+      [...queryKeys.followUp.all, 'bottlenecks', filters] as const,
+    actionsAll: (filters: Record<string, unknown>) =>
+      [...queryKeys.followUp.all, 'actions', 'all', filters] as const,
+    actionsTask: (taskPublicId: string) =>
+      [...queryKeys.followUp.all, 'actions', 'task', taskPublicId] as const,
+  },
+  escalations: {
+    all: ['escalations'] as const,
+    lists: () => [...queryKeys.escalations.all, 'list'] as const,
+    list: (filters: Record<string, unknown>) =>
+      [...queryKeys.escalations.lists(), filters] as const,
+    detail: (publicId: string) => [...queryKeys.escalations.all, 'detail', publicId] as const,
+  },
 } as const;

@@ -457,7 +457,7 @@ export const handlers = [
     return HttpResponse.json({ ...mockBlueprints[0], is_active: false, public_id: params.publicId });
   }),
 
-  http.post('https://api.momentum.test/v1/blueprints/:publicId/duplicate', ({ params }) => {
+  http.post('https://api.momentum.test/v1/blueprints/:publicId/duplicate', () => {
     return HttpResponse.json({
       ...mockBlueprints[0], public_id: 'copy-uuid', name_ar: 'نسخة من ' + mockBlueprints[0].name_ar,
       name_en: 'Copy of ' + mockBlueprints[0].name_en, is_locked: false, is_active: false,
@@ -534,6 +534,124 @@ export const handlers = [
       ],
       next_cursor: null,
       has_more: false,
+    });
+  }),
+
+  // --- Follow-up center handlers ---
+
+  http.get('https://api.momentum.test/v1/follow-up/overdue', () => {
+    return HttpResponse.json({ data: [], next_cursor: null, has_more: false });
+  }),
+
+  http.get('https://api.momentum.test/v1/follow-up/at-risk', () => {
+    return HttpResponse.json({ data: [], next_cursor: null, has_more: false });
+  }),
+
+  http.get('https://api.momentum.test/v1/follow-up/bottlenecks', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          stage_type: { public_id: 'st-1', name_ar: 'مراجعة', name_en: 'Review' },
+          department: { public_id: 'dept-1', name_ar: 'تقنية المعلومات', name_en: 'IT' },
+          overdue_count: '3',
+          at_risk_count: '2',
+          score: '8',
+          average_time_at_stage_seconds: '86400',
+        },
+      ],
+    });
+  }),
+
+  http.get('https://api.momentum.test/v1/follow-up/actions', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          public_id: 'act-1',
+          action_type: '1',
+          task_display_id: 'T-2026-0001',
+          note_ar: 'تم الاتصال بالمسؤول',
+          note_en: 'Called the manager',
+          contact_name: null,
+          created_by: { public_id: 'u-1', name_ar: 'أحمد', name_en: 'Ahmed' },
+          created_at: '2026-06-24T09:00:00Z',
+        },
+      ],
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
+  http.get('https://api.momentum.test/v1/follow-up/tasks/:task/actions', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          public_id: 'act-1',
+          action_type: '1',
+          note_ar: 'تم الاتصال بالمسؤول',
+          note_en: 'Called the manager',
+          contact_name: null,
+          created_by: { public_id: 'u-1', name_ar: 'أحمد', name_en: 'Ahmed' },
+          created_at: '2026-06-24T09:00:00Z',
+        },
+      ],
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/follow-up/tasks/:task/actions', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'act-new',
+      ...body,
+      created_by: { public_id: 'u-1', name_ar: 'أحمد', name_en: 'Ahmed' },
+      created_at: new Date().toISOString(),
+    }, { status: 201 });
+  }),
+
+  http.get('https://api.momentum.test/v1/tracking/escalations', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          public_id: 'esc-1',
+          task_id: 't-1',
+          task_display_id: 'T-2026-0001',
+          stage_instance_id: 'si-1',
+          sub_stage_instance_id: null,
+          escalation_type: 'Manual',
+          escalated_to_user: { public_id: 'u-2', name_ar: 'نورة', name_en: 'Noura' },
+          escalated_by_user: null,
+          reason: 'SLA at risk',
+          status: 'Open',
+          resolution_note: null,
+          resolved_at: null,
+          created_at: '2026-06-24T08:00:00Z',
+        },
+      ],
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/tracking/escalations', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'esc-new',
+      ...body,
+      status: 'Open',
+      resolution_note: null,
+      resolved_at: null,
+      created_at: new Date().toISOString(),
+    }, { status: 201 });
+  }),
+
+  http.post('https://api.momentum.test/v1/tracking/escalations/:escalation/resolve', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'esc-1',
+      status: 'Resolved',
+      resolution_note: (body as { resolution_note?: string }).resolution_note,
+      resolved_at: new Date().toISOString(),
     });
   }),
 ];

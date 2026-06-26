@@ -6,7 +6,6 @@ import { EmptyState } from '@/components/shared/empty-state';
 import { useTranslations } from 'next-intl';
 
 export default function TaskDetailError({
-  error: _error,
   reset,
 }: {
   error: Error & { digest?: string };

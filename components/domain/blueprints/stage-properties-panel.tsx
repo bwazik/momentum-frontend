@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { ArrowLeft } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
@@ -11,12 +11,11 @@ import { TransitionEditor } from './transition-editor';
 import { SubStageList } from './sub-stage-list';
 import {
   useBlueprintStageTypes, useBlueprintSlaPolicies, usePositions,
-  useCreateStage, useUpdateStage, useCreateSubStage, useUpdateSubStage,
+  useCreateStage, useUpdateStage,
 } from '@/lib/api/hooks/use-blueprints';
 import { useDepartmentsInfinite } from '@/lib/api/hooks/use-task-board';
 import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
-import { localizeName, localizeTitle } from '@/lib/utils/localize';
-import { formatSlaThreshold, ASSIGNMENT_TYPE_MAP, CARDINALITY_MAP, COMPLETION_RULE_MAP, buildAssignmentFields } from './blueprint-utils';
+import { buildAssignmentFields } from './blueprint-utils';
 import type { BlueprintResource, BlueprintStageResource } from './blueprint-types';
 
 interface StagePropertiesPanelProps {
@@ -57,19 +56,11 @@ export function StagePropertiesPanel({ blueprint, stage, mode, readOnly, subStag
   const departments = deptPages?.pages.flatMap((p) => p.data) ?? [];
   const createStage = useCreateStage(blueprint.public_id);
   const updateStage = useUpdateStage(blueprint.public_id);
-  const createSubStage = useCreateSubStage(blueprint.public_id);
-  const updateSubStage = useUpdateSubStage(blueprint.public_id);
   const { setSelectedStage, setMetadataDirty } = useBlueprintBuilderStore();
 
-  const [form, setForm] = useState(() => getInitialForm(mode === 'add' ? null : stage));
+  const [form, setForm] = useState<Record<string, string>>(() => getInitialForm(mode === 'add' ? null : stage));
   const [errors, setErrors] = useState<Record<string, string>>({});
   const subStageEditId = subStageEditIdProp ?? null;
-
-  useEffect(() => {
-    setForm(getInitialForm(mode === 'add' ? null : stage));
-    setErrors({});
-    onSubStageBack?.();
-  }, [stage?.public_id, mode]);
 
   const selectedSla = slaPolicies?.find((p) => p.public_id === form.sla_policy_id) ?? null;
 

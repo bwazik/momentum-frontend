@@ -1,5 +1,6 @@
 'use client';
 
+import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -47,7 +48,7 @@ export function RecentActivityCard({
                 className="mt-3 block cursor-pointer text-xs font-medium text-primary hover:underline"
                 onClick={onViewFull}
               >
-                {t('view_full_audit_trail')} →
+                {t('view_full_audit_trail')} <ArrowRight className="inline size-3 rtl:rotate-180" />
               </button>
             </>
           )}

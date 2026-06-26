@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/shared/empty-state';
@@ -18,6 +18,8 @@ import { TaskBoardMobileList } from './task-board-mobile-list';
 export function TaskBoard() {
   const t = useTranslations('tasks.board');
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const { data: user } = useCurrentUser();
 
   const urlFilters = useMemo(
@@ -68,7 +70,7 @@ export function TaskBoard() {
           title={t('empty_title')}
           description={t('empty_description')}
           action={
-            <Button variant="outline" onClick={() => window.location.href = '/tasks'}>
+            <Button variant="outline" onClick={() => router.replace(pathname)}>
               {t('reset_filters')}
             </Button>
           }

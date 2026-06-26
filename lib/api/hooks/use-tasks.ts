@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
 import { queryKeys } from '../query-keys';
-import { apiClient } from '../client';
+import { apiClient, ApiRequestError } from '../client';
 import type { components } from '@/lib/generated/api-types';
 
 type TaskResource = components['schemas']['TaskResource'];
@@ -40,12 +42,21 @@ export function useTasksInfinite(filters: Record<string, unknown>) {
 
 export function useCreateTask() {
   const queryClient = useQueryClient();
+  const t = useTranslations('tasks');
 
   return useMutation({
     mutationFn: (data: Record<string, unknown>) =>
       apiClient.post<TaskResource>('/v1/tasks', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.lists() });
+      toast.success(t('task_created'));
+    },
+    onError: (error) => {
+      if (error instanceof ApiRequestError) {
+        toast.error(error.error.message);
+      } else {
+        toast.error(t('task_create_error'));
+      }
     },
   });
 }

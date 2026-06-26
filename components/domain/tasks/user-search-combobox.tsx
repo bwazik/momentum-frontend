@@ -40,10 +40,6 @@ export function UserSearchCombobox({
   const id = useId();
 
   useEffect(() => {
-    if (!value) setSelectedLabel('');
-  }, [value]);
-
-  useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
     return () => clearTimeout(timer);
   }, [search]);
@@ -51,10 +47,11 @@ export function UserSearchCombobox({
   const { data, isFetching } = useUsersSearch(debouncedSearch);
   const users = data?.data ?? [];
 
-  const currentSelected = users.find((u) => u.public_id === value);
-  const displayLabel = currentSelected
-    ? localizeName(locale, currentSelected.name_ar, currentSelected.name_en)
-    : selectedLabel;
+  const displayLabel = value
+    ? (users.find((u) => u.public_id === value)
+        ? localizeName(locale, users.find((u) => u.public_id === value)!.name_ar, users.find((u) => u.public_id === value)!.name_en)
+        : selectedLabel)
+    : '';
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

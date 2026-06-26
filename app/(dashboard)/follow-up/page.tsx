@@ -1,10 +1,13 @@
 import { getTranslations } from 'next-intl/server';
+import { PageHeader } from '@/components/shared/page-header';
+import { FollowUpCenter } from '@/components/domain/follow-up/follow-up-center';
 
 export default async function FollowUpPage() {
-  const t = await getTranslations('placeholder');
+  const t = await getTranslations('followUp');
   return (
-    <div className="flex flex-1 items-center justify-center">
-      <p className="text-muted-foreground">{t('follow_up')}</p>
-    </div>
+    <main className="flex flex-col gap-6 p-6">
+      <PageHeader title={t('title')} description={t('description')} />
+      <FollowUpCenter />
+    </main>
   );
 }

@@ -26,12 +26,13 @@ export function BlueprintBuilder({ publicId }: BlueprintBuilderProps) {
   const query = useBlueprint(publicId);
   const canManage = useCapability('blueprint.manage');
   const { selectedStageId, setSelectedStage, panelOpen, setPanelOpen, setBlueprintName, reset } = useBlueprintBuilderStore();
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 1023px)').matches : false,
+  );
   const [subStageEditId, setSubStageEditId] = useState<string | null>(null);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 1023px)');
-    setIsMobile(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
@@ -102,6 +103,7 @@ export function BlueprintBuilder({ publicId }: BlueprintBuilderProps) {
         <aside className="hidden w-96 shrink-0 lg:block">
           <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto border-s p-5">
             <StagePropertiesPanel
+              key={selectedStageId ?? 'idle'}
               blueprint={blueprint}
               stage={selectedStage}
               mode={panelMode}
@@ -115,6 +117,7 @@ export function BlueprintBuilder({ publicId }: BlueprintBuilderProps) {
         <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
           <SheetContent side={locale === 'ar' ? 'left' : 'right'} className="w-96 overflow-y-auto p-5 pt-10">
             <StagePropertiesPanel
+              key={selectedStageId ?? 'idle'}
               blueprint={blueprint}
               stage={selectedStage}
               mode={panelMode}

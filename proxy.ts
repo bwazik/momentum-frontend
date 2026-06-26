@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function proxy(_request: NextRequest) {
+export function proxy(request: NextRequest) {
+  void request;
   const response = NextResponse.next();
   response.headers.set('Cache-Control', 'private, no-cache, no-store, max-age=0, must-revalidate');
   response.headers.set('X-Frame-Options', 'DENY');

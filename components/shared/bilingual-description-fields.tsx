@@ -1,28 +1,25 @@
 'use client';
 
-import { useLocale } from 'next-intl';
 import { Textarea } from '@/components/ui/textarea';
 import { Field, FieldLabel } from '@/components/ui/field';
 
-interface BilingualDescriptionFieldsProps {
-  form: Record<string, any>;
-  setForm: React.Dispatch<React.SetStateAction<any>>;
+interface BilingualDescriptionFieldsProps<T extends Record<string, unknown>> {
+  form: T;
+  setForm: React.Dispatch<React.SetStateAction<T>>;
   t: (key: string) => string;
   readOnly?: boolean;
   descriptionArKey?: string;
   descriptionEnKey?: string;
 }
 
-export function BilingualDescriptionFields({
+export function BilingualDescriptionFields<T extends Record<string, unknown>>({
   form,
   setForm,
   t,
   readOnly = false,
   descriptionArKey = 'description_ar',
   descriptionEnKey = 'description_en',
-}: BilingualDescriptionFieldsProps) {
-  const locale = useLocale();
-
+}: BilingualDescriptionFieldsProps<T>) {
   return (
     <>
       <Field>
@@ -31,8 +28,8 @@ export function BilingualDescriptionFields({
           dir="rtl"
           placeholder={t(`${descriptionArKey}_placeholder`)}
           disabled={readOnly}
-          value={form[descriptionArKey] ?? ''}
-          onChange={(e) => setForm((prev: Record<string, string>) => ({ ...prev, [descriptionArKey]: e.target.value }))}
+          value={String(form[descriptionArKey] ?? '')}
+          onChange={(e) => setForm((prev) => ({ ...prev, [descriptionArKey]: e.target.value }))}
         />
       </Field>
       <Field>
@@ -41,8 +38,8 @@ export function BilingualDescriptionFields({
           dir="ltr"
           placeholder={t(`${descriptionEnKey}_placeholder`)}
           disabled={readOnly}
-          value={form[descriptionEnKey] ?? ''}
-          onChange={(e) => setForm((prev: Record<string, string>) => ({ ...prev, [descriptionEnKey]: e.target.value }))}
+          value={String(form[descriptionEnKey] ?? '')}
+          onChange={(e) => setForm((prev) => ({ ...prev, [descriptionEnKey]: e.target.value }))}
         />
       </Field>
     </>

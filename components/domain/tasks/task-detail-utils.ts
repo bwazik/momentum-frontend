@@ -111,10 +111,6 @@ export function timeFmtFromT(t: (key: string) => string): TimeFmt {
   };
 }
 
-function unit(n: number, day: string, days: string, two?: string): string {
-  return n === 1 ? day : n === 2 && two ? two : days;
-}
-
 function fmtDurationVerbose(fmt: TimeFmt, days: number, hours: number): string {
   if (days > 0 && hours > 0) return `${days} ${fmt.unitDay(days)}, ${hours} ${fmt.unitHour(hours)}`;
   if (days > 0) return `${days} ${fmt.unitDay(days)}`;
@@ -147,18 +143,7 @@ export function formatDuration(enteredAt: string, exitedAt: string | null, fmt: 
   return fmtDurationVerbose(fmt, days, hours);
 }
 
-export function formatDualDate(isoDate: string, locale: string): string {
-  const date = new Date(isoDate);
-  const gregorian = new Intl.DateTimeFormat(locale, {
-    year: 'numeric', month: 'short', day: 'numeric',
-  }).format(date);
-
-  const hijri = new Intl.DateTimeFormat(`${locale}-u-ca-islamic`, {
-    year: 'numeric', month: 'short', day: 'numeric',
-  }).format(date);
-
-  return `${hijri} — ${gregorian}`;
-}
+export { formatDualDate } from '@/lib/utils/date-utils';
 
 export function buildStageActivities(
   stages: { blueprint_stage: { name_ar?: string; name_en?: string }; entered_at: string; status: string }[] | undefined,

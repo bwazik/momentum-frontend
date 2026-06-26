@@ -49,9 +49,8 @@ export function ActivityEntry({ entry }: ActivityEntryProps) {
             ? <><span className="text-muted-foreground">{t(typeMeta.label)} </span><span className="font-medium">{stageName}</span>{parentName && <span className="text-muted-foreground"> ({parentName})</span>}</>
             : <><span className="font-medium">{stageName} </span><span className="text-muted-foreground">{t(typeMeta.label)}</span>{parentName && <span className="text-muted-foreground"> ({parentName})</span>}</>
           )}
-          {typeMeta.format === 'override' && actorName && (isRtl
-            ? <><span className="font-medium">{actorName} </span><span className="text-muted-foreground">{t(typeMeta.label)}</span></>
-            : <><span className="font-medium">{actorName} </span><span className="text-muted-foreground">{t(typeMeta.label)}</span></>
+          {typeMeta.format === 'override' && actorName && (
+            <><span className="font-medium">{actorName} </span><span className="text-muted-foreground">{t(typeMeta.label)}</span></>
           )}
           {typeMeta.format === 'assigned' && actorName && (isRtl
             ? <><span className="text-muted-foreground">{t(typeMeta.label)} </span><span className="font-medium">{actorName}</span>{stageName && parentName ? <span className="text-muted-foreground"> {t('substage_suffix')} {stageName} ({parentName})</span> : stageName ? <span className="text-muted-foreground"> {t('stage_suffix')} {stageName}</span> : null}</>

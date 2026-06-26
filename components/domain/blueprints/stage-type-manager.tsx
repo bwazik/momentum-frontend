@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { useBlueprintStageTypes, useCreateStageType, useUpdateStageType, useDeleteStageType } from '@/lib/api/hooks/use-blueprints';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
@@ -35,7 +35,11 @@ export function StageTypeManager({ openCreate, onOpenCreateChange }: StageTypeMa
   const [form, setForm] = useState({ name_ar: '', name_en: '', display_order: '0' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  useEffect(() => { if (openCreate) openCreateDialog(); }, [openCreate]);
+  function openCreateDialog() {
+    setEditItem(null); setForm({ name_ar: '', name_en: '', display_order: '0' }); setErrors({}); setDialogOpen(true);
+  }
+
+  useEffect(() => { if (openCreate) setTimeout(() => openCreateDialog(), 0); }, [openCreate]);
 
   if (isLoading) return <CatalogSkeleton />;
   if (isError) {
@@ -46,10 +50,6 @@ export function StageTypeManager({ openCreate, onOpenCreateChange }: StageTypeMa
   }
 
   const items = data ?? [];
-
-  function openCreateDialog() {
-    setEditItem(null); setForm({ name_ar: '', name_en: '', display_order: '0' }); setErrors({}); setDialogOpen(true);
-  }
 
   function openEdit(item: StageTypeResource) {
     setEditItem(item); setForm({ name_ar: item.name_ar, name_en: item.name_en ?? '', display_order: item.display_order ?? '0' }); setErrors({}); setDialogOpen(true);

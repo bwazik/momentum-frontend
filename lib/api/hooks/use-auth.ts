@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { apiClient, ApiRequestError } from '../client';
 import { queryKeys } from '../query-keys';
 import type { components } from '@/lib/generated/api-types';
@@ -48,6 +49,14 @@ export function useLogout() {
     onSuccess: () => {
       queryClient.clear();
       router.push('/login');
+    },
+    onError: (error) => {
+      if (error instanceof ApiRequestError) {
+        toast.error(error.error.message);
+      } else {
+        queryClient.clear();
+        router.push('/login');
+      }
     },
   });
 }

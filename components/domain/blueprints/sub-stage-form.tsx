@@ -1,16 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Field, FieldGroup, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { RtlSelect } from '@/components/shared/rtl-select';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
 import { BilingualDescriptionFields } from '@/components/shared/bilingual-description-fields';
 import { useCreateSubStage, useUpdateSubStage } from '@/lib/api/hooks/use-blueprints';
 import { localizeName, localizeTitle } from '@/lib/utils/localize';
-import { ASSIGNMENT_TYPE_MAP, CARDINALITY_MAP, COMPLETION_RULE_MAP, buildAssignmentFields } from './blueprint-utils';
+import { buildAssignmentFields } from './blueprint-utils';
 import type { BlueprintResource, BlueprintSubStageResource, SlaPolicyResource, PositionResource, DepartmentResource } from './blueprint-types';
 
 interface SubStageFormProps {
@@ -24,7 +24,7 @@ interface SubStageFormProps {
   positions: PositionResource[];
   departments: DepartmentResource[];
   locale: string;
-  tPanel: any;
+  tPanel: (key: string) => string;
 }
 
 export function SubStageForm({

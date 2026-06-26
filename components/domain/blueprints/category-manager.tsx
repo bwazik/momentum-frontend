@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { ActiveBadge } from '@/components/shared/active-badge';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
 import { useBlueprintCategories, useCreateCategory, useUpdateCategory, useDeactivateCategory, useReactivateCategory, useDeleteCategory } from '@/lib/api/hooks/use-blueprints';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
@@ -37,8 +37,15 @@ export function CategoryManager({ openCreate, onOpenCreateChange }: CategoryMana
   const [form, setForm] = useState({ name_ar: '', name_en: '', display_order: '0' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  function openCreateDialog() {
+    setEditItem(null);
+    setForm({ name_ar: '', name_en: '', display_order: '0' });
+    setErrors({});
+    setDialogOpen(true);
+  }
+
   useEffect(() => {
-    if (openCreate) openCreateDialog();
+    if (openCreate) setTimeout(() => openCreateDialog(), 0);
   }, [openCreate]);
 
   if (isLoading) return <CatalogSkeleton />;
@@ -50,13 +57,6 @@ export function CategoryManager({ openCreate, onOpenCreateChange }: CategoryMana
   }
 
   const categories = data ?? [];
-
-  function openCreateDialog() {
-    setEditItem(null);
-    setForm({ name_ar: '', name_en: '', display_order: '0' });
-    setErrors({});
-    setDialogOpen(true);
-  }
 
   function openEdit(cat: BlueprintCategoryResource) {
     setEditItem(cat);
