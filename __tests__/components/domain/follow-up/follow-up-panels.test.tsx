@@ -85,8 +85,8 @@ describe('EscalationsPanel', () => {
 });
 
 describe('RecentActionsPanel', () => {
-  it('renders empty state when no tasks', () => {
-    renderWithProviders(<RecentActionsPanel tasks={[]} />);
-    expect(screen.getByText('No recent actions')).toBeInTheDocument();
+  it('renders empty state when no tasks', async () => {
+    renderWithProviders(<RecentActionsPanel />);
+    expect(await screen.findByText('No recent actions')).toBeInTheDocument();
   });
 });

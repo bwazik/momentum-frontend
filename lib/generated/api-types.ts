@@ -2739,6 +2739,7 @@ export interface components {
             department: {
                 public_id: string;
                 name_ar: string;
+                name_en: string;
             };
             title_ar: string;
             title_en: string;
@@ -2747,6 +2748,7 @@ export interface components {
                 public_id: string;
                 rank: string;
                 name_ar: string;
+                name_en: string;
             };
             is_department_head: string;
             is_active: string;

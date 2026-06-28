@@ -1,10 +1,9 @@
 import { getTranslations } from 'next-intl/server';
+import { OrganizationWorkspace } from '@/components/domain/organization/organization-workspace';
 
 export default async function OrganizationPage() {
-  const t = await getTranslations('placeholder');
+  const t = await getTranslations('organization');
   return (
-    <div className="flex flex-1 items-center justify-center">
-      <p className="text-muted-foreground">{t('organization')}</p>
-    </div>
+    <OrganizationWorkspace title={t('page_title')} description={t('page_description')} />
   );
 }

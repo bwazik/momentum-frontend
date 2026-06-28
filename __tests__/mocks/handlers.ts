@@ -1,6 +1,11 @@
 import { http, HttpResponse } from 'msw';
+import { organizationHandlers } from './organization-handlers';
 
 export const handlers = [
+  ...organizationHandlers,
+  http.get('https://api.momentum.test/v1/follow-up/actions', () =>
+    HttpResponse.json({ data: [], next_cursor: null, has_more: false }),
+  ),
   http.get('https://api.momentum.test/v1/follow-up/board', () => {
     return HttpResponse.json({
       data: [

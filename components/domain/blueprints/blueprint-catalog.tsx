@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/shared/page-header';
@@ -49,20 +50,22 @@ export function BlueprintCatalog() {
         }
       />
       <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className={locale === 'ar' ? 'w-full justify-end' : 'w-full justify-start'}>
+        <TabsList className={cn('w-full justify-start', locale === 'ar' && 'flex-row-reverse')}>
           <TabsTrigger value="categories">{t('categories')}</TabsTrigger>
           <TabsTrigger value="stage-types">{t('stage_types')}</TabsTrigger>
           <TabsTrigger value="sla-policies">{t('sla_policies')}</TabsTrigger>
         </TabsList>
-        <TabsContent value="categories">
-          <CategoryManager openCreate={openCategory} onOpenCreateChange={setOpenCategory} />
-        </TabsContent>
-        <TabsContent value="stage-types">
-          <StageTypeManager openCreate={openStageType} onOpenCreateChange={setOpenStageType} />
-        </TabsContent>
-        <TabsContent value="sla-policies">
-          <SlaPolicyManager openCreate={openSlaPolicy} onOpenCreateChange={setOpenSlaPolicy} />
-        </TabsContent>
+        <div dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+          <TabsContent value="categories">
+            <CategoryManager openCreate={openCategory} onOpenCreateChange={setOpenCategory} />
+          </TabsContent>
+          <TabsContent value="stage-types">
+            <StageTypeManager openCreate={openStageType} onOpenCreateChange={setOpenStageType} />
+          </TabsContent>
+          <TabsContent value="sla-policies">
+            <SlaPolicyManager openCreate={openSlaPolicy} onOpenCreateChange={setOpenSlaPolicy} />
+          </TabsContent>
+        </div>
       </Tabs>
     </main>
   );

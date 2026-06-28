@@ -20,8 +20,24 @@ export const queryKeys = {
     all: ['organization'] as const,
     departments: (filters?: Record<string, unknown>) =>
       [...queryKeys.organization.all, 'departments', filters] as const,
+    departmentTree: () =>
+      [...queryKeys.organization.all, 'departments', 'tree'] as const,
+    department: (publicId: string) =>
+      [...queryKeys.organization.all, 'departments', 'detail', publicId] as const,
+    authorityGrades: () =>
+      [...queryKeys.organization.all, 'authority-grades'] as const,
+    authorityGrade: (publicId: string) =>
+      [...queryKeys.organization.all, 'authority-grades', 'detail', publicId] as const,
     positions: (filters?: Record<string, unknown>) =>
-      [...queryKeys.organization.all, 'positions', filters] as const,
+      [...queryKeys.organization.all, 'positions', 'list', filters] as const,
+    position: (publicId: string) =>
+      [...queryKeys.organization.all, 'positions', 'detail', publicId] as const,
+    workingCalendars: () =>
+      [...queryKeys.organization.all, 'working-calendars'] as const,
+    workingCalendar: (publicId: string) =>
+      [...queryKeys.organization.all, 'working-calendars', 'detail', publicId] as const,
+    holidays: (calendarPublicId: string, filters?: Record<string, unknown>) =>
+      [...queryKeys.organization.all, 'working-calendars', calendarPublicId, 'holidays', filters] as const,
   },
   blueprints: {
     all: ['blueprints'] as const,

@@ -73,7 +73,6 @@ Create a new frontend feature spec for the following screen/feature:
     - Explicit out-of-scope items
     - Any open questions that need answering before implementation
 10. Do NOT create `plan.md` yet — that comes after the spec is reviewed and approved.
-11. After creating the file, show me its contents for review.
 
 **Do not start implementing.** This prompt is spec creation only.
 **You can know the next spec from the roadmap.md**
@@ -166,7 +165,6 @@ Keep concise; mark uncertain details with `<!-- TODO: verify -->`.
     - Architecture or standards violations
 
     Include file paths and recommended fixes.
-13. After creating the file, show me its contents for review.
 
 **Do not start implementing.** This prompt is plan creation only.
 **You can access the backend project at `../backend/` for API contracts, specs, and plans**

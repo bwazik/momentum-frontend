@@ -6,8 +6,8 @@
 
 ## Current Focus
 
-**Phase:** F6 — Admin, org, help, onboarding
-**Active spec:** `008-organization-structure`
+**Phase:** F5 — Dashboards & analytics
+**Active spec:** `009-analytics-reporting`
 
 ---
 
@@ -21,7 +21,7 @@
 | F3 | Blueprint builder | ✅ Done | M3 backend |
 | F4 | Follow-up & workflow viz | ✅ Done | M4–M5 backend |
 | F5 | Dashboards & analytics | ⬜ Not Started | M6 backend |
-| F6 | Admin, org, help, onboarding | ⬜ Not Started | M1–M2, M7 backend |
+| F6 | Admin, org, help, onboarding | 🔄 In Progress | M1–M2, M7 backend |
 
 **Legend:** ✅ Done · 🔄 In Progress · ⬜ Not Started · 🚧 Blocked
 
@@ -38,9 +38,9 @@
 | `005-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ✅ |
 | `006-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ✅ |
 | `007-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ✅ |
-| `008-organization-structure` | F6 | Organization | `002-organization-structure` | ⬜ |
+| `008-organization-structure` | F6 | Organization | `002-organization-structure` | ✅ |
 | `009-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
-| `010-system-administration` | F6 | Platform | `001`, `003`, `005` (priorities), `015` | ⬜ |
+| `010-system-administration` | F6 | Tenant Admin | `003`, `005` (priorities), `015` | ⬜ |
 | `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
 | `013-pending-approvals` | F2 | Tasks | `006-stage-lifecycle` | ⬜ |
@@ -52,6 +52,7 @@
 | `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ⬜ |
 | `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ⬜ |
 | `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
+| `022-platform-administration` | F6 | Platform | `001-platform-tenancy`, `001-platform-admin` | ⬜ |
 
 Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API dependencies. `015` and `016` were removed as orphaned specs with no backend counterpart.
 
@@ -116,7 +117,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 ## F2 — Task Board & Task Details
 
-**Status:** ✅ Done
+**Status:** 🔄 In Progress
 
 **Completed (003):**
 - `/tasks` route with breadcrumb + description inside dashboard shell ✅
@@ -287,6 +288,45 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Board query key reuse:** Follow-up board reuses `taskBoard.list` query key (shared cache with `/tasks`) but adds its own 60s polling via `refetchInterval`.
 - **Unknown narrowing adapters:** `getBottleneckEntities()` narrows `BottleneckResource.stage_type`/`.department` from `unknown` to typed entities where OpenAPI schemas are incorrect.
 - **Action type normalization:** `actionTypeKey()` handles both integer (1-5) and string (`phonecall`, `message`, etc.) action type formats.
+
+## F6 — Admin, Org, Help, Onboarding
+
+**Status:** 🔄 In Progress
+
+**Completed (008):**
+- `/organization` route with URL-driven tabbed workspace (Overview/Departments/Positions/Grades/Calendars) ✅
+- `useDepartmentTree()`, `useDepartmentsInfinite()`, `usePositionsInfinite()`, `useAuthorityGrades()`, `useWorkingCalendars()`, `usePublicHolidays()` hooks with generated types ✅
+- All mutation hooks organized in `use-organization.ts` (create/update/deactivate/reactivate/delete for all 5 entities) ✅
+- Query key factory extended with `organization` namespace (backward-compatible with existing task-board department picker) ✅
+- **Overview tab:** visual org chart with gradient avatar cards, connector lines, stat cards (derived from positions list), zoom controls, two-column layout (chart left + selected department's positions right) ✅
+- **Departments tab:** tree panel + flat cursor-paginated table + CRUD dialogs (form with bilingual name + parent select, deactivate-with-cascade dialog) ✅
+- **Positions tab:** cursor-paginated table + mobile card list + CRUD dialogs (bilingual title, department/grade/reports-to selects, head checkbox, transfer dialog, detail drawer) ✅
+- **Authority Grades tab:** bounded list + CRUD dialog (rank + bilingual name + description); delete disabled when grade has active positions ✅
+- **Working Calendars tab:** calendar cards grid + CRUD dialog (working-days ToggleGroup starting Saturday, time inputs, GCC timezone select) + nested Public Holidays sub-view with year filter ✅
+- **5 form dialogs** (Department, Position, Grade, Working Calendar, Public Holiday) with ApiRequestError validation display ✅
+- **PositionDetailDrawer** (Sheet) for position details (status, grade, department, occupant, reports-to) ✅
+- **Unified confirmation dialogs** with threatening descriptions (`dialogs.confirm_delete_desc`, `confirm_deactivate_desc`, `confirm_reactivate_desc`) across departments, positions, grades, and calendars ✅
+- **Capability-gated actions** (`organization.manage`) on all mutating buttons and action menus ✅
+- **All 4 states:** loading skeleton (per-tab variants), empty states, error with retry, 403 permission-denied, success ✅
+- **i18n:** ~174 keys in `organization` namespace, both locales (AR + EN) ✅
+- **RTL:** logical Tailwind properties, Sheet `end-3` close button fix, Select `position="popper"` on all selects, Arabic day names, Saturday-first week order ✅
+- **MSW handlers:** `__tests__/mocks/organization-handlers.ts` (250 lines, all endpoints) ✅
+- **5 test files:** overview, departments, positions, grades, calendars panel tests (11 tests) ✅
+- **DRY refactors:** `PermissionDenied`, `VacantBadge`, `LoadMoreButton` shared components; `extractApiErrors`, `groupPositionsByDept` shared utils ✅
+
+**Established by 008:**
+- **Visual org chart pattern:** Gradient avatar cards with initials, tiered layout with CSS connector lines, progressive disclosure via click, zoom controls (`ZoomIn`/`ZoomOut`). Works for org chart browsing, not just list trees.
+- **Two-column overview layout:** Chart on left (flex-1) for browsing, right panel (380px) for selected department's positions. Replaces toggle between list/chart views.
+- **Collapsible positions per department:** Positions rendered as `Card size="sm"` sub-cards, collapsed by default, toggled per department card click.
+- **Select `position="popper"` standardization:** Every `SelectContent` across all dialogs uses `position="popper"` for consistent popover behavior (avoids inline scroll-lock issues).
+- **Sheet close button RTL fix:** `end-3` instead of `right-3` in base `sheet.tsx` — single source of truth for all sheets (3 domain sheets + sidebar).
+- **Unified threatening confirmation pattern:** All delete/deactivate/reactivate dialogs share `dialogs.confirm_delete_desc` / `confirm_deactivate_desc` / `confirm_reactivate_desc` with `{name}` interpolation.
+- **Boolean normalization with `asBool()`:** Backend serializes booleans natively but OpenAPI/mock may use strings — `asBool()` handles `true`, `'1'`, `1`, `'true'` consistently across all components.
+- **Flattened tree for selects:** Department tree (roots only from API) recursively flattened via `flattenTree()` utility for department-picker selects.
+- **Holiday query invalidation:** Prefix match without trailing `undefined` — invalidation key `['organization', 'working-calendars', calId, 'holidays']` matches all year-filtered query keys.
+- **DRY shared components pattern:** Domain-local shared components (`PermissionDenied`, `VacantBadge`, `LoadMoreButton`) avoid coupling to shared/ while eliminating 15+ duplicated code blocks.
+
+---
 
 ## Dependency Map
 

@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { RtlSelect } from '@/components/shared/rtl-select';
 import { useTaskPriorities, useBlueprintCategories, useStageTypes, useDepartmentsInfinite } from '@/lib/api/hooks/use-task-board';
 import { localizeName } from '@/components/domain/tasks/task-board-utils';
@@ -25,6 +25,7 @@ interface AdvancedFiltersSheetProps {
 
 export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersSheetProps) {
   const locale = useLocale();
+  const side = locale === 'ar' ? 'left' : 'right';
   const { data: departmentsData } = useDepartmentsInfinite();
   const { data: stageTypes } = useStageTypes();
   const { data: priorities } = useTaskPriorities();
@@ -40,13 +41,16 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
           {t('advanced')}
         </Button>
       </SheetTrigger>
-      <SheetContent side={locale === 'ar' ? 'left' : 'right'} className="w-96 overflow-y-auto p-5 pt-10">
-        <h2 className="mb-4 text-lg font-semibold">{t('advanced')}</h2>
+      <SheetContent side={side} className="w-96 overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle>{t('advanced')}</SheetTitle>
+        </SheetHeader>
+        <div className="flex flex-col gap-4 px-4">
         <Field>
           <FieldLabel>{t('department')}</FieldLabel>
           <RtlSelect value={filters.departmentId ?? ''} onValueChange={(v) => onParam('departmentId', v || null)}>
             <SelectTrigger><SelectValue placeholder={t('department')} /></SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper">
               <SelectGroup>
                 <SelectItem value="all">{t('department')}</SelectItem>
                 {departments.map((d) => (
@@ -61,7 +65,7 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
           <FieldLabel>{t('stage_type')}</FieldLabel>
           <RtlSelect value={filters.stageTypeId ?? ''} onValueChange={(v) => onParam('stageTypeId', v || null)}>
             <SelectTrigger><SelectValue placeholder={t('stage_type')} /></SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper">
               <SelectGroup>
                 <SelectItem value="all">{t('stage_type')}</SelectItem>
                 {(stageTypes ?? []).map((st) => (
@@ -76,7 +80,7 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
           <FieldLabel>{t('priority')}</FieldLabel>
           <RtlSelect value={filters.priorityId?.[0] ?? ''} onValueChange={(v) => onParam('priorityId', v || null)}>
             <SelectTrigger><SelectValue placeholder={t('priority')} /></SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper">
               <SelectGroup>
                 <SelectItem value="all">{t('priority')}</SelectItem>
                 {(priorities ?? []).map((p) => (
@@ -91,7 +95,7 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
           <FieldLabel>{t('blueprint_category')}</FieldLabel>
           <RtlSelect value={filters.blueprintCategoryId ?? ''} onValueChange={(v) => onParam('blueprintCategoryId', v || null)}>
             <SelectTrigger><SelectValue placeholder={t('blueprint_category')} /></SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper">
               <SelectGroup>
                 <SelectItem value="all">{t('blueprint_category')}</SelectItem>
                 {(categories ?? []).map((c) => (
@@ -121,6 +125,7 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
               onChange={(e) => onParam('dateTo', e.target.value || null)}
             />
           </Field>
+        </div>
         </div>
       </SheetContent>
     </Sheet>

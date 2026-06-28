@@ -13,7 +13,7 @@ import { BuilderTopBar } from './builder-top-bar';
 import { StageCanvas } from './stage-canvas';
 import { StagePropertiesPanel } from './stage-properties-panel';
 import { BlueprintBuilderSkeleton } from './blueprint-builder-skeleton';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { localizeName } from '@/lib/utils/localize';
 
 interface BlueprintBuilderProps {
@@ -115,7 +115,11 @@ export function BlueprintBuilder({ publicId }: BlueprintBuilderProps) {
           </div>
         </aside>
         <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
-          <SheetContent side={locale === 'ar' ? 'left' : 'right'} className="w-96 overflow-y-auto p-5 pt-10">
+          <SheetContent side={locale === 'ar' ? 'left' : 'right'} className="w-96 overflow-y-auto">
+            <SheetHeader className="sr-only">
+              <SheetTitle>{t('stage_properties')}</SheetTitle>
+            </SheetHeader>
+            <div className="flex flex-col gap-4 px-4">
             <StagePropertiesPanel
               key={selectedStageId ?? 'idle'}
               blueprint={blueprint}
@@ -126,6 +130,7 @@ export function BlueprintBuilder({ publicId }: BlueprintBuilderProps) {
               onEditSubStage={setSubStageEditId}
               onSubStageBack={() => setSubStageEditId(null)}
             />
+            </div>
           </SheetContent>
         </Sheet>
       </div>

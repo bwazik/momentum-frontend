@@ -96,7 +96,7 @@ describe('RecentActivityCard', () => {
 
   it('renders view full audit trail link', () => {
     render(<RecentActivityCard entries={mockEntries} isLoading={false} />);
-    expect(screen.getByText('View Full Audit Trail →')).toBeInTheDocument();
+    expect(screen.getByText('View Full Audit Trail')).toBeInTheDocument();
   });
 
   it('calls onViewFull when link is clicked', async () => {
@@ -104,7 +104,7 @@ describe('RecentActivityCard', () => {
     const onViewFull = vi.fn();
     render(<RecentActivityCard entries={mockEntries} isLoading={false} onViewFull={onViewFull} />);
 
-    await user.click(screen.getByText('View Full Audit Trail →'));
+    await user.click(screen.getByText('View Full Audit Trail'));
     expect(onViewFull).toHaveBeenCalledTimes(1);
   });
 });

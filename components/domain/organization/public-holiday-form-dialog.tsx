@@ -1,0 +1,148 @@
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { useCreatePublicHoliday, useUpdatePublicHoliday } from '@/lib/api/hooks/use-organization';
+import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
+import { asBool, extractApiErrors } from './organization-utils';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import type { components } from '@/lib/generated/api-types';
+
+type PublicHolidayResource = components['schemas']['PublicHolidayResource'];
+type StorePublicHolidayRequest = components['schemas']['StorePublicHolidayRequest'];
+
+interface PublicHolidayFormDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  calendarPublicId: string;
+  holiday?: PublicHolidayResource;
+}
+
+interface HolidayFormState {
+  name_ar: string;
+  name_en: string;
+  holiday_date: string;
+  is_recurring: boolean;
+  [key: string]: unknown;
+}
+
+export function PublicHolidayFormDialog({
+  open,
+  onOpenChange,
+  calendarPublicId,
+  holiday,
+}: PublicHolidayFormDialogProps) {
+  const t = useTranslations('organization');
+  const isEdit = !!holiday;
+
+  const [form, setForm] = useState<HolidayFormState>(() => ({
+    name_ar: holiday?.name_ar ?? '',
+    name_en: holiday?.name_en ?? '',
+    holiday_date: holiday?.holiday_date ? holiday.holiday_date.split('T')[0] : '',
+    is_recurring: asBool(holiday?.is_recurring),
+  }));
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const createMutation = useCreatePublicHoliday(calendarPublicId);
+  const updateMutation = useUpdatePublicHoliday(calendarPublicId, holiday?.public_id ?? '');
+  const isPending = createMutation.isPending || updateMutation.isPending;
+
+  function validate(): boolean {
+    const newErrors: Record<string, string> = {};
+    if (!form.name_ar.trim()) newErrors.name_ar = t('dialogs.name_ar_required');
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!validate()) return;
+
+    const body = {
+      name_ar: form.name_ar,
+      name_en: form.name_en || undefined,
+      holiday_date: form.holiday_date,
+      is_recurring: form.is_recurring,
+    } as unknown as StorePublicHolidayRequest;
+
+    const mutation = isEdit ? updateMutation : createMutation;
+    mutation.mutate(body, {
+      onSuccess: () => onOpenChange(false),
+      onError: (err: Error) => {
+        const fieldErrors = extractApiErrors(err);
+        if (fieldErrors) setErrors(fieldErrors);
+      },
+    });
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {isEdit ? t('dialogs.edit_holiday') : t('dialogs.add_holiday')}
+          </DialogTitle>
+          <DialogDescription>
+            {isEdit ? t('dialogs.edit_holiday') : t('dialogs.add_holiday')}
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <BilingualNameFields
+            form={form as unknown as Record<string, unknown>}
+            setForm={setForm as unknown as React.Dispatch<React.SetStateAction<Record<string, unknown>>>}
+            errors={errors}
+            t={t}
+            nameArKey="name_ar"
+          />
+
+          <Field>
+            <FieldLabel>{t('dialogs.date')} <span className="text-destructive">*</span></FieldLabel>
+            <Input
+              type="date"
+              value={form.holiday_date}
+              onChange={(e) => setForm((prev) => ({ ...prev, holiday_date: e.target.value }))}
+            />
+            {errors.holiday_date && <FieldError>{errors.holiday_date}</FieldError>}
+          </Field>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="is_recurring"
+              checked={form.is_recurring}
+              onCheckedChange={(checked) => setForm((prev) => ({ ...prev, is_recurring: checked === true }))}
+            />
+            <label htmlFor="is_recurring" className="text-sm font-medium">
+              {t('dialogs.is_recurring')}
+            </label>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isPending}
+            >
+              {t('actions.cancel')}
+            </Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? t('actions.saving') : isEdit ? t('actions.save') : t('actions.create')}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

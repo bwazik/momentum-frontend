@@ -55,7 +55,12 @@ vi.mock('@/lib/api/hooks/use-capabilities', () => ({
 describe('FollowUpBoard', () => {
   it('renders loading skeleton initially', () => {
     renderWithProviders(
-      <FollowUpBoard filters={{}} onLogFollowUp={vi.fn()} onEscalate={vi.fn()} />
+      <FollowUpBoard
+        allTasks={[]}
+        query={{ isLoading: true, isError: false, error: null, data: undefined, hasNextPage: false, isFetchingNextPage: false, fetchNextPage: vi.fn(), refetch: vi.fn() }}
+        onLogFollowUp={vi.fn()}
+        onEscalate={vi.fn()}
+      />
     );
     expect(screen.getByTestId('follow-up-skeleton')).toBeInTheDocument();
   });
