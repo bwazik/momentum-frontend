@@ -30,7 +30,7 @@ const PRIORITY_DOT: Record<string, string> = {
 
 export function SlaBadge({ health, status }: { health?: string | null; status?: string | null }) {
   const t = useTranslations('tasks.board.sla');
-  const effective = status === 'completed' || status === 'cancelled' ? 'none' : health;
+  const effective = status === 'draft' || status === 'completed' || status === 'cancelled' ? 'none' : health;
   const raw = (effective ?? '').toLowerCase();
   const value: string = raw === 'green' || raw === 'amber' || raw === 'red' || raw === 'grey' || raw === 'none' ? raw : 'none';
 

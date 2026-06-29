@@ -87,6 +87,7 @@ export function useBlueprintsInfinite(filters: BlueprintListFilters) {
       }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => (lastPage.has_more ? lastPage.next_cursor : undefined),
+    staleTime: 30 * 1000,
   });
 }
 

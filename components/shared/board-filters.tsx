@@ -23,7 +23,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { AdvancedFiltersSheet } from '@/components/shared/advanced-filters-sheet';
 import type { TaskBoardUrlFilters } from '@/components/domain/tasks/task-board-types';
 
-const QUICK_FILTERS = ['active', 'mine', 'overdue', 'at_risk', 'suspended', 'all'] as const;
+const QUICK_FILTERS = ['active', 'mine', 'overdue', 'at_risk', 'suspended', 'draft', 'all'] as const;
 const SORT_FIELDS = ['time_at_stage', 'priority', 'due_date', 'created_at', 'department', 'stage_type'] as const;
 
 interface BoardFiltersProps {

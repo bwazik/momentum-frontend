@@ -5,35 +5,46 @@ import { Field, FieldLabel, FieldError } from '@/components/ui/field';
 
 interface BilingualNameFieldsProps<T extends Record<string, unknown>> {
   form: T;
-  setForm: React.Dispatch<React.SetStateAction<T>>;
-  errors: Record<string, string>;
+  setForm?: React.Dispatch<React.SetStateAction<T>>;
+  onFieldChange?: (key: string, value: string) => void;
+  errors?: Record<string, string>;
   t: (key: string) => string;
   readOnly?: boolean;
   arRequired?: boolean;
   nameArKey?: string;
   nameEnKey?: string;
+  placeholderArKey?: string;
+  placeholderEnKey?: string;
 }
 
 export function BilingualNameFields<T extends Record<string, unknown>>({
   form,
   setForm,
-  errors,
+  onFieldChange,
+  errors = {},
   t,
   readOnly = false,
   arRequired = true,
   nameArKey = 'name_ar',
   nameEnKey = 'name_en',
+  placeholderArKey = `${nameArKey}_placeholder`,
+  placeholderEnKey = `${nameEnKey}_placeholder`,
 }: BilingualNameFieldsProps<T>) {
+  const handleChange = (key: string, value: string) => {
+    if (onFieldChange) onFieldChange(key, value);
+    else setForm?.((prev) => ({ ...prev, [key]: value }));
+  };
+
   return (
     <>
       <Field>
         <FieldLabel>{t(nameArKey)} {arRequired && <span className="text-destructive">*</span>}</FieldLabel>
         <Input
           dir="rtl"
-          placeholder={t(`${nameArKey}_placeholder`)}
+          placeholder={t(placeholderArKey)}
           disabled={readOnly}
           value={String(form[nameArKey] ?? '')}
-          onChange={(e) => setForm((prev) => ({ ...prev, [nameArKey]: e.target.value }))}
+          onChange={(e) => handleChange(nameArKey, e.target.value)}
         />
         {errors[nameArKey] && <FieldError>{errors[nameArKey]}</FieldError>}
       </Field>
@@ -41,10 +52,10 @@ export function BilingualNameFields<T extends Record<string, unknown>>({
         <FieldLabel>{t(nameEnKey)}</FieldLabel>
         <Input
           dir="ltr"
-          placeholder={t(`${nameEnKey}_placeholder`)}
+          placeholder={t(placeholderEnKey)}
           disabled={readOnly}
           value={String(form[nameEnKey] ?? '')}
-          onChange={(e) => setForm((prev) => ({ ...prev, [nameEnKey]: e.target.value }))}
+          onChange={(e) => handleChange(nameEnKey, e.target.value)}
         />
       </Field>
     </>

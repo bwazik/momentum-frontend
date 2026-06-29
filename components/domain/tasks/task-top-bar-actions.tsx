@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { GitBranch } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { GitBranch, Pencil, Loader2, Rocket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTaskDetail } from '@/lib/api/hooks/use-task-detail';
 import { useCurrentUser } from '@/lib/api/hooks/use-auth';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { useResumeTask } from '@/lib/api/hooks/use-task-detail';
+import { useLaunchTask } from '@/lib/api/hooks/use-task-create';
 import { isUserAssignee, getActiveStage } from './task-detail-utils';
 import { TaskLifecycleDialog } from './task-lifecycle-dialog';
 import { CompleteStageDialog } from './complete-stage-dialog';
@@ -20,11 +22,14 @@ interface TaskTopBarActionsProps {
 export function TaskTopBarActions({ publicId }: TaskTopBarActionsProps) {
   const t = useTranslations('tasks.detail');
   const nav = useTranslations('nav');
+  const router = useRouter();
   const { data: task } = useTaskDetail(publicId);
   const { data: user } = useCurrentUser();
   const canSuspend = useCapability('task.suspend_resume');
   const canCancel = useCapability('task.cancel');
+  const canManage = useCapability('task.manage');
   const resumeMut = useResumeTask(publicId);
+  const launchMut = useLaunchTask();
 
   const [showSuspend, setShowSuspend] = useState(false);
   const [showCancel, setShowCancel] = useState(false);
@@ -39,8 +44,34 @@ export function TaskTopBarActions({ publicId }: TaskTopBarActionsProps) {
     user?.public_id,
   );
 
+  const isDraft = status === 'draft';
+  const isInitiatorOrManager = isDraft && (task.initiator_id === user?.public_id || canManage);
+
+  const handleLaunch = async () => {
+    try {
+      await launchMut.mutateAsync({ publicId });
+      router.push(`/tasks/${publicId}`);
+    } catch {
+      // error toast handled by mutation
+    }
+  };
+
   return (
     <div className="flex items-center gap-2">
+      {isDraft && isInitiatorOrManager && (
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/tasks/${publicId}/edit`}>
+            <Pencil data-icon="inline-start" className="size-4" />
+            {t('edit_draft')}
+          </Link>
+        </Button>
+      )}
+      {isDraft && isInitiatorOrManager && (
+        <Button size="sm" onClick={handleLaunch} disabled={launchMut.isPending}>
+          {launchMut.isPending ? <Loader2 className="size-4 animate-spin" /> : <Rocket data-icon="inline-start" className="size-4" />}
+          {t('launch')}
+        </Button>
+      )}
       <Button variant="outline" size="sm" asChild>
         <Link href={`/tasks/${publicId}/workflow`}>
           <GitBranch data-icon="inline-start" className="size-4" />

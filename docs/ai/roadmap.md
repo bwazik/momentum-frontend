@@ -17,7 +17,7 @@
 |-------|------|--------|------------------|
 | F0 | Scaffold & design system | ✅ Done | — |
 | F1 | App shell, auth, i18n/RTL | ✅ Done | M2 backend (IAM) |
-| F2 | Task board & task details | 🔄 In Progress | M4 backend |
+| F2 | Task board & task details | ✅ Done | M4 backend |
 | F3 | Blueprint builder | ✅ Done | M3 backend |
 | F4 | Follow-up & workflow viz | ✅ Done | M4–M5 backend |
 | F5 | Dashboards & analytics | ⬜ Not Started | M6 backend |
@@ -43,12 +43,9 @@
 | `010-system-administration` | F6 | Tenant Admin | `003`, `005` (priorities), `015` | ⬜ |
 | `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
-| `013-pending-approvals` | F2 | Tasks | `006-stage-lifecycle` | ⬜ |
-| `014-team-capacity-workload` | V2 | Analytics | `009` (V2 workload) | ⬜ Deferred V2 |
-| `015-staff-performance-hub` | V2 | Analytics | `009` (V2) | ⬜ Deferred V2 |
 | `016-notifications-search` | F1 | Core | `008`, `011` | ✅ (merged into `001`) |
 | `017-user-settings-delegation` | F6 | Settings | `016` | ⬜ |
-| `018-task-creation-launch` | F2 | Tasks | `005-task-execution` | ⬜ |
+| `016-task-creation-launch` | F2 | Tasks | `005-task-execution` | ✅ |
 | `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ⬜ |
 | `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ⬜ |
 | `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
@@ -175,6 +172,43 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Toast localization:** All mutation success/error toasts use `useTranslations('tasks.detail')` — no hardcoded strings
 - **Stage progress by task status:** Details card shows `status_label — current_stage of total` where label matches task status (Active/Completed/Cancelled/Suspended), not hardcoded to "Active"
 - **`display_id` breadcrumb:** Task detail breadcrumb shows `display_id` (e.g. `T-2026-0001`) from API via Zustand store, falling back to URL segment UUID
+
+**Completed (016):**
+- `/tasks/new` route with `PageHeader`, `TaskCancelButton` (dirty-check dialog), and `TaskCreationForm` orchestrator ✅
+- `/tasks/[publicId]/edit` route with `EditPageTitle` (display_id), `TaskEditActions` (Cancel + Delete Draft), and `TaskCreationForm` in edit mode ✅
+- Two-step creation form: Step 1 (blueprint combobox + bilingual title/description + priority/classification/due date), Step 2 (manual assignment blocks, conditional) ✅
+- `useTaskFormStore` (Zustand) for multi-step form state across create and edit routes ✅
+- `useCreateTask`, `useUpdateTask`, `useLaunchTask`, `useDeleteTask` mutation hooks with cache invalidation ✅
+- `BlueprintCombobox` with client-side filter, "Load more", fresh mount on each open ✅
+- `MultiUserCombobox` with debounced user search, batch-resolve via `public_ids[]`, chips with remove ✅
+- `ManualAssignmentBlock` for Stage 1 manual-at-launch stages and sub-stages ✅
+- `PrioritySelect`, `ClassificationSelect` (capability-gated), `DueDateField` (Hijri display) ✅
+- `TaskFormFooter` with summary grid, Save Draft, and Launch buttons ✅
+- `TaskFormSkeleton` matching form layout for edit loading state ✅
+- `TaskEditActions` in PageHeader with dirty-check Cancel and initiator-only Delete Draft ✅
+- `TaskCancelButton` client component for dirty-state-aware cancel navigation ✅
+- `DeleteDraftDialog` and `CancelDiscardDialog` wrappers around shared `ConfirmDeleteDialog` ✅
+- `EditPageTitle` client component reading `useTaskDisplayStore` for display_id resolution ✅
+- `useLaunchTask` supports backend fallback to saved `draft_manual_assignments` ✅
+- Task board "Create Task" button in PageHeader actions, Quick Create link in sidebar → `/tasks/new` ✅
+- Task detail page `TaskTopBarActions` shows Edit Draft + Launch for drafts, with backend fallback for manual assignments ✅
+- "Drafts" filter chip on task board (`status=draft`) with backend support ✅
+- i18n: `tasks.new` (~55 keys) and `tasks.create.toast` (3 keys) namespaces in both locales ✅
+- All 4 states: loading skeleton, empty (no blueprints), error (toast + combobox errors), permission denied, success (toast + navigation) ✅
+- `formatHijriDate` shared utility in `lib/utils/date-utils.ts`, `formatDualDate` delegates to it ✅
+- `BilingualNameFields`/`BilingualDescriptionFields` updated with `onFieldChange` prop for Zustand store compatibility ✅
+- 8 tests: render, launch, save draft, 422 error, edit prefill, non-draft redirect, 403, 404 ✅
+- RTL: logical properties, bilingual field dir attributes, `rtl:rotate-180` on directional icons ✅
+
+**Established by 016:**
+- **Multi-step form with Zustand store:** Form state spanning two routes (create/edit) and two logical steps lives in a non-persisted Zustand store. Never API data in Zustand.
+- **PageHeader action slot for form actions:** Cancel/Delete Draft buttons live in the PageHeader via client components (`TaskCancelButton`, `TaskEditActions`) rather than in the form footer. Footer only has primary actions (Save Draft, Launch).
+- **Client-side blueprint filtering:** Backend lacks `search` param on blueprint list; frontend loads all pages via infinite query and filters client-side via `Command` input with `shouldFilter={false}`.
+- **Batch user name resolution:** Pre-filled user IDs from `draft_manual_assignments` resolved via `GET /v1/iam/users?public_ids[]=...` batch endpoint. User names loaded before chips render — no UUID flash.
+- **Draft manual assignments persistence:** Backend stores `manual_assignments` in `tasks.draft_manual_assignments` JSON column. `TaskDetailResource` exposes it. Launch endpoint falls back to saved data when body omits `manual_assignments`.
+- **`assignment_type` string comparison:** Backend serializes `AssignmentType` enum via `apiValue()` → `Str::snake($this->name)`, producing `"manual_at_launch"` in responses. Frontend compares against the string name, not integer codes.
+- **Cancel with dirty-state guard:** Cancel button is a client component that checks `useTaskFormStore.touched` before navigating. Shows `CancelDiscardDialog` ("Discard changes?") if the form has unsaved data.
+- **Drafts on task board:** `GET /v1/follow-up/board?status=draft` returns draft tasks. The board's default behavior excludes drafts; explicit `status=draft` overrides the exclusion. Board task resource omits SLA/assignees for drafts.
 
 ## F3 — Blueprint Builder
 

@@ -2,7 +2,7 @@ import type { BoardTaskResource, TaskBoardUrlFilters, BoardQuery, AssigneeDispla
 
 export type { TaskBoardUrlFilters };
 
-const BOARD_STATUS_VALUES = ['active', 'suspended', 'overdue', 'at_risk', 'completed', 'cancelled'] as const;
+const BOARD_STATUS_VALUES = ['draft', 'active', 'suspended', 'overdue', 'at_risk', 'completed', 'cancelled'] as const;
 const BOARD_DATE_FIELD_VALUES = ['created_at', 'due_date', 'completed_at'] as const;
 const BOARD_SORT_FIELD_VALUES = ['priority', 'due_date', 'created_at', 'time_at_stage', 'department', 'stage_type'] as const;
 const BOARD_SORT_DIRECTION_VALUES = ['asc', 'desc'] as const;

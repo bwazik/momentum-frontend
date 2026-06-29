@@ -3028,8 +3028,8 @@ export interface components {
         };
         /** StoreTaskRequest */
         StoreTaskRequest: {
-            blueprint_id: number;
-            priority_id?: number | null;
+            blueprint_id: string;
+            priority_id?: string | null;
             title_ar: string;
             title_en?: string | null;
             description_ar: string;
@@ -3106,6 +3106,7 @@ export interface components {
             cancelled_at: string;
             suspension_reason: string;
             cancellation_reason: string;
+            draft_manual_assignments: string;
             stages?: components["schemas"]["TaskStageInstanceResource"][];
         };
         /** TaskListItemResource */
@@ -5693,7 +5694,7 @@ export interface operations {
     "followUpBoard.board": {
         parameters: {
             query?: {
-                status?: "active" | "suspended" | "overdue" | "at_risk" | "completed" | "cancelled" | null;
+                status?: "draft" | "active" | "suspended" | "overdue" | "at_risk" | "completed" | "cancelled" | null;
                 stage_type_id?: string | null;
                 assignee_id?: string | null;
                 department_id?: string | null;
@@ -5736,7 +5737,7 @@ export interface operations {
     "followUpBoard.overdue": {
         parameters: {
             query?: {
-                status?: "active" | "suspended" | "overdue" | "at_risk" | "completed" | "cancelled" | null;
+                status?: "draft" | "active" | "suspended" | "overdue" | "at_risk" | "completed" | "cancelled" | null;
                 stage_type_id?: string | null;
                 assignee_id?: string | null;
                 department_id?: string | null;
@@ -5779,7 +5780,7 @@ export interface operations {
     "followUpBoard.atRisk": {
         parameters: {
             query?: {
-                status?: "active" | "suspended" | "overdue" | "at_risk" | "completed" | "cancelled" | null;
+                status?: "draft" | "active" | "suspended" | "overdue" | "at_risk" | "completed" | "cancelled" | null;
                 stage_type_id?: string | null;
                 assignee_id?: string | null;
                 department_id?: string | null;
@@ -5822,7 +5823,7 @@ export interface operations {
     "followUpBoard.bottlenecks": {
         parameters: {
             query?: {
-                status?: "active" | "suspended" | "overdue" | "at_risk" | "completed" | "cancelled" | null;
+                status?: "draft" | "active" | "suspended" | "overdue" | "at_risk" | "completed" | "cancelled" | null;
                 stage_type_id?: string | null;
                 assignee_id?: string | null;
                 department_id?: string | null;
@@ -8390,6 +8391,7 @@ export interface operations {
                 is_active?: boolean | null;
                 account_type?: components["schemas"]["AccountType"];
                 department_id?: string | null;
+                "public_ids[]"?: string[];
                 per_page?: number | null;
             };
             header: {

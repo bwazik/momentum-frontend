@@ -1,0 +1,470 @@
+﻿
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.9 [39m[90mD:/Projects/momentum/frontend[39m
+
+node.exe : [90mstderr[2m | __tests__/components/domain/tasks/task-creation-form.test.tsx[2m > [22m[2medit mode 
+with draft task prefills form and shows delete draft button
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m...te draft button:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39mSelect is changing from uncontrolled to controlled. Components should not switch from controlled to 
+uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the 
+component.
+
+[90mstderr[2m | __tests__/components/domain/tasks/task-creation-form.test.tsx[2m > [22m[2mlaunch without manual 
+assignees shows validation error for manual-at-launch blueprints
+[22m[39mSelect is changing from controlled to uncontrolled. Components should not switch from controlled to 
+uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the 
+component.
+
+ [31m❯[39m __tests__/components/domain/tasks/task-creation-form.test.tsx [2m([22m[2m10 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 5889[2mms[22m[39m
+   [32m✓[39m renders create mode with Save Draft and Launch buttons[32m 188[2mms[22m[39m
+   [33m[2m✓[22m[39m launch creates task then launches and navigates to detail [33m 1417[2mms[22m[39m
+   [33m[2m✓[22m[39m save draft navigates to detail page [33m 969[2mms[22m[39m
+   [33m[2m✓[22m[39m stays on form page on 422 launch failure (no navigation) [33m 1144[2mms[22m[39m
+   [32m✓[39m edit mode with draft task prefills form and shows delete draft button[32m 57[2mms[22m[39m
+   [32m✓[39m edit mode non-draft task redirects to detail page[32m 52[2mms[22m[39m
+   [32m✓[39m edit mode 403 renders permission empty state[32m 31[2mms[22m[39m
+   [32m✓[39m edit mode 404 renders not found empty state[32m 16[2mms[22m[39m
+[31m   [31m×[31m launch without manual assignees shows validation error for manual-at-launch blueprints[39m[33m 918[2mms[22m[39m
+[31m   [31m×[31m capability-gated confidential option is disabled without permission[39m[33m 1092[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m __tests__/components/domain/tasks/task-creation-form.test.tsx[2m > [22mlaunch without 
+manual assignees shows validation error for manual-at-launch blueprints
+[31m[1mTestingLibraryElementError[22m[39m: Found multiple elements with the text: Select blueprint
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<label[39m
+  [33mclass[39m=[32m"items-center text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none 
+group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 group/field-label 
+peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 
+has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg 
+has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 
+dark:has-data-checked:bg-primary/10 has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col"[39m
+  [33mdata-slot[39m=[32m"field-label"[39m
+[36m>[39m
+  [0mSelect blueprint[0m
+[36m</label>[39m
+
+Ignored nodes: comments, script, style
+[36m<span[39m
+  [33mclass[39m=[32m"truncate"[39m
+[36m>[39m
+  [0mSelect blueprint[0m
+[36m</span>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or 
+`findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"group/card overflow-hidden rounded-xl bg-card text-sm text-card-foreground ring-1 
+ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 
+data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 
+*:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl flex flex-col gap-6 p-6"[39m
+      [33mdata-size[39m=[32m"default"[39m
+      [33mdata-slot[39m=[32m"card"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"group/field-group @container/field-group flex w-full flex-col gap-5 
+data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"[39m
+        [33mdata-slot[39m=[32m"field-group"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"group/field-group @container/field-group flex w-full flex-col gap-5 
+data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"[39m
+          [33mdata-slot[39m=[32m"field-group"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col 
+*:w-full [&>.sr-only]:w-auto"[39m
+              [33mdata-orientation[39m=[32m"vertical"[39m
+              [33mdata-slot[39m=[32m"field"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"items-center text-sm font-medium select-none 
+group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed 
+peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug 
+group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 
+has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 
+dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[>[data-slot=field]]:w-full 
+has-[>[data-slot=field]]:flex-col"[39m
+                [33mdata-slot[39m=[32m"field-label"[39m
+              [36m>[39m
+                [0mSelect blueprint[0m
+              [36m</label>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"dialog"[39m
+                [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center rounded-lg border bg-clip-padding 
+text-sm font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer focus-visible:border-ring 
+focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none 
+disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 
+dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none 
+[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground 
+aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 
+gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full justify-between"[39m
+                [33mdata-size[39m=[32m"default"[39m
+                [33mdata-slot[39m=[32m"popover-trigger"[39m
+                [33mdata-state[39m=[32m"closed"[39m
+                [33mdata-variant[39m=[32m"outline"[39m
+                [33mrole[39m=[32m"combobox"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"truncate"[39m
+                [36m>[39m
+                  [0mSelect blueprint[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-chevrons-up-down ms-2 size-4 opacity-50"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"24"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"24"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m7 15 5 5 5-5"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m7 9 5-5 5 5"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-1 gap-4 md:grid-cols-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col 
+*:w-full [&>.sr-only]:w-auto"[39m
+                [33mdata-orientation[39m=[32m"vertical"[39m
+                [33mdata-slot[39m=[32m"field"[39m
+                [33mrole[39m=[32m"group"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"items-center text-sm font-medium select-none 
+group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed 
+peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug 
+group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 
+has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 
+dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[>[data-slot=field]]:w-full 
+has-[>[data-slot=field]]:flex-col"[39m
+                  [33mdata-slot[39m=[32m"field-label"[39m
+                [36m>[39m
+                  [0mTitle (Arabic)[0m
+                  [0m [0m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"text-destructive"[39m
+                  [36m>[39m
+                    [0m*[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<input[39m
+                  [33mclass[39m=[32m"h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 
+text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm 
+file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-...
+[90m [2m❯[22m Object.getElementError node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+[90m [2m❯[22m getElementError node_modules/@testing-library/dom/dist/query-helpers.js:[2m20:35[22m[39m
+[90m [2m❯[22m getMultipleElementsFoundError 
+node_modules/@testing-library/dom/dist/query-helpers.js:[2m23:10[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m55:13[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+[36m [2m❯[22m __tests__/components/domain/tasks/task-creation-form.test.tsx:[2m381:35[22m[39m
+    [90m379|[39m   [35mawait[39m user[33m.[39m[34mtype[39m(descInput[33m,[39m [32m'Test 
+Description'[39m)[33m;[39m
+    [90m380|[39m
+    [90m381|[39m   [35mconst[39m blueprintTrigger [33m=[39m screen[33m.[39m[34mgetByText[39m([32m'Select 
+blueprint'[39m)[33m;[39m
+    [90m   |[39m                                   [31m^[39m
+    [90m382|[39m   [35mawait[39m user[33m.[39m[34mclick[39m(blueprintTrigger)[33m;[39m
+    [90m383|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m __tests__/components/domain/tasks/task-creation-form.test.tsx[2m > [22mcapability-gated 
+confidential option is disabled without permission
+[31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the text: Confidential. This could be 
+because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to 
+make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"group/card overflow-hidden rounded-xl bg-card text-sm text-card-foreground ring-1 
+ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 
+data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 
+*:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl flex flex-col gap-6 p-6"[39m
+      [33mdata-size[39m=[32m"default"[39m
+      [33mdata-slot[39m=[32m"card"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"group/field-group @container/field-group flex w-full flex-col gap-5 
+data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"[39m
+        [33mdata-slot[39m=[32m"field-group"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"group/field-group @container/field-group flex w-full flex-col gap-5 
+data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"[39m
+          [33mdata-slot[39m=[32m"field-group"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col 
+*:w-full [&>.sr-only]:w-auto"[39m
+              [33mdata-orientation[39m=[32m"vertical"[39m
+              [33mdata-slot[39m=[32m"field"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"items-center text-sm font-medium select-none 
+group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed 
+peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug 
+group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 
+has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 
+dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[>[data-slot=field]]:w-full 
+has-[>[data-slot=field]]:flex-col"[39m
+                [33mdata-slot[39m=[32m"field-label"[39m
+              [36m>[39m
+                [0mSelect blueprint[0m
+              [36m</label>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"dialog"[39m
+                [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center rounded-lg border bg-clip-padding 
+text-sm font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer focus-visible:border-ring 
+focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none 
+disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 
+dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none 
+[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground 
+aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 
+gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full justify-between"[39m
+                [33mdata-size[39m=[32m"default"[39m
+                [33mdata-slot[39m=[32m"popover-trigger"[39m
+                [33mdata-state[39m=[32m"closed"[39m
+                [33mdata-variant[39m=[32m"outline"[39m
+                [33mrole[39m=[32m"combobox"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"truncate"[39m
+                [36m>[39m
+                  [0mSelect blueprint[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-chevrons-up-down ms-2 size-4 opacity-50"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"24"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"24"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m7 15 5 5 5-5"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m7 9 5-5 5 5"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-1 gap-4 md:grid-cols-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col 
+*:w-full [&>.sr-only]:w-auto"[39m
+                [33mdata-orientation[39m=[32m"vertical"[39m
+                [33mdata-slot[39m=[32m"field"[39m
+                [33mrole[39m=[32m"group"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"items-center text-sm font-medium select-none 
+group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed 
+peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug 
+group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 
+has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 
+dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[>[data-slot=field]]:w-full 
+has-[>[data-slot=field]]:flex-col"[39m
+                  [33mdata-slot[39m=[32m"field-label"[39m
+                [36m>[39m
+                  [0mTitle (Arabic)[0m
+                  [0m [0m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"text-destructive"[39m
+                  [36m>[39m
+                    [0m*[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<input[39m
+                  [33mclass[39m=[32m"h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 
+text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm 
+file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"group/card overflow-hidden rounded-xl bg-card text-sm text-card-foreground ring-1 
+ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 
+data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 
+*:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl flex flex-col gap-6 p-6"[39m
+      [33mdata-size[39m=[32m"default"[39m
+      [33mdata-slot[39m=[32m"card"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"group/field-group @container/field-group flex w-full flex-col gap-5 
+data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"[39m
+        [33mdata-slot[39m=[32m"field-group"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"group/field-group @container/field-group flex w-full flex-col gap-5 
+data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4"[39m
+          [33mdata-slot[39m=[32m"field-group"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col 
+*:w-full [&>.sr-only]:w-auto"[39m
+              [33mdata-orientation[39m=[32m"vertical"[39m
+              [33mdata-slot[39m=[32m"field"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"items-center text-sm font-medium select-none 
+group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed 
+peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug 
+group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 
+has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 
+dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[>[data-slot=field]]:w-full 
+has-[>[data-slot=field]]:flex-col"[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 05:09:53
+[2m   Duration [22m 9.81s[2m (transform 404ms, setup 561ms, import 1.37s, tests 5.89s, environment 1.74s)[22m
+
+                [33mdata-slot[39m=[32m"field-label"[39m
+              [36m>[39m
+                [0mSelect blueprint[0m
+              [36m</label>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"dialog"[39m
+                [33mclass[39m=[32m"group/button inline-flex shrink-0 items-center rounded-lg border bg-clip-padding 
+text-sm font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer focus-visible:border-ring 
+focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none 
+disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 
+dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none 
+[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 border-border bg-background hover:bg-muted hover:text-foreground 
+aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 h-8 
+gap-1.5 px-2.5 has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2 w-full justify-between"[39m
+                [33mdata-size[39m=[32m"default"[39m
+                [33mdata-slot[39m=[32m"popover-trigger"[39m
+                [33mdata-state[39m=[32m"closed"[39m
+                [33mdata-variant[39m=[32m"outline"[39m
+                [33mrole[39m=[32m"combobox"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"truncate"[39m
+                [36m>[39m
+                  [0mSelect blueprint[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-chevrons-up-down ms-2 size-4 opacity-50"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"24"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"24"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m7 15 5 5 5-5"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m7 9 5-5 5 5"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-1 gap-4 md:grid-cols-2"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"group/field flex w-full gap-2 data-[invalid=true]:text-destructive flex-col 
+*:w-full [&>.sr-only]:w-auto"[39m
+                [33mdata-orientation[39m=[32m"vertical"[39m
+                [33mdata-slot[39m=[32m"field"[39m
+                [33mrole[39m=[32m"group"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"items-center text-sm font-medium select-none 
+group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed 
+peer-disabled:opacity-50 group/field-label peer/field-label flex w-fit gap-2 leading-snug 
+group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 
+has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 
+dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[>[data-slot=field]]:w-full 
+has-[>[data-slot=field]]:flex-col"[39m
+                  [33mdata-slot[39m=[32m"field-label"[39m
+                [36m>[39m
+                  [0mTitle (Arabic)[0m
+                  [0m [0m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"text-destructive"[39m
+                  [36m>[39m
+                    [0m*[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<input[39m
+                  [33mclass[39m=[32m"h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 
+text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm 
+file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-...
+[90m [2m❯[22m waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m __tests__/components/domain/tasks/task-creation-form.test.tsx:[2m410:43[22m[39m
+    [90m408|[39m   [35mawait[39m user[33m.[39m[34mclick[39m(classificationTrigger)[33m;[39m
+    [90m409|[39m
+    [90m410|[39m   [35mconst[39m confidentialOption [33m=[39m [35mawait[39m 
+screen[33m.[39m[34mfindByText[39m([32m'Confidential'[39m)[33m;[39m
+    [90m   |[39m                                           [31m^[39m
+    [90m411|[39m   [35mconst[39m option [33m=[39m 
+confidentialOption[33m.[39m[34mclosest[39m([32m'[role="option"]'[39m)[33m;[39m
+    [90m412|[39m   [34mexpect[39m(option)[33m.[39m[34mtoHaveAttribute[39m([32m'aria-disabled'[39m[33m,[39m 
+[32m'true'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+

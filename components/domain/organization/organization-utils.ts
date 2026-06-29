@@ -102,17 +102,4 @@ export function groupByTitle(positions: PositionResource[]): Map<string, Positio
   return groups;
 }
 
-export function formatDualDate(iso: string, locale: string): string {
-  const d = new Date(iso);
-  const g = new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(d);
-  const h = new Intl.DateTimeFormat(`${locale}-u-ca-islamic`, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  }).format(d);
-  return `${h} — ${g}`;
-}
+
