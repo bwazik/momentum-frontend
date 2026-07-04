@@ -184,21 +184,21 @@ function TreeBranch({
 export function VisualOrgChart({ tree, positions, selectedDeptId, onSelectDept }: VisualOrgChartProps) {
   const posByDept = useMemo(() => groupPositionsByDept(positions), [positions]);
   const [zoom, setZoom] = useState(1);
-  const zoomLevels = [0.5, 0.75, 1, 1.25, 1.5];
+  const zoomLevels = useMemo(() => [0.5, 0.75, 1, 1.25, 1.5], []);
 
   const zoomIn = useCallback(() => {
     setZoom((prev) => {
       const idx = zoomLevels.indexOf(prev);
       return idx < zoomLevels.length - 1 ? zoomLevels[idx + 1] : prev;
     });
-  }, []);
+  }, [zoomLevels]);
 
   const zoomOut = useCallback(() => {
     setZoom((prev) => {
       const idx = zoomLevels.indexOf(prev);
       return idx > 0 ? zoomLevels[idx - 1] : prev;
     });
-  }, []);
+  }, [zoomLevels]);
 
   if (!tree || tree.length === 0) return null;
 

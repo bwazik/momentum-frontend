@@ -4,7 +4,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Edit, PowerOff, Power, Trash2 } from 'lucide-react';
 import { RtlTable } from '@/components/shared/rtl-table';
 import { TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
 import { ActiveBadge } from '@/components/shared/active-badge';
 import { OrgActionMenu, type OrgAction } from './org-action-menu';
 import { LoadMoreButton } from './load-more-button';

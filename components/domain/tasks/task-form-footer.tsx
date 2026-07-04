@@ -22,7 +22,7 @@ interface Props {
   onLaunch: () => void;
 }
 
-export function TaskFormFooter({ mode, priorities = [], hasManualItems = false, isSaving, isLaunching, onSaveDraft, onLaunch }: Props) {
+export function TaskFormFooter({ priorities = [], hasManualItems = false, isSaving, isLaunching, onSaveDraft, onLaunch }: Props) {
   const t = useTranslations('tasks.new');
   const locale = useLocale();
   const { blueprintName, title_ar, priorityId, classificationLevel, dueDate, manualAssignments } = useTaskFormStore();

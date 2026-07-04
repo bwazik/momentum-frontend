@@ -28,7 +28,6 @@ export function MultiUserCombobox({ value, onChange, placeholder, ariaLabel }: M
   const [search, setSearch] = useState('');
   const [debounced, setDebounced] = useState('');
   const [open, setOpen] = useState(false);
-  const [labels, setLabels] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const tm = setTimeout(() => setDebounced(search), 300);
@@ -36,62 +35,36 @@ export function MultiUserCombobox({ value, onChange, placeholder, ariaLabel }: M
   }, [search]);
 
   const { data, isFetching, isError } = useUsersSearch(debounced);
-  const users = data?.data ?? [];
+  const users = useMemo(() => data?.data ?? [], [data]);
 
-  const unknownIds = useMemo(
-    () => value.filter((uid) => !labels[uid]),
-    [value, labels],
-  );
-  const sortedIds = useMemo(() => [...unknownIds].sort(), [unknownIds]);
   const { data: resolvedData } = useQuery({
-    queryKey: ['users', 'by-ids', sortedIds],
+    queryKey: ['users', 'by-ids', value],
     queryFn: () => {
-      const qs = unknownIds.map((id) => `public_ids[]=${encodeURIComponent(id)}`).join('&');
+      if (value.length === 0) return { data: [] };
+      const qs = value.map((id) => `public_ids[]=${encodeURIComponent(id)}`).join('&');
       return apiClient.get<{ data: components['schemas']['UserResource'][] }>(
-        `/v1/iam/users?${qs}&per_page=${unknownIds.length}`,
+        `/v1/iam/users?${qs}&per_page=${value.length}`,
       );
     },
-    enabled: unknownIds.length > 0,
+    enabled: value.length > 0,
     staleTime: 5 * 60 * 1000,
   });
-  const resolvedUsers = resolvedData?.data ?? [];
+  const resolvedUsers = useMemo(() => resolvedData?.data ?? [], [resolvedData]);
 
-  useEffect(() => {
-    if (resolvedUsers.length === 0) return;
-    setLabels((prev) => {
-      const next = { ...prev };
-      let changed = false;
-      for (const user of resolvedUsers) {
-        if (next[user.public_id]) continue;
-        next[user.public_id] = localizeName(locale, user.name_ar, user.name_en);
-        changed = true;
+  const labels = useMemo(() => {
+    const result: Record<string, string> = {};
+    for (const user of resolvedUsers) {
+      result[user.public_id] = localizeName(locale, user.name_ar, user.name_en);
+    }
+    for (const user of users) {
+      if (!result[user.public_id]) {
+        result[user.public_id] = localizeName(locale, user.name_ar, user.name_en);
       }
-      return changed ? next : prev;
-    });
-  }, [resolvedUsers, locale]);
-
-  useEffect(() => {
-    if (users.length === 0) return;
-    setLabels((prev) => {
-      const next = { ...prev };
-      let changed = false;
-      for (const uid of value) {
-        if (next[uid]) continue;
-        const user = users.find((u) => u.public_id === uid);
-        if (user) {
-          next[uid] = localizeName(locale, user.name_ar, user.name_en);
-          changed = true;
-        }
-      }
-      return changed ? next : prev;
-    });
-  }, [users, value, locale]);
+    }
+    return result;
+  }, [resolvedUsers, users, locale]);
 
   const toggle = (uid: string) => {
-    const user = users.find((u) => u.public_id === uid);
-    if (user) {
-      setLabels((prev) => ({ ...prev, [uid]: localizeName(locale, user.name_ar, user.name_en) }));
-    }
     onChange(value.includes(uid) ? value.filter((v) => v !== uid) : [...value, uid]);
   };
 

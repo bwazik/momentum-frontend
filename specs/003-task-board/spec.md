@@ -5,7 +5,7 @@
 > **Status:** `completed`
 > **Milestone:** F2 - Task board & task details
 > **Depends on:** `001-core-shell`
-> **Backend spec:** `../backend/specs/005-task-execution/`, `../backend/specs/007-sla-escalation/`, `../backend/specs/010-follow-up-board/`, `../backend/specs/011-search-discovery/` - `Contract status: stable`; roadmap references backend `014`, but no matching backend spec folder exists and external-reference filtering currently returns a backend domain error
+> **Backend spec:** `../backend/specs/005-task-execution/`, `../backend/specs/007-sla-escalation/`, `../backend/specs/010-follow-up-board/`, `../backend/specs/011-search-discovery/` - `Contract status: stable`; `../backend/specs/014-external-references/` — `Contract status: stable` (✅ Done)
 > **Contract status:** `stable`
 > **Author:** Codex
 > **Branch:** `feat/003-task-board`

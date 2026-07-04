@@ -348,6 +348,25 @@
       "edit_draft": "تعديل المسودة",
       "launch": "إطلاق"
     },
+    "comments": {
+      "title": "التعليقات",
+      "composer_label": "تعليق جديد",
+      "composer_placeholder": "اكتب تعليقك هنا...",
+      "post_comment": "نشر تعليق",
+      "post_reply": "نشر رد",
+      "posting": "جاري النشر...",
+      "reply": "رد",
+      "reply_to": "رد على {author}",
+      "cancel": "إلغاء",
+      "load_more": "تحميل المزيد",
+      "loading_more": "جاري التحميل...",
+      "empty_title": "لا توجد تعليقات بعد",
+      "empty_description": "ابدأ المحادثة بإضافة أول تعليق.",
+      "error": "تعذر تحميل التعليقات.",
+      "toast_posted": "تم نشر التعليق",
+      "comments_list_label": "التعليقات",
+      "replies_list_label": "الردود"
+    },
     "new": {
       "title": "إنشاء مهمة",
       "edit_title_draft": "تعديل المسودة — {id}",

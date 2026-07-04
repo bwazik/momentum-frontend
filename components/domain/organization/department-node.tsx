@@ -6,7 +6,6 @@ import { ChevronDown, Edit2, Trash2, Power, PowerOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { OrgActionMenu, type OrgAction } from './org-action-menu';
-import { PositionNode } from './position-node';
 import { localizeName, localizeTitle, asBool, groupByTitle } from './organization-utils';
 import { VacantBadge } from './vacant-badge';
 import { ActiveBadge } from '@/components/shared/active-badge';

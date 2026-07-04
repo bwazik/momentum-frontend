@@ -9,6 +9,8 @@ export const queryKeys = {
     timeline: (publicId: string) => [...queryKeys.tasks.detail(publicId), 'timeline'] as const,
     returns: (publicId: string) => [...queryKeys.tasks.detail(publicId), 'returns'] as const,
     priorities: () => [...queryKeys.tasks.all, 'priorities'] as const,
+    comments: (publicId: string) =>
+      [...queryKeys.tasks.detail(publicId), 'comments'] as const,
   },
   taskBoard: {
     all: ['task-board'] as const,

@@ -652,6 +652,50 @@ export const handlers = [
     }, { status: 201 });
   }),
 
+  http.get('https://api.momentum.test/v1/tasks/:publicId/comments', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          public_id: '01912a00-0000-7000-8000-000000000001',
+          task_id: 'task-uuid-1',
+          author: { public_id: 'user-1', name_ar: 'أحمد', name_en: 'Ahmad' },
+          body: 'هل يمكن توضيح المطلوب؟',
+          parent_comment_id: '',
+          created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+          attachment_count: 0,
+          replies: [
+            {
+              public_id: '01912a00-0000-7000-8000-000000000002',
+              task_id: 'task-uuid-1',
+              author: { public_id: 'user-2', name_ar: 'سارة', name_en: 'Sara' },
+              body: 'سأرسل التفاصيل الآن.',
+              parent_comment_id: '01912a00-0000-7000-8000-000000000001',
+              created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
+              attachment_count: 0,
+            },
+          ],
+        },
+      ],
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/tasks/:publicId/comments', async ({ request }) => {
+    const body = (await request.json()) as { body: string; parent_comment_id?: string | null };
+    const created = {
+      public_id: 'new-comment-uuid',
+      task_id: 'task-uuid-1',
+      author: { public_id: 'user-1', name_ar: 'المستخدم', name_en: 'Current User' },
+      body: body.body,
+      parent_comment_id: body.parent_comment_id ?? '',
+      created_at: new Date().toISOString(),
+      attachment_count: 0,
+      replies: [],
+    };
+    return HttpResponse.json(created, { status: 200 });
+  }),
+
   http.post('https://api.momentum.test/v1/tracking/escalations/:escalation/resolve', async ({ request }) => {
     const body = await request.json() as Record<string, unknown>;
     return HttpResponse.json({

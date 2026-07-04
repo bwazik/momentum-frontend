@@ -6,8 +6,9 @@
 
 ## Current Focus
 
-**Phase:** F5 — Dashboards & analytics
-**Active spec:** `009-analytics-reporting`
+**Phase:** F2 — Task board & task details
+**Active spec:** `023-task-comments`
+**Branch:** `main`
 
 ---
 
@@ -17,10 +18,10 @@
 |-------|------|--------|------------------|
 | F0 | Scaffold & design system | ✅ Done | — |
 | F1 | App shell, auth, i18n/RTL | ✅ Done | M2 backend (IAM) |
-| F2 | Task board & task details | ✅ Done | M4 backend |
+| F2 | Task board & task details | 🔄 In Progress | M4 backend |
 | F3 | Blueprint builder | ✅ Done | M3 backend |
-| F4 | Follow-up & workflow viz | ✅ Done | M4–M5 backend |
-| F5 | Dashboards & analytics | ⬜ Not Started | M6 backend |
+| F4 | Follow-up & workflow viz | ✅ Done | M4–M6 backend |
+| F5 | Dashboards & analytics | 🔄 In Progress | M6 backend |
 | F6 | Admin, org, help, onboarding | 🔄 In Progress | M1–M2, M7 backend |
 
 **Legend:** ✅ Done · 🔄 In Progress · ⬜ Not Started · 🚧 Blocked
@@ -43,15 +44,17 @@
 | `010-system-administration` | F6 | Tenant Admin | `003`, `005` (priorities), `015` | ⬜ |
 | `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
-| `016-notifications-search` | F1 | Core | `008`, `011` | ✅ (merged into `001`) |
-| `017-user-settings-delegation` | F6 | Settings | `016` | ⬜ |
 | `016-task-creation-launch` | F2 | Tasks | `005-task-execution` | ✅ |
+| `017-user-settings-delegation` | F6 | Settings | `016` | ⬜ |
 | `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ⬜ |
 | `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ⬜ |
 | `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
 | `022-platform-administration` | F6 | Platform | `001-platform-tenancy`, `001-platform-admin` | ⬜ |
+| `023-task-comments` | F2 | Tasks | `013-comments-collaboration` | ✅ |
+| `024-task-documents` | F2 | Tasks | `012-documents-attachments` | ⬜ |
+| `025-external-references` | F2 | Tasks | `014-external-references` | ⬜ |
 
-Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API dependencies. `015` and `016` were removed as orphaned specs with no backend counterpart.
+Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API dependencies.
 
 ---
 
@@ -59,7 +62,8 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** ✅ Done
 
-**Completed:**
+**Specs:** *None (scaffold only)*
+
 - `create-next-app` with TypeScript, Tailwind v4, App Router ✅
 - shadcn/ui init ✅
 - shadcn preset applied (amber theme) ✅
@@ -80,20 +84,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** ✅ Done
 
-**Active spec:** `001-core-shell`
-
-**Completed:**
-- Login page with Sanctum SPA cookie auth ✅
-- Dashboard shell (sidebar + top bar + main content) ✅
-- RTL-first layout with logical CSS properties ✅
-- Global search (Cmd+K command palette) ✅
-- Notifications center (bell + panel + mark-read) ✅
-- Locale toggle (Arabic/English, cookie-based) ✅
-- Theme toggle (Light/Dark/System) in user menu ✅
-- Brand color picker (amber/blue/emerald/rose/slate) in user menu ✅
-- OpenAPI type integration ✅
-- TanStack Query + Zustand patterns established ✅
-- i18n via next-intl v4 with `messages/{locale}.json` ✅
+**Specs:** `001` ✅
 
 **Established by 001:**
 - **Login:** Sanctum SPA cookies, CSRF-first, `getCsrfCookie()` before `POST /login`, flat `AuthTokenResource` response
@@ -110,27 +101,11 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 ---
 
----
-
 ## F2 — Task Board & Task Details
 
 **Status:** 🔄 In Progress
 
-**Completed (003):**
-- `/tasks` route with breadcrumb + description inside dashboard shell ✅
-- `useTaskBoardInfinite()` cursor-paginated board via `GET /v1/follow-up/board` ✅
-- URL-driven filters (ToggleGroup quick filters, search with 300ms debounce, sort Select + direction toggle) ✅
-- Hybrid enterprise table: SLA, rich Task cell, Stage+Department, stacked avatar assignees, Time In Stage+Due Date, Actions dropdown ✅
-- Mobile card list with matching information hierarchy ✅
-- SlaBadge, TaskStatusBadge, PriorityBadge (colored dot), ClassificationBadge (icon+text) ✅
-- Visual hierarchy: SLA owns color, everything else neutral/outline ✅
-- Row accent border derived from SLA health, not status ✅
-- All 4 states: loading skeleton, empty, error (with retry), 403, success ✅
-- RTL: logical properties, breadcrumb `rtl:rotate-180`, conditional dropdown alignment ✅
-- Dark mode: `dark:` variants on all badge colors and row borders ✅
-- Global `cursor-pointer` added to base components (button/toggle/select/dropdown-menu/command/sidebar) ✅
-- OpenAPI type regeneration on backend contract changes ✅
-- 69 tests across utils, badges, board states ✅
+**Specs:** `003` ✅, `004` ✅, `016` ✅, `023` ✅, `024` ⬜, `025` ⬜
 
 **Established by 003:**
 - **Board layout:** 6-column hybrid enterprise table (SLA, Task, Stage+Dept, Assignees, Time In Stage, Actions) with SLA-derived row accents and stacked avatar assignees
@@ -139,28 +114,6 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Row borders on `<td>`:** Side borders (`border-s-4`) on `<td>` not `<tr>` — `<tr>` doesn't render side borders in standard table layout
 - **Select scroll lock:** Radix `Select.Content` with `position="popper"` applies `body[data-scroll-locked]` CSS — avoided by using default `item-aligned` positioning
 - **Badge color system:** SLA (emerald/amber/red/slate) keeps full color; Status (blue/orange/teal/rose/zinc) uses neutral outline; Priority (fuchsia/yellow) uses neutral bg + colored dot; Classification (lime/purple) uses plain text + icon
-
-**Completed (004):**
-- `/tasks/[publicId]` route with two-column stacked-card layout inside dashboard shell ✅
-- `useTaskDetail()`, `useTaskSlaHealth()`, `useTaskTimeline()`, `useBlueprintTransitions()`, `useUsersSearch()` hooks with generated types ✅
-- All 8 mutation hooks: `useCompleteStage`, `useCompleteSubStage`, `useReturnStage`, `useReturnSubStage`, `useOverrideAssignment`, `useSuspendTask`, `useResumeTask`, `useCancelTask` with cache invalidation + localized toast ✅
-- Query key factory extended: `tasks.slaHealth`, `tasks.timeline`, `tasks.returns`, `blueprints.transitions`, `users` namespace ✅
-- Title & Meta card with badge row (priority/classification/status/SLA), localized title, ref with `display_id`, description, copy button ✅
-- Stage Timeline: vertical `<ol>` with completed (emerald check), active (blue pulse + SLA inline + action buttons), pending (grey), returned (undo arrow + reason) nodes ✅
-- Sub-stage checklist with complete/override actions for active assignees ✅
-- Sidebar Details card with dual Hijri+Gregorian dates, stage progress by status, initiator/blueprint/department ✅
-- Sidebar Recent Activity card (last 5 events via `buildStageActivities`) + full audit trail Dialog ✅
-- CompleteStageDialog, ReturnStageDialog (pre-filtered transitions + stage name resolution), OverrideAssignmentDialog (current assignee Select + debounced user combobox) ✅
-- TaskLifecycleDialog (AlertDialog for suspend/cancel with required reason) ✅
-- TaskTopBarActions in PageHeader (suspend/resume/cancel/advance, capability-gated) ✅
-- Board row/card hover prefetch for task detail ✅
-- Breadcrumb moved to SiteHeader with pathname-based auto-resolution + `rtl:rotate-180` chevrons ✅
-- `PageHeader` shared component (title + description + actions) ✅
-- i18n: ~100 keys in `tasks.detail` namespace including toast messages, activity types, time formatting ✅
-- `TaskDetail` display store (Zustand) for sharing `display_id` between page and header breadcrumb ✅
-- 86 tests across task-detail (5), stage-timeline (7), recent-activity-card (5), plus board + badge + utils tests ✅
-- MSW handlers for task detail, SLA health, timeline, blueprint transitions, users search ✅
-- Regenerated OpenAPI types for `display_id` field ✅
 
 **Established by 004:**
 - **Stage timeline pattern:** Vertical `<ol>` inside a Card, sorted by `entered_at`. Connecting line is an `::before` pseudo-element at `start-[17px]`. Node icon is a `size-9 rounded-full border-2` with status-driven classes (emerald/blue/slate + corresponding border)
@@ -173,33 +126,6 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Stage progress by task status:** Details card shows `status_label — current_stage of total` where label matches task status (Active/Completed/Cancelled/Suspended), not hardcoded to "Active"
 - **`display_id` breadcrumb:** Task detail breadcrumb shows `display_id` (e.g. `T-2026-0001`) from API via Zustand store, falling back to URL segment UUID
 
-**Completed (016):**
-- `/tasks/new` route with `PageHeader`, `TaskCancelButton` (dirty-check dialog), and `TaskCreationForm` orchestrator ✅
-- `/tasks/[publicId]/edit` route with `EditPageTitle` (display_id), `TaskEditActions` (Cancel + Delete Draft), and `TaskCreationForm` in edit mode ✅
-- Two-step creation form: Step 1 (blueprint combobox + bilingual title/description + priority/classification/due date), Step 2 (manual assignment blocks, conditional) ✅
-- `useTaskFormStore` (Zustand) for multi-step form state across create and edit routes ✅
-- `useCreateTask`, `useUpdateTask`, `useLaunchTask`, `useDeleteTask` mutation hooks with cache invalidation ✅
-- `BlueprintCombobox` with client-side filter, "Load more", fresh mount on each open ✅
-- `MultiUserCombobox` with debounced user search, batch-resolve via `public_ids[]`, chips with remove ✅
-- `ManualAssignmentBlock` for Stage 1 manual-at-launch stages and sub-stages ✅
-- `PrioritySelect`, `ClassificationSelect` (capability-gated), `DueDateField` (Hijri display) ✅
-- `TaskFormFooter` with summary grid, Save Draft, and Launch buttons ✅
-- `TaskFormSkeleton` matching form layout for edit loading state ✅
-- `TaskEditActions` in PageHeader with dirty-check Cancel and initiator-only Delete Draft ✅
-- `TaskCancelButton` client component for dirty-state-aware cancel navigation ✅
-- `DeleteDraftDialog` and `CancelDiscardDialog` wrappers around shared `ConfirmDeleteDialog` ✅
-- `EditPageTitle` client component reading `useTaskDisplayStore` for display_id resolution ✅
-- `useLaunchTask` supports backend fallback to saved `draft_manual_assignments` ✅
-- Task board "Create Task" button in PageHeader actions, Quick Create link in sidebar → `/tasks/new` ✅
-- Task detail page `TaskTopBarActions` shows Edit Draft + Launch for drafts, with backend fallback for manual assignments ✅
-- "Drafts" filter chip on task board (`status=draft`) with backend support ✅
-- i18n: `tasks.new` (~55 keys) and `tasks.create.toast` (3 keys) namespaces in both locales ✅
-- All 4 states: loading skeleton, empty (no blueprints), error (toast + combobox errors), permission denied, success (toast + navigation) ✅
-- `formatHijriDate` shared utility in `lib/utils/date-utils.ts`, `formatDualDate` delegates to it ✅
-- `BilingualNameFields`/`BilingualDescriptionFields` updated with `onFieldChange` prop for Zustand store compatibility ✅
-- 8 tests: render, launch, save draft, 422 error, edit prefill, non-draft redirect, 403, 404 ✅
-- RTL: logical properties, bilingual field dir attributes, `rtl:rotate-180` on directional icons ✅
-
 **Established by 016:**
 - **Multi-step form with Zustand store:** Form state spanning two routes (create/edit) and two logical steps lives in a non-persisted Zustand store. Never API data in Zustand.
 - **PageHeader action slot for form actions:** Cancel/Delete Draft buttons live in the PageHeader via client components (`TaskCancelButton`, `TaskEditActions`) rather than in the form footer. Footer only has primary actions (Save Draft, Launch).
@@ -210,35 +136,28 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Cancel with dirty-state guard:** Cancel button is a client component that checks `useTaskFormStore.touched` before navigating. Shows `CancelDiscardDialog` ("Discard changes?") if the form has unsaved data.
 - **Drafts on task board:** `GET /v1/follow-up/board?status=draft` returns draft tasks. The board's default behavior excludes drafts; explicit `status=draft` overrides the exclusion. Board task resource omits SLA/assignees for drafts.
 
+**Established by 023:**
+- **Comment card in task detail main column:** `TaskCommentsCard` renders after `StageTimeline` in the two-column task detail layout, following the existing stacked-card pattern.
+- **Cursor-paginated top-level comments + inline replies:** `useInfiniteQuery` for top-level comments; `next_cursor`/`has_more` drives a manual "Load more" button. Replies are returned inline under each `CommentResource.replies` — no separate reply pagination in MVP.
+- **Custom message rows (no shadcn Message/Bubble):** The shadcn registry has no `@shadcn/message` or `@shadcn/bubble` components. Built custom rows with `Avatar`, `Card`, `Button`, `Textarea` primitives matching existing task-detail styling.
+- **Current-user chat-style alignment:** Own comments align to `end` (chat-style, `flex-row-reverse` + `bg-muted`); others align to `start` (`bg-background border`). Improves scanability.
+- **Single-level replies only:** Reply button only on top-level comments. Reply rows have no Reply button — backend 013 enforces this.
+- **Error display via sonner toasts:** All errors (422 validation, network, 500) show as sonner toasts, never inline. The `useCreateComment` hook calls `toast.error()` for all failures.
+- **Mutation error scoping:** `errorSource` state tracks which composer (top-level or reply) triggered the last mutation, preventing cross-composer error display.
+- **Flex max-height scroll limitation:** `ScrollArea` with `height: 100%` inside a flex item cannot resolve percentage height against the flex algorithm's assigned height in Chrome (CSS spec resolution uses *specified* `height`, not *used* height). Fixed by putting `overflow-y-auto` directly on the `max-h-[60vh]` constrained element.
+- **`timeFmtFromT` uses `tasks.detail` namespace:** Time translation keys (`time_just_now`, `time_day_one`, etc.) live under `tasks.detail`, not `tasks.comments`. Components pass `useTranslations('tasks.detail')` to `timeFmtFromT`.
+
+**F2 follow-up specs (backend now ✅ Done, UI not yet implemented):**
+- `024-task-documents` — File upload, preview, download, and version list in task details sidebar
+- `025-external-references` — External reference display, add, and search in task details sidebar; external_reference filter on task board
+
+---
+
 ## F3 — Blueprint Builder
 
 **Status:** ✅ Done
 
-**Completed (005):**
-- `/blueprints` library with cursor-paginated table, URL filters, create/duplicate/activate/deactivate/delete ✅
-- `/blueprints/[publicId]` builder with split view (canvas + properties panel), stage/sub-stage CRUD, transitions ✅
-- `/blueprints/catalog` with tabs (Categories, Stage Types, SLA Policies) and CRUD dialogs ✅
-- `useBlueprintsInfinite`, `useBlueprint`, `useBlueprintCategories`, `useBlueprintStageTypes`, `useBlueprintSlaPolicies` hooks ✅
-- All mutation hooks: create/update/activate/deactivate/duplicate/delete blueprint; stage/sub-stage CRUD + reorder; transition CRUD; category/stage-type/sla-policy CRUD ✅
-- Stage canvas with vertical stage list, flow connectors, expand/collapse sub-stage preview ✅
-- Sub-stage preview on canvas with reorder + delete (hover-only actions) ✅
-- Stage properties panel with 3 sections: StageForm, TransitionEditor, SubStageList ✅
-- StageForm with 12 fields (name AR/EN, description AR/EN, stage type, assignment, SLA, cardinality, completion rule, escalation) ✅
-- SubStageForm with 11 fields (name AR/EN, description AR/EN, SLA, assignment, cardinality, completion rule, required) ✅
-- Panel mode: idle/add/edit with stateful StageForm (unsaved changes preserved across sub-stage edit) ✅
-- Builder top bar: status badge, Settings, Activate/Deactivate, Duplicate (capability-gated) ✅
-- Locked/read-only mode with lock banner and disabled editing ✅
-- Blueprint settings dialog (edit metadata: name, category, scope, department, description) ✅
-- Zustand store for builder UI state: selectedStageId, blueprintName, panelOpen, metadataDirty ✅
-- Shell breadcrumb for blueprint routes with blueprint name via Zustand store ✅
-- CompleteStageDialog with multi-target advance transition picker ✅
-- DetailsCard stage progress uses blueprint total stage count ✅
-- Sub-stage override button for non-assignees with capability ✅
-- Dark mode on all blueprint badges ✅
-- Shared components extracted: BilingualNameFields, BilingualDescriptionFields, RtlSelect, RtlTable, ConfirmDeleteDialog, CatalogTable ✅
-- Utilities extracted: localizeName/localizeTitle to lib/utils/localize.ts, enum maps and getStagesCount/buildAssignmentFields to blueprint-utils.ts ✅
-- i18n: ~120 keys in blueprints namespace + ~25 toast keys, both locales ✅
-- MSW handlers for all blueprint endpoints ✅
+**Specs:** `005` ✅
 
 **Established by 005:**
 - **Granular mutations pattern:** Stage/sub-stage/transition CRUD is immediate API call + invalidate `detail(publicId)`; no batch save endpoint
@@ -259,46 +178,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** ✅ Done
 
-**Completed (006):**
-- `/tasks/[publicId]/workflow` route inside dashboard shell ✅
-- Workflow graph with nodes per blueprint stage, sorted by `sequence_order` ✅
-- Node cards showing status badges, assignees, SLA summary, sub-stage mini-list ✅
-- CSS border-triangle advance arrows + SVG dashed return edges ✅
-- `WorkflowTerminalNode` checkmark circle at end of flow ✅
-- Legend with stage status dots, SLA health indicators, path icons, stats ✅
-- `WorkflowTimelineBar` day-view timeline with colored segments and deadline markers ✅
-- SLA policy display on non-active stages via blueprint fallback ✅
-- Sub-stage SLA on task details page (active timer + completed policy) ✅
-- Auto-scroll to active stage on mount (replaces Fit to Screen) ✅
-- Horizontal `ScrollArea` from shadcn for scrollable workflow ✅
-- RTL support across all components (`ltr:block`/`rtl:block`, logical properties) ✅
-- Breadcrumb for workflow route in `SiteHeader` ✅
-- Workflow entry buttons in `task-top-bar-actions.tsx` and `task-board-table.tsx` ✅
-- Loading skeleton (3 sections: graph + legend + timeline bar), empty, error, 403, 404 states ✅
-- 5 tests (3 visualization, 2 node) ✅
-- i18n: `tasks.workflow` namespace in both locales (~55 keys) ✅
-
-**Completed (007):**
-- `/follow-up` route with `PageHeader` + `FollowUpCenter` orchestrator ✅
-- `useFollowUpBoardInfinite` with 60s polling, cursor-paginated board ✅
-- `useFollowUpOverdueInfinite`, `useFollowUpAtRiskInfinite`, `useFollowUpBottlenecks` hooks ✅
-- `useAllFollowUpActions`, `useFollowUpActions`, `useCreateFollowUpAction` hooks ✅
-- `useEscalationsInfinite`, `useCreateEscalation`, `useResolveEscalation` hooks ✅
-- Query key factory extended: `followUp` + `escalations` namespaces ✅
-- 4 stat cards (Scope, At Risk, Overdue, Today) with page-local counts + tinted borders ✅
-- Dismissible overdue alert banner with "View All" action ✅
-- URL-driven filters (quick chips, debounced search, sort, advanced Sheet) ✅
-- Desktop 6-column follow-up board with SLA accent + actions dropdown ✅
-- Mobile card list with matching information hierarchy ✅
-- Bottleneck panel (top 3 preview + "View All" Dialog, clickable items -> URL filters) ✅
-- Recent actions panel (cross-task endpoint, 3-line ActionEntry, "View All" Dialog) ✅
-- Escalations panel (timeline feed, Open/Resolved tab, resolve action) ✅
-- LogFollowUpDialog, EscalateDialog, ResolveEscalationDialog ✅
-- All 4 states per component (loading skeleton, empty, error, no-permission) ✅
-- 8 mutation hooks with `ApiRequestError` handling showing backend error messages ✅
-- Dark mode on all panels and cards ✅
-- i18n: `followUp.*` namespace in both locales (~80 keys) ✅
-- MSW handlers for all follow-up and escalation endpoints ✅
+**Specs:** `006` ✅, `007` ✅
 
 **Established by 006:**
 - **Graph model as pure utility:** `buildWorkflowNodes()` and `buildWorkflowEdges()` are pure functions with no React dependencies; memoized via `useMemo`.
@@ -323,30 +203,24 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Unknown narrowing adapters:** `getBottleneckEntities()` narrows `BottleneckResource.stage_type`/`.department` from `unknown` to typed entities where OpenAPI schemas are incorrect.
 - **Action type normalization:** `actionTypeKey()` handles both integer (1-5) and string (`phonecall`, `message`, etc.) action type formats.
 
+## F5 — Dashboards & Analytics
+
+**Status:** 🔄 In Progress
+
+**Specs:** `002` ⬜, `009` ⬜, `012` ⬜
+
+**Pending F5 specs:**
+- `002-executive-dashboard` — Executive-level overview dashboard
+- `009-analytics-reporting` — Analytics reports and drill-downs
+- `012-department-manager-dashboard` — Department-level manager dashboard
+
+All F5 specs depend on backend M6 (`009-analytics-reporting`, `010-follow-up-board`, `011-search-discovery`) which is ✅ Done and contract-stable.
+
 ## F6 — Admin, Org, Help, Onboarding
 
 **Status:** 🔄 In Progress
 
-**Completed (008):**
-- `/organization` route with URL-driven tabbed workspace (Overview/Departments/Positions/Grades/Calendars) ✅
-- `useDepartmentTree()`, `useDepartmentsInfinite()`, `usePositionsInfinite()`, `useAuthorityGrades()`, `useWorkingCalendars()`, `usePublicHolidays()` hooks with generated types ✅
-- All mutation hooks organized in `use-organization.ts` (create/update/deactivate/reactivate/delete for all 5 entities) ✅
-- Query key factory extended with `organization` namespace (backward-compatible with existing task-board department picker) ✅
-- **Overview tab:** visual org chart with gradient avatar cards, connector lines, stat cards (derived from positions list), zoom controls, two-column layout (chart left + selected department's positions right) ✅
-- **Departments tab:** tree panel + flat cursor-paginated table + CRUD dialogs (form with bilingual name + parent select, deactivate-with-cascade dialog) ✅
-- **Positions tab:** cursor-paginated table + mobile card list + CRUD dialogs (bilingual title, department/grade/reports-to selects, head checkbox, transfer dialog, detail drawer) ✅
-- **Authority Grades tab:** bounded list + CRUD dialog (rank + bilingual name + description); delete disabled when grade has active positions ✅
-- **Working Calendars tab:** calendar cards grid + CRUD dialog (working-days ToggleGroup starting Saturday, time inputs, GCC timezone select) + nested Public Holidays sub-view with year filter ✅
-- **5 form dialogs** (Department, Position, Grade, Working Calendar, Public Holiday) with ApiRequestError validation display ✅
-- **PositionDetailDrawer** (Sheet) for position details (status, grade, department, occupant, reports-to) ✅
-- **Unified confirmation dialogs** with threatening descriptions (`dialogs.confirm_delete_desc`, `confirm_deactivate_desc`, `confirm_reactivate_desc`) across departments, positions, grades, and calendars ✅
-- **Capability-gated actions** (`organization.manage`) on all mutating buttons and action menus ✅
-- **All 4 states:** loading skeleton (per-tab variants), empty states, error with retry, 403 permission-denied, success ✅
-- **i18n:** ~174 keys in `organization` namespace, both locales (AR + EN) ✅
-- **RTL:** logical Tailwind properties, Sheet `end-3` close button fix, Select `position="popper"` on all selects, Arabic day names, Saturday-first week order ✅
-- **MSW handlers:** `__tests__/mocks/organization-handlers.ts` (250 lines, all endpoints) ✅
-- **5 test files:** overview, departments, positions, grades, calendars panel tests (11 tests) ✅
-- **DRY refactors:** `PermissionDenied`, `VacantBadge`, `LoadMoreButton` shared components; `extractApiErrors`, `groupPositionsByDept` shared utils ✅
+**Specs:** `008` ✅, `010` ⬜, `011` ⬜, `017` ⬜, `019` ⬜, `020` ⬜, `021` ⬜, `022` ⬜
 
 **Established by 008:**
 - **Visual org chart pattern:** Gradient avatar cards with initials, tiered layout with CSS connector lines, progressive disclosure via click, zoom controls (`ZoomIn`/`ZoomOut`). Works for org chart browsing, not just list trees.
@@ -360,6 +234,17 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Holiday query invalidation:** Prefix match without trailing `undefined` — invalidation key `['organization', 'working-calendars', calId, 'holidays']` matches all year-filtered query keys.
 - **DRY shared components pattern:** Domain-local shared components (`PermissionDenied`, `VacantBadge`, `LoadMoreButton`) avoid coupling to shared/ while eliminating 15+ duplicated code blocks.
 
+**Remaining F6 specs:**
+- `010-system-administration` — Tenant admin screens (requires `015-audit-trail` — ✅ Done on backend)
+- `011-help-center` — Help center CMS screens (requires `020-help-center` — ✅ Done on backend)
+- `017-user-settings-delegation` — User settings and delegation UI (requires `016-delegation-oof` — ✅ Done on backend)
+- `019-confidential-access` — Confidential task access management (requires `017-confidentiality-access` — ✅ Done on backend)
+- `020-localization-calendar` — Hijri calendar and localization settings (requires `018-localization-calendar` — ✅ Done on backend)
+- `021-onboarding-training` — Onboarding and training module (requires `019-onboarding-training` — ✅ Done on backend)
+- `022-platform-administration` — Platform-level tenant management (requires `001-platform-tenancy`/`admin` — ✅ Done on backend)
+
+All F6 backend dependencies are now ✅ Done. No specs are blocked.
+
 ---
 
 ## Dependency Map
@@ -367,22 +252,22 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 ```
 F0: Scaffold & Design System
   └── Design tokens, shell layout, API client ────────────────┐
-                                                               ↓
+                                                                ↓
 F1: App Shell, Auth, i18n/RTL ──────────────────────────────────┐
   └── Login flow, route protection, locale routing             │
-                                                               ↓
+                                                                ↓
 F2: Task Board & Task Details ─────────────────────────────────┤
   └── Data table, task card, stage timeline                    │
-                                                               ↓
+                                                                ↓
 F3: Blueprint Builder ──────────────────────────────────────────┤
   └── Visual editor, stage nodes, transition arrows            │
-                                                               ↓
+                                                                ↓
 F4: Follow-up & Workflow Viz ───────────────────────────────────┤
   └── Follow-up board, action log, workflow diagram            │
-                                                               ↓
+                                                                ↓
 F5: Dashboards & Analytics ─────────────────────────────────────┤
   └── Stat cards, charts, department health                    │
-                                                               ↓
+                                                                ↓
 F6: Admin, Org, Help, Onboarding ───────────────────────────────
 ```
 

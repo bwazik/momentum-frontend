@@ -7,7 +7,6 @@ import { Loader2, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTaskDetail } from '@/lib/api/hooks/use-task-detail';
 import { useCurrentUser } from '@/lib/api/hooks/use-auth';
-import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { useDeleteTask } from '@/lib/api/hooks/use-task-create';
 import { TaskCancelButton } from './task-cancel-button';
 import { DeleteDraftDialog } from './delete-draft-dialog';
@@ -17,7 +16,6 @@ export function TaskEditActions({ publicId }: { publicId: string }) {
   const router = useRouter();
   const { data: task } = useTaskDetail(publicId);
   const { data: user } = useCurrentUser();
-  const canManage = useCapability('task.manage');
   const deleteMut = useDeleteTask();
   const [deleteOpen, setDeleteOpen] = useState(false);
 

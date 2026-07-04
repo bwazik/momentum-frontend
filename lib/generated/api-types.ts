@@ -169,6 +169,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tasks/{task}/audit-trail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["audit.task-trail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/audit-trail/system": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["audit.system-log"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/audit-trail/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["audit.my-activity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/iam/auth/login": {
         parameters: {
             query?: never;
@@ -553,6 +601,150 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tasks/{task}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["comment.index"];
+        put?: never;
+        post: operations["comment.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{task}/metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["confidentialAccess.metadata"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{task}/access-override": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["confidentialAccess.override"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{task}/confidential-access-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["confidentialAccess.events"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/iam/confidential-governance-participants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["confidentialGovernanceParticipant.index"];
+        put?: never;
+        post: operations["confidentialGovernanceParticipant.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/iam/confidential-governance-participants/{participant}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["confidentialGovernanceParticipant.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/iam/confidential-governance-participants/{participant}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["confidentialGovernanceParticipant.revoke"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{task}/confidential-participants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["confidentialParticipant.index"];
+        put?: never;
+        post: operations["confidentialParticipant.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{task}/confidential-participants/{user}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["confidentialParticipant.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/iam/delegations": {
         parameters: {
             query?: never;
@@ -569,6 +761,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/iam/delegations/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["delegation.active"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/iam/delegations/{delegation}": {
         parameters: {
             query?: never;
@@ -577,7 +785,7 @@ export interface paths {
             cookie?: never;
         };
         get: operations["delegation.show"];
-        put?: never;
+        put: operations["delegation.update"];
         post?: never;
         delete?: never;
         options?: never;
@@ -729,6 +937,134 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/documents/{document}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["documents.show"];
+        put?: never;
+        post?: never;
+        delete: operations["documents.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/documents/{document}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["documents.download"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/documents/{document}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["documents.preview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/documents/{document}/versions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["documents.versions"];
+        put?: never;
+        post: operations["documents.versions.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{task}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["documentAttachment.listForTask"];
+        put?: never;
+        post: operations["documentAttachment.uploadForTask"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/task-stage-instances/{stageInstance}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["documentAttachment.listForStage"];
+        put?: never;
+        post: operations["documentAttachment.uploadForStage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/task-sub-stage-instances/{subStageInstance}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["documentAttachment.listForSubStage"];
+        put?: never;
+        post: operations["documentAttachment.uploadForSubStage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/comments/{comment}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["documentAttachment.listForComment"];
+        put?: never;
+        post: operations["documentAttachment.uploadForComment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tracking/escalations": {
         parameters: {
             query?: never;
@@ -857,6 +1193,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tasks/external-entities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["externalEntity.index"];
+        put?: never;
+        post: operations["externalEntity.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/external-entities/{entity}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["externalEntity.show"];
+        put: operations["externalEntity.update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/external-entities/{entity}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["externalEntity.deactivate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/external-entities/{entity}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["externalEntity.reactivate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/follow-up/actions": {
         parameters: {
             query?: never;
@@ -945,6 +1345,182 @@ export interface paths {
             cookie?: never;
         };
         get: operations["followUpBoard.bottlenecks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["helpArticle.index"];
+        put?: never;
+        post: operations["helpArticle.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/articles/{article}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["helpArticle.show"];
+        put: operations["helpArticle.update"];
+        post?: never;
+        delete: operations["helpArticle.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/articles/{article}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["helpArticle.listDocuments"];
+        put?: never;
+        post: operations["helpArticle.uploadDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/articles/{article}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["helpArticle.publish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/articles/{article}/unpublish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["helpArticle.unpublish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["helpArticleCategory.index"];
+        put?: never;
+        post: operations["helpArticleCategory.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/categories/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["helpArticleCategory.reorder"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/categories/{category}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["helpArticleCategory.update"];
+        post?: never;
+        delete: operations["helpArticleCategory.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/help-center/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["helpArticleSearch.search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/localization/context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["localization.context"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/localization/date-conversion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["localization.dateConversion"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1043,6 +1619,150 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["notification.markRead"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["onboarding.me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/me/journey": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["onboarding.journey"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/me/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["onboarding.updateProgress"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/me/skip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["onboarding.skip"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/me/relaunch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["onboarding.relaunch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/me/sections/{section}/quiz-attempts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["onboarding.submitQuiz"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["onboardingAdmin.users"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/admin/departments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["onboardingAdmin.departments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/onboarding/admin/reminders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["onboardingAdmin.reminders"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1898,6 +2618,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/tasks/{task}/external-references": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["taskExternalReference.index"];
+        put?: never;
+        post: operations["taskExternalReference.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tasks/{task}/external-references/{reference}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["taskExternalReference.update"];
+        post?: never;
+        delete: operations["taskExternalReference.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tasks/priorities": {
         parameters: {
             query?: never;
@@ -2158,6 +2910,13 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AccessOverrideRequest */
+        AccessOverrideRequest: {
+            reason: string;
+            /** Format: date-time */
+            expires_at?: string | null;
+            calendar_system?: components["schemas"]["CalendarSystem"];
+        };
         /**
          * AccountType
          * @enum {integer}
@@ -2178,6 +2937,7 @@ export interface components {
             /** Format: date-time */
             started_at?: string | null;
             is_primary?: boolean | null;
+            calendar_system?: components["schemas"]["CalendarSystem"];
         };
         /**
          * AssignmentCardinality
@@ -2189,6 +2949,11 @@ export interface components {
          * @enum {integer}
          */
         AssignmentType: 1 | 2 | 3;
+        /**
+         * AuditEntityType
+         * @enum {integer}
+         */
+        AuditEntityType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34;
         /** AuditGrantResource */
         AuditGrantResource: {
             external_auditor?: {
@@ -2356,8 +3121,11 @@ export interface components {
                 name_en: string;
             } | null;
             due_date: string;
+            due_date_hijri: string | null;
             created_at: string;
+            created_at_hijri: string | null;
             launched_at: string;
+            launched_at_hijri: string | null;
         };
         /** BottleneckResource */
         BottleneckResource: {
@@ -2368,6 +3136,11 @@ export interface components {
             score: string;
             average_time_at_stage_seconds: string;
         };
+        /**
+         * CalendarSystem
+         * @enum {string}
+         */
+        CalendarSystem: "gregorian" | "hijri";
         /** CancelTaskRequest */
         CancelTaskRequest: {
             reason: string;
@@ -2388,6 +3161,21 @@ export interface components {
          * @enum {integer}
          */
         ClassificationLevel: 1 | 2 | 3;
+        /** CommentResource */
+        CommentResource: {
+            public_id: string;
+            task_id: string;
+            author: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            body: string;
+            parent_comment_id: string;
+            created_at: string;
+            attachment_count?: number;
+            replies?: components["schemas"]["CommentResource"][];
+        };
         /** CompleteStageRequest */
         CompleteStageRequest: {
             completion_note?: string | null;
@@ -2398,6 +3186,60 @@ export interface components {
          * @enum {integer}
          */
         CompletionRule: 1 | 2 | 3;
+        /** ConfidentialAccessEventResource */
+        ConfidentialAccessEventResource: {
+            user: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            access_type: string;
+            reason: string;
+            created_at: string;
+        };
+        /** ConfidentialGovernanceParticipantResource */
+        ConfidentialGovernanceParticipantResource: {
+            public_id: string;
+            position: {
+                public_id: string;
+                title_ar: string;
+                title_en: string;
+            };
+            scope_type: string;
+            scope_department?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            blueprint_category?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            applies_to_classification_level: string;
+            created_by?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            created_at: string;
+            revoked_at: string;
+        };
+        /** ConfidentialParticipantResource */
+        ConfidentialParticipantResource: {
+            user: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            added_by: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            added_at: string;
+            removed_at: string;
+        };
         /** CreateManualEscalationRequest */
         CreateManualEscalationRequest: {
             /** Format: uuid */
@@ -2409,6 +3251,14 @@ export interface components {
             reason: string;
             /** Format: uuid */
             escalated_to_position_id?: string | null;
+        };
+        /** DateConversionResource */
+        DateConversionResource: {
+            gregorian_date: string;
+            hijri_date: string;
+            from_calendar: string;
+            timezone: string;
+            hijri_calendar_variant: string;
         };
         /** DelegationResource */
         DelegationResource: {
@@ -2424,11 +3274,25 @@ export interface components {
                 name_en: string;
             };
             starts_at: string;
+            starts_at_hijri: string | null;
             ends_at: string;
+            ends_at_hijri: string | null;
             scope_type: string;
+            blueprint_category?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            stage_type?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
             is_active: string;
             created_at: string;
+            created_at_hijri: string | null;
             updated_at: string;
+            updated_at_hijri: string | null;
         };
         /**
          * DelegationScopeType
@@ -2461,9 +3325,12 @@ export interface components {
             name_ar: string;
             name_en: string;
             is_active: string;
+            working_calendar?: components["schemas"]["WorkingCalendarResource"];
             children?: components["schemas"]["DepartmentResource"][];
             created_at: string;
+            created_at_hijri: string | null;
             updated_at: string;
+            updated_at_hijri: string | null;
         };
         /** DepartmentTreeResource */
         DepartmentTreeResource: {
@@ -2471,7 +3338,40 @@ export interface components {
             name_ar: string;
             name_en: string;
             is_active: string;
+            working_calendar?: components["schemas"]["WorkingCalendarResource"];
             children?: components["schemas"]["DepartmentTreeResource"][];
+        };
+        /** DocumentResource */
+        DocumentResource: {
+            public_id: string;
+            original_filename: string;
+            mime_type: string;
+            mime_category: string;
+            size_bytes: string;
+            version_number: string;
+            description: string;
+            uploader: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            download_url: string;
+            preview_url: string | null;
+            created_at: string;
+        };
+        /** DocumentVersionResource */
+        DocumentVersionResource: {
+            public_id: string;
+            version_number: string;
+            original_filename: string;
+            mime_type: string;
+            size_bytes: string;
+            uploader: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            created_at: string;
         };
         /** EffectiveCapabilityResource */
         EffectiveCapabilityResource: {
@@ -2484,6 +3384,7 @@ export interface components {
         EndPositionRequest: {
             /** Format: date-time */
             ended_at?: string | null;
+            calendar_system?: components["schemas"]["CalendarSystem"];
         };
         /** EscalationDetailResource */
         EscalationDetailResource: {
@@ -2496,8 +3397,11 @@ export interface components {
                 public_id: string;
                 status: string;
                 started_at: string;
+                started_at_hijri: string | null;
                 deadline_at: string;
+                deadline_at_hijri: string | null;
                 warning_at: string;
+                warning_at_hijri: string | null;
             } | null;
             escalation_type: string;
             escalated_to_user: {
@@ -2519,8 +3423,11 @@ export interface components {
             status: string;
             resolution_note: string;
             resolved_at: string;
+            resolved_at_hijri: string | null;
             created_at: string;
+            created_at_hijri: string | null;
             updated_at: string;
+            updated_at_hijri: string | null;
         };
         /** EscalationResource */
         EscalationResource: {
@@ -2544,7 +3451,9 @@ export interface components {
             status: string;
             resolution_note: string;
             resolved_at: string;
+            resolved_at_hijri: string | null;
             created_at: string;
+            created_at_hijri: string | null;
         };
         /**
          * EscalationStatus
@@ -2566,6 +3475,26 @@ export interface components {
             cancelled: string;
             completion_rate: string;
         };
+        /** ExternalEntityResource */
+        ExternalEntityResource: {
+            public_id: string;
+            name_ar: string;
+            name_en: string;
+            entity_type: string;
+            is_active: string;
+            created_at: string;
+            updated_at: string;
+        };
+        /**
+         * ExternalEntityType
+         * @enum {integer}
+         */
+        ExternalEntityType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+        /**
+         * ExternalReferenceType
+         * @enum {integer}
+         */
+        ExternalReferenceType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
         /** FollowUpActionResource */
         FollowUpActionResource: {
             public_id: string;
@@ -2594,6 +3523,7 @@ export interface components {
             /** Format: date-time */
             date_range_end: string;
             department_id?: number | null;
+            calendar_system?: components["schemas"]["CalendarSystem"];
         };
         /** GrantMonitoringScopeRequest */
         GrantMonitoringScopeRequest: {
@@ -2616,6 +3546,89 @@ export interface components {
             scope_department_id?: number | null;
             reason: string;
         };
+        /** HelpArticleCategoryResource */
+        HelpArticleCategoryResource: {
+            public_id: string;
+            name_ar: string;
+            name_en: string;
+            display_order: string;
+            is_active: string;
+            article_count?: number;
+            created_at: string;
+        };
+        /** HelpArticleDetailResource */
+        HelpArticleDetailResource: {
+            public_id: string;
+            title_ar: string;
+            title_en: string;
+            body_ar: string;
+            body_en: string;
+            category?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            is_published: string;
+            display_order: string;
+            view_count: string;
+            author?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            last_editor?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            published_at: string;
+            created_at: string;
+            updated_at: string;
+        };
+        /** HelpArticleResource */
+        HelpArticleResource: {
+            public_id: string;
+            title_ar: string;
+            title_en: string;
+            category?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            is_published: string;
+            display_order: string;
+            view_count: string;
+            author?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            published_at: string;
+            created_at: string;
+            updated_at: string;
+        };
+        /** HelpArticleSearchResultResource */
+        HelpArticleSearchResultResource: {
+            public_id: string;
+            title_ar: string;
+            title_en: string;
+            category?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            is_published: string;
+            display_order: string;
+            view_count: string;
+            author?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            };
+            relevance_score?: number;
+            published_at: string;
+            created_at: string;
+        };
         /** ImpersonateRequest */
         ImpersonateRequest: {
             /** Format: uuid */
@@ -2628,6 +3641,18 @@ export interface components {
                 blueprint_sub_stage_id?: string;
                 user_ids: string[];
             }[] | null;
+        };
+        /** LocalizationContextResource */
+        LocalizationContextResource: {
+            locale: string;
+            text_direction: string;
+            timezone: string;
+            default_language: string;
+            preferred_language: string;
+            supported_locales: string;
+            supported_calendar_systems: string;
+            hijri_calendar_variant: string;
+            hijri_supported_range: string;
         };
         /** LoginRequest */
         LoginRequest: {
@@ -2648,6 +3673,115 @@ export interface components {
             granted_at: string;
             revoked_at: string;
         };
+        /** OnboardingDepartmentStatusResource */
+        OnboardingDepartmentStatusResource: {
+            department_public_id: string | null;
+            department_name_ar: string | null;
+            department_name_en: string | null;
+            user_count: number;
+            not_started_count: number;
+            in_progress_count: number;
+            completed_count: number;
+            skipped_count: number;
+            completion_rate: number;
+        } | string[];
+        /** OnboardingJourneyResource */
+        OnboardingJourneyResource: {
+            public_id: string;
+            journey_key: string;
+            name_ar: string;
+            name_en: string;
+            description_ar: string;
+            description_en: string;
+            display_order: string;
+            sections: components["schemas"]["OnboardingSectionResource"][];
+        } | string[];
+        /**
+         * OnboardingProgressStatus
+         * @enum {integer}
+         */
+        OnboardingProgressStatus: 1 | 2 | 3 | 4;
+        /** OnboardingQuizAttemptResource */
+        OnboardingQuizAttemptResource: {
+            score: string;
+            passed: string;
+            attempt_number: string;
+            created_at: string;
+            answers: {
+                question_public_id: string;
+                option_id: string;
+                is_correct: boolean;
+            }[];
+        } | string[];
+        /** OnboardingQuizQuestionResource */
+        OnboardingQuizQuestionResource: {
+            public_id: string;
+            question_text_ar: string;
+            question_text_en: string;
+            display_order: string;
+            options: {
+                id: string;
+                text_ar: string;
+                text_en: string;
+            }[];
+        } | string[];
+        /** OnboardingSectionResource */
+        OnboardingSectionResource: {
+            public_id: string;
+            title_ar: string;
+            title_en: string;
+            sequence_order: string;
+            pass_threshold: string;
+            steps: components["schemas"]["OnboardingStepResource"][];
+            questions: components["schemas"]["OnboardingQuizQuestionResource"][];
+        } | string[];
+        /** OnboardingStatusResource */
+        OnboardingStatusResource: {
+            journey: {
+                public_id: string;
+                key: string;
+                name_ar: string;
+                name_en: string;
+            };
+            status: string;
+            current_section: components["schemas"]["OnboardingSectionResource"] | null;
+            current_step: components["schemas"]["OnboardingStepResource"] | null;
+            attempt_count: number;
+            completed_at: string;
+            skipped_at: string;
+            relaunched_at: string;
+            replay_section: components["schemas"]["OnboardingSectionResource"] | null;
+            replay_step: components["schemas"]["OnboardingStepResource"] | null;
+        } | string[];
+        /** OnboardingStepResource */
+        OnboardingStepResource: {
+            public_id: string;
+            title_ar: string;
+            title_en: string;
+            content_ar: string;
+            content_en: string;
+            target_selector: string;
+            sequence_order: string;
+        } | string[];
+        /** OnboardingUserStatusResource */
+        OnboardingUserStatusResource: {
+            user_public_id: string;
+            user_name_ar: string;
+            user_name_en: string;
+            email: string;
+            department: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            } | null;
+            journey: {
+                key: string;
+                name_ar: string;
+                name_en: string;
+            } | null;
+            status: string;
+            completed_at: string;
+        } | string[];
         /** OverrideAssignmentRequest */
         OverrideAssignmentRequest: {
             reason: string;
@@ -2713,7 +3847,9 @@ export interface components {
                 };
             };
             started_at: string;
+            started_at_hijri: string | null;
             ended_at: string;
+            ended_at_hijri: string | null;
             is_primary: string;
         };
         /** PositionCapabilityGrantResource */
@@ -2771,8 +3907,11 @@ export interface components {
             name_ar: string;
             name_en: string;
             holiday_date: string;
+            holiday_date_hijri: string | null;
             is_recurring: string;
             created_at: string;
+            created_at_hijri: string | null;
+            updated_at: string;
         };
         /** RecentActivityResource */
         RecentActivityResource: {
@@ -2782,6 +3921,14 @@ export interface components {
             status: string;
             activity_type: string;
             occurred_at: string;
+            occurred_at_hijri: string | null;
+        };
+        /** ReorderCategoriesRequest */
+        ReorderCategoriesRequest: {
+            categories: {
+                public_id: string;
+                display_order: number;
+            }[];
         };
         /** ReorderStagesRequest */
         ReorderStagesRequest: {
@@ -2818,6 +3965,15 @@ export interface components {
          * @enum {integer}
          */
         ScopeType: 1 | 2 | 3 | 4 | 5 | 6;
+        /** SendRemindersRequest */
+        SendRemindersRequest: {
+            /** Format: uuid */
+            department_id?: string | null;
+        };
+        /** SkipJourneyRequest */
+        SkipJourneyRequest: {
+            confirmed: boolean;
+        };
         /** SlaPolicyResource */
         SlaPolicyResource: {
             public_id: string;
@@ -2846,10 +4002,15 @@ export interface components {
             };
             status: string;
             started_at: string;
+            started_at_hijri: string | null;
             deadline_at: string;
+            deadline_at_hijri: string | null;
             warning_at: string;
+            warning_at_hijri: string | null;
             paused_at: string;
+            paused_at_hijri: string | null;
             completed_at: string;
+            completed_at_hijri: string | null;
             elapsed_before_pause: string;
             created_at: string;
         };
@@ -2889,6 +4050,15 @@ export interface components {
             display_order: string;
             created_at: string;
             updated_at: string;
+        };
+        /** StoreArticleRequest */
+        StoreArticleRequest: {
+            category_id: string;
+            title_ar: string;
+            title_en?: string | null;
+            body_ar: string;
+            body_en?: string | null;
+            display_order?: number | null;
         };
         /** StoreAuthorityGradeRequest */
         StoreAuthorityGradeRequest: {
@@ -2951,8 +4121,36 @@ export interface components {
             transition_type: components["schemas"]["TransitionType"];
             return_reason_required?: boolean | null;
         };
+        /** StoreCategoryRequest */
+        StoreCategoryRequest: {
+            name_ar: string;
+            name_en: string;
+            display_order?: number | null;
+        };
+        /** StoreCommentRequest */
+        StoreCommentRequest: {
+            body: string;
+            parent_comment_id?: string | null;
+        };
+        /** StoreConfidentialGovernanceParticipantRequest */
+        StoreConfidentialGovernanceParticipantRequest: {
+            /** Format: uuid */
+            position_id: string;
+            scope_type: components["schemas"]["ScopeType"];
+            /** Format: uuid */
+            scope_department_id?: string | null;
+            /** Format: uuid */
+            blueprint_category_id?: string | null;
+            applies_to_classification_level?: components["schemas"]["ClassificationLevel"];
+        };
+        /** StoreConfidentialParticipantRequest */
+        StoreConfidentialParticipantRequest: {
+            /** Format: uuid */
+            user_id: string;
+        };
         /** StoreDelegationRequest */
         StoreDelegationRequest: {
+            calendar_system?: components["schemas"]["CalendarSystem"];
             delegator_user_id?: string | null;
             delegate_user_id: string;
             /** Format: date-time */
@@ -2960,8 +4158,8 @@ export interface components {
             /** Format: date-time */
             ends_at: string;
             scope_type: components["schemas"]["DelegationScopeType"];
-            blueprint_category_id?: number | null;
-            stage_type_id?: number | null;
+            blueprint_category_id?: string | null;
+            stage_type_id?: string | null;
         };
         /** StoreDepartmentRequest */
         StoreDepartmentRequest: {
@@ -2969,6 +4167,14 @@ export interface components {
             name_en?: string | null;
             /** Format: uuid */
             parent_department_id?: string | null;
+            /** Format: uuid */
+            working_calendar_id?: string | null;
+        };
+        /** StoreExternalEntityRequest */
+        StoreExternalEntityRequest: {
+            name_ar: string;
+            name_en?: string | null;
+            entity_type: components["schemas"]["ExternalEntityType"];
         };
         /** StoreFollowUpActionRequest */
         StoreFollowUpActionRequest: {
@@ -2997,6 +4203,7 @@ export interface components {
         };
         /** StorePublicHolidayRequest */
         StorePublicHolidayRequest: {
+            calendar_system?: components["schemas"]["CalendarSystem"];
             name_ar: string;
             name_en?: string | null;
             /** Format: date-time */
@@ -3016,6 +4223,14 @@ export interface components {
             name_ar: string;
             name_en?: string | null;
             display_order?: number | null;
+        };
+        /** StoreTaskExternalReferenceRequest */
+        StoreTaskExternalReferenceRequest: {
+            reference_type: components["schemas"]["ExternalReferenceType"];
+            reference_number: string;
+            /** Format: uuid */
+            external_entity_id?: string | null;
+            notes?: string | null;
         };
         /** StoreTaskPriorityRequest */
         StoreTaskPriorityRequest: {
@@ -3037,6 +4252,7 @@ export interface components {
             classification_level?: components["schemas"]["ClassificationLevel"];
             /** Format: date-time */
             due_date?: string | null;
+            calendar_system?: components["schemas"]["CalendarSystem"];
             manual_assignments?: {
                 blueprint_stage_id?: string;
                 blueprint_sub_stage_id?: string;
@@ -3078,6 +4294,14 @@ export interface components {
             timezone?: string | null;
             is_default?: boolean;
         };
+        /** SubmitQuizRequest */
+        SubmitQuizRequest: {
+            answers: {
+                /** Format: uuid */
+                question_public_id: string;
+                option_id: string;
+            }[];
+        };
         /** SuspendTaskRequest */
         SuspendTaskRequest: {
             reason: string;
@@ -3098,7 +4322,9 @@ export interface components {
             initiator_name_ar: string;
             initiator_name_en: string;
             due_date: string;
+            due_date_hijri: string | null;
             created_at: string;
+            created_at_hijri: string | null;
             launched_at: string;
             suspended_at: string;
             resumed_at: string;
@@ -3108,6 +4334,16 @@ export interface components {
             cancellation_reason: string;
             draft_manual_assignments: string;
             stages?: components["schemas"]["TaskStageInstanceResource"][];
+            updated_at_hijri: string | null;
+        };
+        /** TaskExternalReferenceResource */
+        TaskExternalReferenceResource: {
+            public_id: string;
+            reference_type: string;
+            reference_number: string;
+            external_entity?: components["schemas"]["ExternalEntityResource"];
+            notes: string;
+            created_at: string;
         };
         /** TaskListItemResource */
         TaskListItemResource: {
@@ -3123,7 +4359,9 @@ export interface components {
             /** @constant */
             sla_health: "none";
             created_at: string;
+            created_at_hijri: string | null;
             completed_at: string;
+            completed_at_hijri: string | null;
         };
         /** TaskPriorityResource */
         TaskPriorityResource: {
@@ -3152,7 +4390,9 @@ export interface components {
             status: string;
             initiator_id: string;
             due_date: string;
+            due_date_hijri: string | null;
             created_at: string;
+            created_at_hijri: string | null;
             launched_at: string;
             suspended_at: string;
             suspension_reason: string;
@@ -3160,6 +4400,7 @@ export interface components {
             completed_at: string;
             cancelled_at: string;
             cancellation_reason: string;
+            updated_at_hijri: string | null;
         };
         /** TaskSlaHealthResource */
         TaskSlaHealthResource: {
@@ -3179,9 +4420,12 @@ export interface components {
             assignment_role: string;
             is_completed: string;
             assigned_at: string;
+            assigned_at_hijri: string | null;
             completed_at: string;
+            completed_at_hijri: string | null;
             completion_note: string;
             reassigned_at: string;
+            reassigned_at_hijri: string | null;
             reassigned_by_user_id: string;
             reassignment_reason: string;
         };
@@ -3206,7 +4450,9 @@ export interface components {
             completion_rule: string;
             status: string;
             entered_at: string;
+            entered_at_hijri: string | null;
             exited_at: string;
+            exited_at_hijri: string | null;
             completion_note: string;
             return_reason: string;
             sub_stages?: components["schemas"]["TaskSubStageInstanceResource"][];
@@ -3237,7 +4483,9 @@ export interface components {
             completion_rule: string;
             status: string;
             entered_at: string;
+            entered_at_hijri: string | null;
             exited_at: string;
+            exited_at_hijri: string | null;
             completion_note: string;
             assignments?: components["schemas"]["TaskStageAssignmentResource"][];
         };
@@ -3245,6 +4493,7 @@ export interface components {
         TaskTimelineResource: {
             type: string;
             timestamp: string;
+            timestamp_hijri: string | null;
             stage_name_ar: string | null;
             stage_name_en: string | null;
             parent_stage_name_ar: string | null;
@@ -3294,6 +4543,15 @@ export interface components {
          * @enum {integer}
          */
         TransitionType: 1 | 2;
+        /** UpdateArticleRequest */
+        UpdateArticleRequest: {
+            category_id: string;
+            title_ar: string;
+            title_en?: string | null;
+            body_ar: string;
+            body_en?: string | null;
+            display_order?: number | null;
+        };
         /** UpdateAuthorityGradeRequest */
         UpdateAuthorityGradeRequest: {
             rank?: number;
@@ -3361,12 +4619,47 @@ export interface components {
             description?: string | null;
             key?: string;
         };
+        /** UpdateCategoryRequest */
+        UpdateCategoryRequest: {
+            name_ar: string;
+            name_en: string;
+            display_order?: number | null;
+            is_active?: boolean | null;
+        };
+        /** UpdateConfidentialGovernanceParticipantRequest */
+        UpdateConfidentialGovernanceParticipantRequest: {
+            scope_type?: components["schemas"]["ScopeType"];
+            /** Format: uuid */
+            scope_department_id?: string | null;
+            /** Format: uuid */
+            blueprint_category_id?: string | null;
+            applies_to_classification_level?: components["schemas"]["ClassificationLevel"];
+        };
+        /** UpdateDelegationRequest */
+        UpdateDelegationRequest: {
+            calendar_system?: components["schemas"]["CalendarSystem"];
+            /** Format: date-time */
+            starts_at?: string;
+            /** Format: date-time */
+            ends_at?: string;
+            scope_type?: components["schemas"]["DelegationScopeType"];
+            blueprint_category_id?: string | null;
+            stage_type_id?: string | null;
+        };
         /** UpdateDepartmentRequest */
         UpdateDepartmentRequest: {
             name_ar?: string;
             name_en?: string | null;
             /** Format: uuid */
             parent_department_id?: string | null;
+            /** Format: uuid */
+            working_calendar_id?: string | null;
+        };
+        /** UpdateExternalEntityRequest */
+        UpdateExternalEntityRequest: {
+            name_ar?: string;
+            name_en?: string | null;
+            entity_type?: components["schemas"]["ExternalEntityType"];
         };
         /** UpdatePlatformAdminRequest */
         UpdatePlatformAdminRequest: {
@@ -3384,8 +4677,16 @@ export interface components {
             authority_grade_id?: number;
             is_department_head?: boolean;
         };
+        /** UpdateProgressRequest */
+        UpdateProgressRequest: {
+            /** Format: uuid */
+            section_id: string;
+            /** Format: uuid */
+            step_id: string;
+        };
         /** UpdatePublicHolidayRequest */
         UpdatePublicHolidayRequest: {
+            calendar_system?: components["schemas"]["CalendarSystem"];
             name_ar?: string;
             name_en?: string | null;
             /** Format: date-time */
@@ -3408,6 +4709,14 @@ export interface components {
             display_order?: number | null;
             is_active?: boolean | null;
         };
+        /** UpdateTaskExternalReferenceRequest */
+        UpdateTaskExternalReferenceRequest: {
+            reference_type?: components["schemas"]["ExternalReferenceType"];
+            reference_number?: string;
+            /** Format: uuid */
+            external_entity_id?: string | null;
+            notes?: string | null;
+        };
         /** UpdateTaskPriorityRequest */
         UpdateTaskPriorityRequest: {
             name_ar?: string;
@@ -3426,6 +4735,7 @@ export interface components {
             classification_level?: components["schemas"]["ClassificationLevel"];
             /** Format: date-time */
             due_date?: string | null;
+            calendar_system?: components["schemas"]["CalendarSystem"];
         };
         /** UpdateTenantRequest */
         UpdateTenantRequest: {
@@ -3457,6 +4767,17 @@ export interface components {
             working_hours_end?: string;
             timezone?: string | null;
             is_default?: boolean;
+        };
+        /** UploadDocumentRequest */
+        UploadDocumentRequest: {
+            /** Format: binary */
+            file: string;
+            description?: string | null;
+        };
+        /** UploadDocumentVersionRequest */
+        UploadDocumentVersionRequest: {
+            /** Format: binary */
+            file: string;
         };
         /** UserCapabilityGrantResource */
         UserCapabilityGrantResource: {
@@ -3502,7 +4823,7 @@ export interface components {
             mobile: string | null;
             employee_id: string | null;
             account_type: number;
-            preferred_language: components["schemas"]["PreferredLanguage"];
+            preferred_language: string;
             is_active: boolean;
             is_out_of_office: boolean;
             created_at: string;
@@ -3563,6 +4884,18 @@ export interface components {
                 };
             };
         };
+        /** @description Authorization error */
+        AuthorizationException: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": {
+                    /** @description Error overview. */
+                    message: string;
+                };
+            };
+        };
     };
     parameters: never;
     requestBodies: never;
@@ -3580,6 +4913,7 @@ export interface operations {
                 blueprint_category_id?: string | null;
                 date_from?: string | null;
                 date_to?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
             header: {
@@ -3694,6 +5028,114 @@ export interface operations {
             };
             401: components["responses"]["AuthenticationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "audit.task-trail": {
+        parameters: {
+            query?: {
+                per_page?: number | null;
+                cursor?: string | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: string;
+                        next_cursor: string;
+                        has_more: string;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "audit.system-log": {
+        parameters: {
+            query?: {
+                user_id?: string | null;
+                event_type?: string | null;
+                entity_type?: components["schemas"]["AuditEntityType"];
+                date_from?: string | null;
+                date_to?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
+                per_page?: number | null;
+                cursor?: string | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: string;
+                        next_cursor: string;
+                        has_more: string;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "audit.my-activity": {
+        parameters: {
+            query?: {
+                event_type?: string | null;
+                entity_type?: components["schemas"]["AuditEntityType"];
+                date_from?: string | null;
+                date_to?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
+                per_page?: number | null;
+                cursor?: string | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: string;
+                        next_cursor: string;
+                        has_more: string;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "auth.login": {
@@ -4843,10 +6285,393 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
+    "comment.index": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["CommentResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "comment.store": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreCommentRequest"];
+            };
+        };
+        responses: {
+            /** @description `CommentResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "confidentialAccess.metadata": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        public_id: string;
+                        classification_level: string;
+                        title: string | "Confidential Task";
+                        owning_department: string;
+                        current_responsible_position: string;
+                        status: string;
+                        due_date: string;
+                        sla_health: null;
+                        metadata_only: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "confidentialAccess.override": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccessOverrideRequest"];
+            };
+        };
+        responses: {
+            /** @description `TaskDetailResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskDetailResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "confidentialAccess.events": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ConfidentialAccessEventResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "confidentialGovernanceParticipant.index": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ConfidentialGovernanceParticipantResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "confidentialGovernanceParticipant.store": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreConfidentialGovernanceParticipantRequest"];
+            };
+        };
+        responses: {
+            /** @description `ConfidentialGovernanceParticipantResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfidentialGovernanceParticipantResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "confidentialGovernanceParticipant.update": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The participant public id */
+                participant: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateConfidentialGovernanceParticipantRequest"];
+            };
+        };
+        responses: {
+            /** @description `ConfidentialGovernanceParticipantResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfidentialGovernanceParticipantResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "confidentialGovernanceParticipant.revoke": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The participant public id */
+                participant: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `ConfidentialGovernanceParticipantResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfidentialGovernanceParticipantResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "confidentialParticipant.index": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ConfidentialParticipantResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "confidentialParticipant.store": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreConfidentialParticipantRequest"];
+            };
+        };
+        responses: {
+            /** @description `ConfidentialParticipantResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfidentialParticipantResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "confidentialParticipant.destroy": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+                /** @description The user public id */
+                user: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
     "delegation.index": {
         parameters: {
             query?: {
                 is_active?: boolean;
+                per_page?: number;
                 delegator_user_id?: string;
                 delegate_user_id?: string;
             };
@@ -4865,7 +6690,11 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DelegationResource"][];
+                    "application/json": components["schemas"]["DelegationResource"][] | {
+                        data: components["schemas"]["DelegationResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
                 };
             };
             401: components["responses"]["AuthenticationException"];
@@ -4900,6 +6729,40 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
+    "delegation.active": {
+        parameters: {
+            query?: {
+                delegator_user_id?: string | null;
+                delegate_user_id?: string | null;
+                blueprint_category_id?: string | null;
+                stage_type_id?: string | null;
+                per_page?: number | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DelegationResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
     "delegation.show": {
         parameters: {
             query?: never;
@@ -4926,6 +6789,39 @@ export interface operations {
             };
             401: components["responses"]["AuthenticationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "delegation.update": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The delegation public id */
+                delegation: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateDelegationRequest"];
+            };
+        };
+        responses: {
+            /** @description `DelegationResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DelegationResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "delegation.revoke": {
@@ -5198,6 +7094,7 @@ export interface operations {
                 priority_id?: string | null;
                 status?: string | null;
                 blueprint_category_id?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
             header: {
@@ -5234,6 +7131,7 @@ export interface operations {
                 priority_id?: string | null;
                 status?: string | null;
                 blueprint_category_id?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
             header: {
@@ -5270,6 +7168,7 @@ export interface operations {
                 priority_id?: string | null;
                 status?: string | null;
                 blueprint_category_id?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
             header: {
@@ -5301,6 +7200,446 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
+    "documents.show": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The document public id */
+                document: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `DocumentResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documents.destroy": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The document public id */
+                document: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documents.download": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The document public id */
+                document: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    "Transfer-Encoding": "chunked";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documents.preview": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The document public id */
+                document: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    "Transfer-Encoding": "chunked";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documents.versions": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The document public id */
+                document: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocumentVersionResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documents.versions.create": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The document public id */
+                document: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadDocumentVersionRequest"];
+            };
+        };
+        responses: {
+            /** @description `DocumentResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "documentAttachment.listForTask": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocumentResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documentAttachment.uploadForTask": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description `DocumentResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "documentAttachment.listForStage": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The stage instance ID */
+                stageInstance: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocumentResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documentAttachment.uploadForStage": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The stage instance ID */
+                stageInstance: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description `DocumentResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "documentAttachment.listForSubStage": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The sub stage instance ID */
+                subStageInstance: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocumentResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documentAttachment.uploadForSubStage": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The sub stage instance ID */
+                subStageInstance: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description `DocumentResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "documentAttachment.listForComment": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The comment public id */
+                comment: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocumentResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "documentAttachment.uploadForComment": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The comment public id */
+                comment: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description `DocumentResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
     "escalation.index": {
         parameters: {
             query?: {
@@ -5312,6 +7651,7 @@ export interface operations {
                 department_id?: string | null;
                 created_from?: string | null;
                 created_to?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
                 cursor?: string | null;
             };
@@ -5438,6 +7778,7 @@ export interface operations {
                 priority_id?: string | null;
                 department_id?: string | null;
                 blueprint_category_id?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
             header: {
@@ -5499,6 +7840,7 @@ export interface operations {
                 priority_id?: string | null;
                 department_id?: string | null;
                 blueprint_category_id?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
             header: {
@@ -5531,6 +7873,7 @@ export interface operations {
                 priority_id?: string | null;
                 department_id?: string | null;
                 blueprint_category_id?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
             header: {
@@ -5592,6 +7935,176 @@ export interface operations {
             };
             401: components["responses"]["AuthenticationException"];
             422: components["responses"]["ValidationException"];
+        };
+    };
+    "externalEntity.index": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `ExternalEntityResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalEntityResource"][];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "externalEntity.store": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreExternalEntityRequest"];
+            };
+        };
+        responses: {
+            /** @description `ExternalEntityResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalEntityResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "externalEntity.show": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The entity public id */
+                entity: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `ExternalEntityResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalEntityResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "externalEntity.update": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The entity public id */
+                entity: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateExternalEntityRequest"];
+            };
+        };
+        responses: {
+            /** @description `ExternalEntityResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalEntityResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "externalEntity.deactivate": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The entity public id */
+                entity: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `ExternalEntityResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalEntityResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "externalEntity.reactivate": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The entity public id */
+                entity: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `ExternalEntityResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalEntityResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
         };
     };
     "followUpAction.recent": {
@@ -5703,6 +8216,7 @@ export interface operations {
                 date_from?: string | null;
                 date_to?: string | null;
                 date_field?: "created_at" | "due_date" | "completed_at" | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 external_reference?: string | null;
                 search?: string | null;
                 sort_by?: components["schemas"]["BoardSortField"];
@@ -5746,6 +8260,7 @@ export interface operations {
                 date_from?: string | null;
                 date_to?: string | null;
                 date_field?: "created_at" | "due_date" | "completed_at" | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 external_reference?: string | null;
                 search?: string | null;
                 sort_by?: components["schemas"]["BoardSortField"];
@@ -5789,6 +8304,7 @@ export interface operations {
                 date_from?: string | null;
                 date_to?: string | null;
                 date_field?: "created_at" | "due_date" | "completed_at" | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 external_reference?: string | null;
                 search?: string | null;
                 sort_by?: components["schemas"]["BoardSortField"];
@@ -5832,6 +8348,7 @@ export interface operations {
                 date_from?: string | null;
                 date_to?: string | null;
                 date_field?: "created_at" | "due_date" | "completed_at" | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 external_reference?: string | null;
                 search?: string | null;
                 sort_by?: components["schemas"]["BoardSortField"];
@@ -5858,6 +8375,505 @@ export interface operations {
                 };
             };
             401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "helpArticle.index": {
+        parameters: {
+            query?: {
+                category_id?: string | null;
+                is_published?: boolean | null;
+                per_page?: number | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["HelpArticleResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "helpArticle.store": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreArticleRequest"];
+            };
+        };
+        responses: {
+            /** @description `HelpArticleDetailResource` */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HelpArticleDetailResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "helpArticle.show": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The article public id */
+                article: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `HelpArticleDetailResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HelpArticleDetailResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "helpArticle.update": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The article public id */
+                article: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateArticleRequest"];
+            };
+        };
+        responses: {
+            /** @description `HelpArticleDetailResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HelpArticleDetailResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "helpArticle.destroy": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The article public id */
+                article: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "helpArticle.listDocuments": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The article public id */
+                article: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocumentResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "helpArticle.uploadDocument": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The article public id */
+                article: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadDocumentRequest"];
+            };
+        };
+        responses: {
+            /** @description `DocumentResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "helpArticle.publish": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The article public id */
+                article: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `HelpArticleDetailResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HelpArticleDetailResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "helpArticle.unpublish": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The article public id */
+                article: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `HelpArticleDetailResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HelpArticleDetailResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "helpArticleCategory.index": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `HelpArticleCategoryResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HelpArticleCategoryResource"][];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "helpArticleCategory.store": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreCategoryRequest"];
+            };
+        };
+        responses: {
+            /** @description `HelpArticleCategoryResource` */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HelpArticleCategoryResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "helpArticleCategory.reorder": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderCategoriesRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        message: "Categories reordered successfully.";
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "helpArticleCategory.update": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The category public id */
+                category: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCategoryRequest"];
+            };
+        };
+        responses: {
+            /** @description `HelpArticleCategoryResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HelpArticleCategoryResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "helpArticleCategory.destroy": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The category public id */
+                category: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "helpArticleSearch.search": {
+        parameters: {
+            query: {
+                q: string;
+                category_id?: string | null;
+                per_page?: number | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["HelpArticleSearchResultResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "localization.context": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `LocalizationContextResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LocalizationContextResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "localization.dateConversion": {
+        parameters: {
+            query: {
+                date: string;
+                from_calendar: components["schemas"]["CalendarSystem"];
+                timezone?: string;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `DateConversionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DateConversionResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
             422: components["responses"]["ValidationException"];
         };
     };
@@ -6050,6 +9066,274 @@ export interface operations {
                 content?: never;
             };
             401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "onboarding.me": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `OnboardingStatusResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        onboarding_available: boolean;
+                        /** @constant */
+                        message: "No eligible onboarding journey was found for your access profile.";
+                    } | components["schemas"]["OnboardingStatusResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "onboarding.journey": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `OnboardingJourneyResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        onboarding_available: boolean;
+                        /** @constant */
+                        message: "No eligible onboarding journey was found for your access profile.";
+                    } | components["schemas"]["OnboardingJourneyResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "onboarding.updateProgress": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProgressRequest"];
+            };
+        };
+        responses: {
+            /** @description `OnboardingStatusResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingStatusResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "onboarding.skip": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SkipJourneyRequest"];
+            };
+        };
+        responses: {
+            /** @description `OnboardingStatusResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingStatusResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "onboarding.relaunch": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `OnboardingStatusResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingStatusResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "onboarding.submitQuiz": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The section public id */
+                section: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitQuizRequest"];
+            };
+        };
+        responses: {
+            /** @description `OnboardingQuizAttemptResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingQuizAttemptResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "onboardingAdmin.users": {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["OnboardingProgressStatus"];
+                department_id?: string | null;
+                search?: string | null;
+                per_page?: number | null;
+                cursor?: string | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["OnboardingUserStatusResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "onboardingAdmin.departments": {
+        parameters: {
+            query?: {
+                department_id?: string | null;
+                per_page?: number | null;
+                cursor?: string | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["OnboardingDepartmentStatusResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "onboardingAdmin.reminders": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["SendRemindersRequest"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        accepted_count: number;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "platformAdmin.index": {
@@ -7225,13 +10509,14 @@ export interface operations {
     };
     "search.search": {
         parameters: {
-            query: {
-                q: string;
+            query?: {
+                q?: string;
                 "status[]"?: "active" | "suspended" | "completed" | "cancelled";
                 "priority_id[]"?: string[];
                 date_from?: string | null;
                 date_to?: string | null;
                 date_field?: "created_at" | "completed_at" | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 department_id?: string | null;
                 blueprint_id?: string | null;
                 blueprint_category_id?: string | null;
@@ -7439,6 +10724,7 @@ export interface operations {
                 department_id?: string | null;
                 deadline_from?: string | null;
                 deadline_to?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
                 cursor?: string | null;
             };
@@ -7479,6 +10765,7 @@ export interface operations {
                 department_id?: string | null;
                 deadline_from?: string | null;
                 deadline_to?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
                 cursor?: string | null;
             };
@@ -7955,6 +11242,7 @@ export interface operations {
                 created_to?: string | null;
                 due_from?: string | null;
                 due_to?: string | null;
+                calendar_system?: components["schemas"]["CalendarSystem"];
                 search?: string | null;
                 per_page?: number | null;
             };
@@ -8240,6 +11528,135 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
             404: components["responses"]["ModelNotFoundException"];
             422: components["responses"]["ValidationException"];
+        };
+    };
+    "taskExternalReference.index": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["TaskExternalReferenceResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "taskExternalReference.store": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreTaskExternalReferenceRequest"];
+            };
+        };
+        responses: {
+            /** @description `TaskExternalReferenceResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskExternalReferenceResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "taskExternalReference.update": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+                /** @description The reference public id */
+                reference: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["UpdateTaskExternalReferenceRequest"];
+            };
+        };
+        responses: {
+            /** @description `TaskExternalReferenceResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskExternalReferenceResource"];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "taskExternalReference.destroy": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The task public id */
+                task: number;
+                /** @description The reference public id */
+                reference: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
         };
     };
     "taskPriority.index": {
@@ -8913,6 +12330,7 @@ export interface operations {
         parameters: {
             query: {
                 date: string;
+                calendar_system?: components["schemas"]["CalendarSystem"];
             };
             header: {
                 /** @description Tenant slug or public ID for multi-tenant resolution. */
@@ -8933,11 +12351,13 @@ export interface operations {
                 content: {
                     "application/json": {
                         date: string;
+                        date_hijri: string | null;
                         is_working_day: boolean;
                     };
                 };
             };
             401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
             404: components["responses"]["ModelNotFoundException"];
             422: components["responses"]["ValidationException"];
         };

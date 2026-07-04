@@ -93,8 +93,40 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 
 ## Current Focus
 
-**Milestone F5 — Dashboards & analytics**
-**Active spec:** `009-analytics-reporting`
+**Milestone F0 — Scaffold & Design System: ✅ Done**
+
+**Milestone F1 — App Shell, Auth, i18n/RTL: ✅ Done**
+- ✅ `001-core-shell` — Login, dashboard shell, sidebar, global search, notifications, i18n, RTL, brand theming
+
+**Milestone F2 — Task Board & Task Details: 🔄 In Progress**
+- ✅ `003-task-board` — Cursor-paginated enterprise table, SLA row accents, URL-driven filters, 4 states
+- ✅ `004-task-details` — Stage timeline, sub-stage checklist, SLA countdown, stage lifecycle actions, recent activity
+- ✅ `016-task-creation-launch` — Multi-step creation form, manual assignment, draft/edit/launch flow
+- ✅ `023-task-comments` — Comment UI, reply, threading, composer, 4 states, cursor pagination
+- ⬜ `024-task-documents` — Document attachment UI (backend `012` now ✅ Done)
+- ⬜ `025-external-references` — External reference UI (backend `014` now ✅ Done)
+
+**Milestone F3 — Blueprint Builder: ✅ Done**
+- ✅ `005-blueprint-builder` — Visual stage canvas, properties panel, sub-stage CRUD, transitions, lock/read-only
+
+**Milestone F4 — Follow-up & Workflow Viz: ✅ Done**
+- ✅ `006-workflow-visualization` — Workflow graph, stage nodes, advance/return arrows, timeline bar
+- ✅ `007-follow-up-center` — Board, overdue/at-risk panels, bottlenecks, escalations, action log
+
+**Milestone F5 — Dashboards & Analytics: 🔄 In Progress**
+- ⬜ `002-executive-dashboard` — Executive summary, key metrics, trend charts
+- ⬜ `009-analytics-reporting` — Drill-down reports, aging analysis, bottleneck identification
+- ⬜ `012-department-manager-dashboard` — Department-level performance, team metrics, health cards
+
+**Milestone F6 — Admin, Org, Help, Onboarding: 🔄 In Progress**
+- ✅ `008-organization-structure` — Org chart, department/position/grade CRUD, working calendars, holidays
+- ⬜ `010-system-administration` — Tenant admin screens (requires `015-audit-trail` — ✅ Done on backend)
+- ⬜ `011-help-center` — Help center CMS (requires `020-help-center` — ✅ Done on backend)
+- ⬜ `017-user-settings-delegation` — User settings and delegation (requires `016-delegation-oof` — ✅ Done on backend)
+- ⬜ `019-confidential-access` — Confidential task access (requires `017-confidentiality-access` — ✅ Done on backend)
+- ⬜ `020-localization-calendar` — Hijri calendar settings (requires `018-localization-calendar` — ✅ Done on backend)
+- ⬜ `021-onboarding-training` — Onboarding module (requires `019-onboarding-training` — ✅ Done on backend)
+- ⬜ `022-platform-administration` — Platform tenant management (requires `001-platform-tenancy/admin` — ✅ Done on backend)
 
 ---
 

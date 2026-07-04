@@ -157,6 +157,16 @@ export function buildStageActivities(
   })).sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }
 
+export function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+
 export function formatRelativeTime(timestamp: string, fmt: TimeFmt): string {
   const now = Date.now();
   const then = new Date(timestamp).getTime();

@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Lock, FileQuestion, Loader2, Trash2 } from 'lucide-react';
+import { Lock, FileQuestion } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { FieldGroup } from '@/components/ui/field';
 import { useTaskFormStore, ManualAssignments } from '@/lib/stores/use-task-form-store';
@@ -224,9 +223,6 @@ export function TaskCreationForm({ mode, publicId }: Props) {
       toast.error(e instanceof Error ? e.message : String(e));
     }
   };
-
-  const isInitiator =
-    mode === 'edit' && detail.data ? detail.data.initiator_id === user?.public_id : false;
 
   return (
     <>

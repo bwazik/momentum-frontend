@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { ActiveBadge } from '@/components/shared/active-badge';
 import { OrgActionMenu, type OrgAction } from './org-action-menu';
 import { localizeTitle, localizeName, asBool } from './organization-utils';
-import { Button } from '@/components/ui/button';
 import { LoadMoreButton } from './load-more-button';
 import type { components } from '@/lib/generated/api-types';
 

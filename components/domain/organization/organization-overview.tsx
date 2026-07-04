@@ -13,7 +13,6 @@ import { ErrorState } from '@/components/shared/error-state';
 import { Badge } from '@/components/ui/badge';
 import { VacantBadge } from './vacant-badge';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
 import { localizeName, localizeTitle, asBool } from './organization-utils';
 import type { components } from '@/lib/generated/api-types';
 

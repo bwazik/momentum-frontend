@@ -314,21 +314,20 @@ All task lifecycle actions that already exist on the task details page (suspend/
 
 ---
 
-## Resolved Questions
+## Open Questions — Resolved
 
-- [x] **Unsaved-changes guard** — **Controlled `AlertDialog` ("Discard changes?").** Matches the existing `ConfirmDeleteDialog` pattern in the app (consistent focus management, RTL-safe, no native browser dialog masking custom styling). The dialog only appears when the form is dirty (any field touched). `beforeunload` is not used.
-- [x] **Launch as one click or two-step** — **Single click does POST + POST sequentially.** On the create/edit form the **Launch** button calls `useCreateTask()` (or `useUpdateTask()`) and on success immediately calls `useLaunchTask()` in a single `await` chain with a shared loading state. Save Draft is a separate button that only persists the draft. The two-step "Save Draft then Launch from the details page" path also still works (spec 004 task details already has a Launch affordance for drafts), but the create-form's primary intent is one click.
-- [x] **Manual assignments payload shape** — confirmed against `StoreTaskRequest`, `LaunchTaskRequest`, and `AssignmentResolutionService`: a **stage** entry is `{ blueprint_stage_id, user_ids[] }` (omit `blueprint_sub_stage_id`); a **sub-stage** entry is `{ blueprint_sub_stage_id, user_ids[] }` (omit `blueprint_stage_id`). The validation rules accept both id fields as optional strings; only `user_ids` is required. The backend `resolveManualUsers` looks up the entry by `blueprint_stage_id`, and `resolveManualUsersFromSubStage` by `blueprint_sub_stage_id`.
-- [x] **OpenAPI schema `blueprint_id`/`priority_id` type mismatch** — confirmed. Backend validates `Rule::exists('blueprints', 'public_id')` (UUID string). The generated types now correctly use `string` for `blueprint_id`/`priority_id`, so the `StoreTaskBody` alias was not needed and was removed. `useCreateTask` directly uses `StoreTaskRequest` with no override.
-- [x] **Blueprint list endpoint — search & stage embedding** — confirmed by reading `BlueprintController::index`: the list endpoint does NOT support a `search` query param (only `is_active`, `scope`, `category_id`, `per_page`), and the list `BlueprintResource` does NOT embed `stages[]` (only `stages_count` + `category`). **Decision:** the combobox uses `useBlueprintsInfinite({ is_active: true, per_page: 50 })` for options, applies a client-side `name_ar`/`name_en` filter over loaded pages via the `Command` input (debounced 300ms via TanStack Query + local state), and shows a "Load more" affordance when `has_more` is true. After selection, the form calls `useBlueprint(publicId)` (`GET /v1/blueprints/{publicId}`) to fetch the full stage + sub-stage structure — **a second fetch is required**. This was corrected in the acceptance criteria above.
-- [x] **Edit-route deletion ownership** — confirmed by reading `TaskService::delete`: strictly initiator-only (`if ($task->initiator_user_id !== $user->id) abort(403, ...)`). `task.manage` allows **update** of others' drafts but NOT delete. **Decision:** the Delete Draft button is visible only when `TaskDetailResource.initiator_id === currentUser.public_id`. A tenant admin with `task.manage` who is not the initiator can edit but cannot delete; the Delete button is hidden for them.
-- [x] **StoreTaskBody type alias** — removed because generated types correctly use `string` for `blueprint_id`/`priority_id`
-- [x] **assignment_type comparison** — uses `'manual_at_launch'` (string name), not `'3'` (integer)
-- [x] **Cancel button moved from footer to PageHeader** with dirty-check via `TaskCancelButton`/`CancelDiscardDialog`
-- [x] **Delete Draft moved from footer to PageHeader** via `TaskEditActions`
-- [x] **Edit page title shows `display_id`** via `EditPageTitle` client component reading `useTaskDisplayStore`
-- [x] **`draft_manual_assignments` stored in backend JSON column**, returned in `TaskDetailResource`
-- [x] **Drafts filter added to task board** (`status=draft`) with backend support
+- [x] **Unsaved-changes guard:** **Resolved.** Controlled `AlertDialog` ("Discard changes?") matching the existing `ConfirmDeleteDialog` pattern in the app (consistent focus management, RTL-safe, no native browser dialog masking custom styling). The dialog only appears when the form is dirty (any field touched). `beforeunload` is not used.
+- [x] **Launch as one click or two-step:** **Resolved.** Single click does `POST /v1/tasks` (create/update) then `POST /v1/tasks/{task}/launch` sequentially in one `await` chain with a shared loading state. Two-step "Save Draft then Launch from details page" also still works.
+- [x] **Manual assignments payload shape:** **Resolved.** Stage entry is `{ blueprint_stage_id, user_ids[] }` (omit `blueprint_sub_stage_id`); sub-stage entry is `{ blueprint_sub_stage_id, user_ids[] }` (omit `blueprint_stage_id`). Confirmed against `StoreTaskRequest`, `LaunchTaskRequest`, and `AssignmentResolutionService`.
+- [x] **OpenAPI schema `blueprint_id`/`priority_id` type mismatch:** **Resolved.** Generated types correctly use `string` for `blueprint_id`/`priority_id`. The `StoreTaskBody` alias was not needed and was removed.
+- [x] **Blueprint list endpoint — search & stage embedding:** **Resolved.** List endpoint does NOT support `search` param or embed `stages[]`. Combobox uses `useBlueprintsInfinite({ is_active: true, per_page: 50 })` with client-side filter over loaded pages via `Command` input. After selection, form calls `useBlueprint(publicId)` for the full stage structure — second fetch required.
+- [x] **Edit-route deletion ownership:** **Resolved.** Strictly initiator-only per `TaskService::delete`. Delete Draft button visible only when `initiator_id === currentUser.public_id`; `task.manage` allows edit but not delete for non-initiators.
+- [x] **StoreTaskBody type alias:** **Resolved.** Removed — generated types correctly use `string` for `blueprint_id`/`priority_id`.
+- [x] **`assignment_type` comparison:** **Resolved.** Uses `'manual_at_launch'` (string name from backend `apiValue()`), not `'3'` (integer).
+- [x] **Cancel/Delete Draft placement:** **Resolved.** Cancel and Delete Draft moved to PageHeader client components (`TaskCancelButton`, `TaskEditActions`). Footer only has primary actions (Save Draft, Launch).
+- [x] **Edit page title shows `display_id`:** **Resolved.** Via `EditPageTitle` client component reading `useTaskDisplayStore`, matching the spec 004 breadcrumb pattern.
+- [x] **`draft_manual_assignments` persistence:** **Resolved.** Backend stores in `tasks.draft_manual_assignments` JSON column, exposed in `TaskDetailResource`. Launch endpoint falls back to saved data when body omits `manual_assignments`.
+- [x] **Drafts filter on task board:** **Resolved.** `GET /v1/follow-up/board?status=draft` returns drafts; board excludes drafts by default unless explicit `status=draft` filter is set.
 
 ---
 

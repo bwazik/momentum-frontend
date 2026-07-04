@@ -5,7 +5,7 @@
 > **Status:** `completed`
 > **Milestone:** F2 — Task board & task details
 > **Depends on:** `001-core-shell`, `003-task-board`
-> **Backend spec:** `../backend/specs/005-task-execution/` — `Contract status: stable`; `../backend/specs/006-stage-lifecycle/` — `Contract status: stable`; `../backend/specs/007-sla-escalation/` — `Contract status: stable` (read-only SLA health endpoint consumed); `../backend/specs/004-blueprint-engine/` — `Contract status: stable` (transitions endpoint consumed for return-target filtering); `../backend/specs/003-iam-abac/` — `Contract status: stable` (users endpoint consumed for assignment override combobox); `../backend/specs/012-documents-attachments/` — `Contract status: draft` (⬜ Not Started — feature deferred); `../backend/specs/013-comments-collaboration/` — `Contract status: draft` (⬜ Not Started — feature deferred)
+> **Backend spec:** `../backend/specs/005-task-execution/` — `Contract status: stable`; `../backend/specs/006-stage-lifecycle/` — `Contract status: stable`; `../backend/specs/007-sla-escalation/` — `Contract status: stable` (read-only SLA health endpoint consumed); `../backend/specs/004-blueprint-engine/` — `Contract status: stable` (transitions endpoint consumed for return-target filtering); `../backend/specs/003-iam-abac/` — `Contract status: stable` (users endpoint consumed for assignment override combobox); `../backend/specs/012-documents-attachments/` — `Contract status: stable` (✅ Done); `../backend/specs/013-comments-collaboration/` — `Contract status: stable` (✅ Done)
 > **Contract status:** `stable`
 > **Author:** OpenCode
 > **Branch:** `feat/004-task-details`
