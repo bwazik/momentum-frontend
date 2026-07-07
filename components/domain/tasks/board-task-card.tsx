@@ -7,7 +7,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { SlaBadge, TaskStatusBadge, PriorityBadge, ClassificationBadge } from '@/components/domain/tasks/task-badges';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
-import { getCurrentAssignees, localizeName, formatTimeInStage, formatDueDate } from '@/components/domain/tasks/task-board-utils';
+import { getCurrentAssignees, formatTimeInStage, formatDueDate } from '@/components/domain/tasks/task-board-utils';
+import { localizeName } from '@/lib/utils/localize';
 import { copyTaskLink, copyToClipboard } from '@/components/shared/copy-link-button';
 import type { BoardTaskResource } from '@/components/domain/tasks/task-board-types';
 

@@ -33,8 +33,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
         toast.success(t('success'));
         router.push('/');
       },
-      onError: (error: Error) => {
-        toast.error(error.message || t('error'));
+      onError: () => {
+        toast.error(t('error'));
       },
     });
   }

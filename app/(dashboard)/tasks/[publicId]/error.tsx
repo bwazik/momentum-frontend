@@ -1,9 +1,7 @@
 'use client';
 
-import { AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { EmptyState } from '@/components/shared/empty-state';
 import { useTranslations } from 'next-intl';
+import { ErrorState } from '@/components/shared/error-state';
 
 export default function TaskDetailError({
   reset,
@@ -15,14 +13,9 @@ export default function TaskDetailError({
 
   return (
     <div className="p-6">
-      <EmptyState
-        icon={AlertCircle}
-        title={t('error')}
-        action={
-          <Button variant="outline" onClick={reset}>
-            {t('retry')}
-          </Button>
-        }
+      <ErrorState
+        message={t('error')}
+        onRetry={reset}
       />
     </div>
   );

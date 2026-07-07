@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Field, FieldLabel } from '@/components/ui/field';
 import { ApiRequestError } from '@/lib/api/client';
 import { cn } from '@/lib/utils';
-import { formatFileSize } from './task-document-utils';
+import { formatFileSize, MAX_SIZE_MB, ALLOWED_MIME_TYPES } from './task-document-utils';
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { DocumentResource } from './task-document-types';
 
@@ -24,18 +24,6 @@ interface TaskDocumentUploadDialogProps {
   onOpenChange: (open: boolean) => void;
   uploadMutation: UseMutationResult<DocumentResource, Error, FormData, unknown>;
 }
-
-const MAX_SIZE_MB = 20;
-const ALLOWED_MIME_TYPES = [
-  'application/pdf',
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-];
 
 export function TaskDocumentUploadDialog({
   open,

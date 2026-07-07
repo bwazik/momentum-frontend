@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { AdvancedFiltersSheet } from '@/components/shared/advanced-filters-sheet';
+import { AdvancedFiltersSheet } from '@/components/domain/tasks/advanced-filters-sheet';
 import type { TaskBoardUrlFilters } from '@/components/domain/tasks/task-board-types';
 
 const QUICK_FILTERS = ['active', 'mine', 'overdue', 'at_risk', 'suspended', 'draft', 'all'] as const;

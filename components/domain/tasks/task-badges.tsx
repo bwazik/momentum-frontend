@@ -4,7 +4,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Shield, Lock, Globe } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { localizeName } from './task-board-utils';
+import { localizeName } from '@/lib/utils/localize';
 
 const SLA_STYLES: Record<string, string> = {
   green: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400',

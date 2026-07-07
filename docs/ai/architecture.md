@@ -40,17 +40,17 @@ frontend/
 │   ├── dashboard-block/           # shadcn dashboard block demo (reference)
 │   └── proxy.ts                   # Security headers + cache control
 ├── components/
-│   ├── ui/                        # shadcn/ui primitives (CLI-managed; hand-edited for RTL: input-group, sidebar, dropdown-menu, command)
+│   ├── ui/                        # shadcn/ui primitives (CLI-managed; hand-edited for RTL: input-group, sidebar, dropdown-menu, command; empty.tsx removed — unused)
 │   ├── domain/                    # Business domain components
 │   │   ├── auth/                  # Login form
-│   │   ├── tasks/                 # Task board + task details (~28 files)
+│   │   ├── tasks/                 # Task board, task details, board table/filters/cards (~32 files)
 │   │   ├── blueprints/            # Blueprint library + builder + catalog (~25 files)
 │   │   ├── shell/                 # AppSidebar, SiteHeader, nav, notifications (~8 files)
 │   │   ├── search/                # Global search (command palette)
-│   │   ├── follow-up/             # (not yet populated)
+│   │   ├── follow-up/             # Follow-up board, filters, cards (~5 files)
 │   │   ├── analytics/             # (not yet populated)
-│   │   └── organization/          # (not yet populated)
-│   ├── shared/                    # Cross-domain reusable components (~13 files)
+│   │   └── organization/          # Org chart, departments, positions (~15 files)
+│   ├── shared/                    # Cross-domain reusable components (~9 files)
 │   │   ├── empty-state.tsx
 │   │   ├── error-state.tsx
 │   │   ├── page-header.tsx
@@ -73,16 +73,23 @@ frontend/
 │   │   ├── client.ts              # Fetch wrapper (credentials, CSRF, X-Tenant, X-Locale, array params)
 │   │   ├── query-keys.ts          # Centralized query key factory
 │   │   ├── query-keys-extra.ts    # Extra namespaces (search, notifications)
+│   │   ├── types.ts               # Shared cursor-page type (CursorPage<T>)
 │   │   └── hooks/                 # TanStack Query hooks per domain
 │   │       ├── use-auth.ts
+│   │       ├── use-blueprints.ts
 │   │       ├── use-capabilities.ts
+│   │       ├── use-escalations.ts
+│   │       ├── use-follow-up.ts
 │   │       ├── use-notifications.ts
+│   │       ├── use-organization.ts
 │   │       ├── use-search.ts
-│   │       ├── use-tenant.ts
-│   │       ├── use-tasks.ts
 │   │       ├── use-task-board.ts
+│   │       ├── use-task-comments.ts
+│   │       ├── use-task-create.ts
 │   │       ├── use-task-detail.ts
-│   │       └── use-blueprints.ts
+│   │       ├── use-task-documents.ts
+│   │       ├── use-tasks.ts
+│   │       └── use-tenant.ts
 │   ├── auth/
 │   │   └── server.ts              # Server-only auth utility (prefetchAuthenticatedUser)
 │   ├── generated/
@@ -91,20 +98,17 @@ frontend/
 │   │   ├── use-locale-store.ts
 │   │   ├── use-capability-store.ts
 │   │   ├── use-brand-color-store.ts
-│   │   ├── use-sidebar-store.ts
-│   │   ├── use-filter-store.ts
 │   │   ├── use-task-display-store.ts
-│   │   └── use-blueprint-builder-store.ts
+│   │   ├── use-blueprint-builder-store.ts
+│   │   └── use-task-form-store.ts  # Multi-step task creation form state (UI-only, not API data)
 │   ├── hooks/
-│   │   ├── use-debounce.ts
-│   │   └── use-mobile.ts          # (from shadcn scaffold)
 │   ├── tenant/
 │   │   └── server.ts              # Server-only tenant prefetch
 │   └── utils/
 │       ├── utils.ts               # cn(), etc.
 │       ├── localize.ts            # localizeName, localizeTitle (shared locale-aware pickers)
 │       ├── tenant.ts              # extract tenant slug from hostname
-│       └── use-brand-name.ts      # useBrandName() hook + getBrandDescription()
+│       └── manual-assignment-utils.ts  # toApiManual() — pure utility for manual assignment conversion
 ├── i18n/
 │   └── request.ts                 # next-intl request config (reads NEXT_LOCALE cookie)
 ├── hooks/
@@ -255,8 +259,8 @@ See `security-policy.md` for full security details.
 
 | Rule | Meaning |
 |------|---------|
-| Domain components self-contained | `components/domain/tasks/` owns all task-related UI |
-| Shared components are generic | `components/shared/` has no domain imports |
+| Domain components self-contained | `components/domain/tasks/` owns all task-related UI; `board-filters`, `board-table`, `board-task-card`, `advanced-filters-sheet` live in domain/tasks/, not shared/ |
+| Shared components are generic | `components/shared/` has no domain imports (enforced; 4 task-specific components moved out to domain/tasks/) |
 | UI primitives mostly untouched | `components/ui/` managed by shadcn CLI — some files hand-edited for RTL fixes: `input-group.tsx`, `sidebar.tsx`, `dropdown-menu.tsx`, `command.tsx`. Changes noted in `specs/001-core-shell/plan.md`. |
 | Hooks per domain | `lib/api/hooks/use-tasks.ts` — one hook file per API domain |
 | Stores are minimal | Zustand stores for UI-only state — never API data |
@@ -272,7 +276,8 @@ See `security-policy.md` for full security details.
 - **Blueprint builder state complexity** — use Zustand for UI/selection only (never API data); granular per-entity mutations (no batch save — backend has no batch endpoint)
 - **Large bundle size** — dynamic import heavy components (charts, blueprint canvas)
 - **Cursor pagination UX** — no total count available; design for "load more" not page numbers
-- **ui/ hand-edits drift** — 4 shadcn files modified for RTL (`input-group.tsx`, `sidebar.tsx`, `dropdown-menu.tsx`, `command.tsx`); track changes in specs/plan.md — re-add after CLI reinstall
+- **ui/ hand-edits drift** — 4 shadcn files modified for RTL (`input-group.tsx`, `sidebar.tsx`, `dropdown-menu.tsx`, `command.tsx`); track changes in specs/plan.md — re-add after CLI reinstall; `empty.tsx` removed (unused — project uses shared `EmptyState`)
+- **Shared components vs domain** — `board-table`, `board-filters`, `board-task-card`, `advanced-filters-sheet` live in `components/domain/tasks/` (not shared/). Follow-up reuses them via cross-domain import.
 
 ---
 

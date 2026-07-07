@@ -10,13 +10,17 @@ import { SubStageForm } from './sub-stage-form';
 import { TransitionEditor } from './transition-editor';
 import { SubStageList } from './sub-stage-list';
 import {
-  useBlueprintStageTypes, useBlueprintSlaPolicies, usePositions,
+  useBlueprintStageTypes, useBlueprintSlaPolicies,
   useCreateStage, useUpdateStage,
 } from '@/lib/api/hooks/use-blueprints';
-import { useDepartmentsInfinite } from '@/lib/api/hooks/use-task-board';
+import { usePositions } from '@/lib/api/hooks/use-organization';
+import { useDepartmentsInfinite } from '@/lib/api/hooks/use-organization';
 import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
-import { buildAssignmentFields } from './blueprint-utils';
+import { buildAssignmentFields } from '@/lib/utils/blueprint-utils';
 import type { BlueprintResource, BlueprintStageResource } from './blueprint-types';
+import type { components } from '@/lib/generated/api-types';
+
+type StoreBlueprintStageRequest = components['schemas']['StoreBlueprintStageRequest'];
 
 interface StagePropertiesPanelProps {
   blueprint: BlueprintResource;
@@ -84,7 +88,7 @@ export function StagePropertiesPanel({ blueprint, stage, mode, readOnly, subStag
     if (mode === 'edit' && stage) {
       updateStage.mutate({ stageId: stage.public_id, body }, { onSuccess: () => setMetadataDirty(false) });
     } else {
-      createStage.mutate(body as never, { onSuccess: (data) => setSelectedStage((data as { public_id: string }).public_id) });
+      createStage.mutate(body as StoreBlueprintStageRequest, { onSuccess: (data) => setSelectedStage((data as { public_id: string }).public_id) });
     }
   }
 

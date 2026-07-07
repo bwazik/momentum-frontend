@@ -17,9 +17,14 @@ interface ActionsDropdownAction {
   disabled?: boolean;
 }
 
-export function ActionsDropdown({ actions }: { actions: ActionsDropdownAction[] }) {
+interface ActionsDropdownProps {
+  actions: ActionsDropdownAction[];
+  translationsNamespace?: string;
+}
+
+export function ActionsDropdown({ actions, translationsNamespace = 'blueprints.catalog' }: ActionsDropdownProps) {
   const locale = useLocale();
-  const t = useTranslations('blueprints.catalog');
+  const t = useTranslations(translationsNamespace);
 
   return (
     <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
@@ -71,13 +76,15 @@ interface FormDialogProps {
   confirmLabel?: string;
   cancelLabel?: string;
   savingLabel?: string;
+  translationsNamespace?: string;
 }
 
 export function FormDialog({
   open, onOpenChange, title, children, onConfirm,
   isPending = false, confirmLabel, cancelLabel, savingLabel,
+  translationsNamespace = 'blueprints.catalog',
 }: FormDialogProps) {
-  const t = useTranslations('blueprints.catalog');
+  const t = useTranslations(translationsNamespace);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>

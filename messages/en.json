@@ -49,6 +49,11 @@
     "label_admin": "Administration",
     "blueprint_catalog": "Catalog"
   },
+  "not_found": {
+    "title": "Page Not Found",
+    "description": "Sorry, we couldn't find the page you're looking for.",
+    "back_home": "Back to Home"
+  },
   "shell": {
     "search_placeholder": "Search...",
     "page_titles": {
@@ -64,7 +69,8 @@
     "brand_color": "Choose primary color",
     "light": "Light",
     "dark": "Dark",
-    "system": "System"
+    "system": "System",
+    "toggle_theme": "Toggle theme"
   },
   "placeholder": {
     "dashboard": "Dashboard — Under Development",
@@ -78,6 +84,7 @@
   "notifications": {
     "title": "Notifications",
     "mark_all_read": "Mark all as read",
+    "mark_read_error": "Failed to mark notification as read",
     "empty": "No notifications",
     "empty_description": "Notifications will appear here",
     "load_more": "Load more",
@@ -101,7 +108,9 @@
   },
   "shared": {
     "error": "An error occurred. Please try again.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
   "tasks": {
     "workflow": {
@@ -149,6 +158,7 @@
       "sla_no_policy": "No SLA policy",
       "sla_unit_hours": "hours",
       "sla_unit_days": "days",
+      "more_sub_stages": "{n} more",
       "no_permission_title": "No permission",
       "no_permission_description": "You do not have permission to view this task workflow.",
       "not_found_title": "Task not found",
@@ -271,6 +281,8 @@
       "ref": "Ref",
       "copy_id": "Copy task ID",
       "id_copied": "Task ID copied",
+      "link_copied": "Link copied",
+      "copy_failed": "Failed to copy link",
       "bookmark": "Bookmark",
       "not_found_title": "Task not found",
       "not_found_description": "This task may have been deleted or you may not have access.",

@@ -4,6 +4,7 @@ import { apiClient } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
 import { toast } from 'sonner';
 import type { components } from '@/lib/generated/api-types';
+import type { CursorPage } from '@/lib/api/types';
 
 type TaskDetailResource = components['schemas']['TaskDetailResource'];
 type TaskSlaHealthResource = components['schemas']['TaskSlaHealthResource'];
@@ -17,12 +18,6 @@ type ReturnStageRequest = components['schemas']['ReturnStageRequest'];
 type OverrideAssignmentRequest = components['schemas']['OverrideAssignmentRequest'];
 type SuspendTaskRequest = components['schemas']['SuspendTaskRequest'];
 type CancelTaskRequest = components['schemas']['CancelTaskRequest'];
-
-interface CursorPage<T> {
-  data: T[];
-  next_cursor: string | null;
-  has_more: boolean;
-}
 
 export function useTaskDetail(publicId: string) {
   return useQuery({

@@ -13,6 +13,15 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { useSearch, useRecentActivity } from '@/lib/api/hooks/use-search';
+interface SearchResult {
+  public_id: string;
+  title_ar?: string;
+  title_en?: string;
+  status?: string;
+  sla_health?: string;
+  department_name?: string;
+  blueprint_name?: string;
+}
 import { Skeleton } from '@/components/ui/skeleton';
 import { useDebounce } from '@/lib/hooks/use-debounce';
 
@@ -47,8 +56,8 @@ export function GlobalSearch() {
   );
 
   const showResults = debouncedQuery.length >= 2;
-  const results = (searchData?.data ?? []) as Array<{ public_id: string; title_ar?: string; title_en?: string; status?: string; sla_health?: string; department_name?: string; blueprint_name?: string }>;
-  const recentItems = (recentData?.data ?? []) as Array<{ public_id: string; title_ar?: string; title_en?: string; status?: string; sla_health?: string; department_name?: string; blueprint_name?: string }>;
+  const results = (searchData?.data ?? []) as SearchResult[];
+  const recentItems = (recentData?.data ?? []) as SearchResult[];
 
   return (
     <>

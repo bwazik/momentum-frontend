@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { BoardTaskCard } from '@/components/shared/board-task-card';
+import { BoardTaskCard } from '@/components/domain/tasks/board-task-card';
 import type { BoardTaskResource } from './follow-up-types';
 
 interface FollowUpTaskCardProps {

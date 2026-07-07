@@ -15,90 +15,10 @@ import {
 } from '@/components/ui/breadcrumb';
 import { NotificationBell } from '@/components/domain/shell/notification-bell';
 import { LocaleToggle } from '@/components/shared/locale-toggle';
-import { useBrandName } from '@/lib/utils/use-brand-name';
-import { useTaskDisplayStore } from '@/lib/stores/use-task-display-store';
-import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
+import { useBrandName } from '@/lib/api/hooks/use-brand-name';
+import { usePageBreadcrumb } from './use-page-breadcrumb';
 
 const GlobalSearch = dynamic(() => import('@/components/domain/search/global-search').then(m => m.GlobalSearch), { ssr: false });
-
-interface Crumb {
-  label: string;
-  href?: string;
-}
-
-function usePageBreadcrumb(): Crumb[] | null {
-  const pathname = usePathname();
-  const nav = useTranslations('nav');
-
-  const displayId = useTaskDisplayStore((s) => s.displayId);
-  const blueprintName = useBlueprintBuilderStore((s) => s.blueprintName);
-
-  const taskWorkflow = pathname.match(/^\/tasks\/([^/]+)\/workflow$/);
-  if (taskWorkflow) {
-    return [
-      { label: nav('dashboard'), href: '/' },
-      { label: nav('tasks'), href: '/tasks' },
-      { label: displayId || '...', href: `/tasks/${taskWorkflow[1]}` },
-      { label: nav('label_workflow') },
-    ];
-  }
-
-  const taskDetail = pathname.match(/^\/tasks\/(.+)$/);
-  if (taskDetail) {
-    return [
-      { label: nav('dashboard'), href: '/' },
-      { label: nav('tasks'), href: '/tasks' },
-      { label: displayId || '...' },
-    ];
-  }
-
-  if (pathname === '/tasks') {
-    return [
-      { label: nav('dashboard'), href: '/' },
-      { label: nav('tasks') },
-    ];
-  }
-
-  const blueprintDetail = pathname.match(/^\/blueprints\/([^/]+)$/);
-  if (blueprintDetail && blueprintDetail[1] !== 'catalog') {
-    return [
-      { label: nav('dashboard'), href: '/' },
-      { label: nav('blueprints'), href: '/blueprints' },
-      { label: blueprintName || '...' },
-    ];
-  }
-
-  if (pathname === '/blueprints/catalog') {
-    return [
-      { label: nav('dashboard'), href: '/' },
-      { label: nav('blueprints'), href: '/blueprints' },
-      { label: nav('blueprint_catalog') },
-    ];
-  }
-
-  if (pathname === '/blueprints') {
-    return [
-      { label: nav('dashboard'), href: '/' },
-      { label: nav('blueprints') },
-    ];
-  }
-
-  if (pathname === '/analytics') {
-    return [
-      { label: nav('dashboard'), href: '/' },
-      { label: nav('analytics') },
-    ];
-  }
-
-  if (pathname === '/follow-up') {
-    return [
-      { label: nav('dashboard'), href: '/' },
-      { label: nav('follow_up') },
-    ];
-  }
-
-  return null;
-}
 
 export function SiteHeader() {
   const pathname = usePathname();

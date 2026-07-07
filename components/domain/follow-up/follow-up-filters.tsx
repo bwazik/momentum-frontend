@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { BoardFilters } from '@/components/shared/board-filters';
+import { BoardFilters } from '@/components/domain/tasks/board-filters';
 import type { TaskBoardUrlFilters } from './follow-up-types';
 
 interface FollowUpFiltersProps {

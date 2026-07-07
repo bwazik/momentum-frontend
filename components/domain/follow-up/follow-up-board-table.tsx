@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { BoardTable } from '@/components/shared/board-table';
+import { BoardTable } from '@/components/domain/tasks/board-table';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import type { BoardTaskResource } from './follow-up-types';
 

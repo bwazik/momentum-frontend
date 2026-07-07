@@ -230,6 +230,11 @@ React escapes all rendered strings by default. This covers most XSS vectors:
 
 **Never use `dangerouslySetInnerHTML`** without explicit security review and approval. If HTML rendering is needed (e.g., rich text from Help Center articles), use a sanitization library:
 
+**Approved exceptions:**
+- `app/layout.tsx` — Brand color blocking script (`<script dangerouslySetInnerHTML={{ __html: ... }} />`). This is self-contained JS with no user input. It reads from localStorage and sets CSS variables synchronously before React hydrates to eliminate color flash. Approved as of F1 milestone.
+
+If HTML rendering is needed (e.g., rich text from Help Center articles), use a sanitization library:
+
 ```tsx
 // If approved after review — sanitize first
 import DOMPurify from 'dompurify';

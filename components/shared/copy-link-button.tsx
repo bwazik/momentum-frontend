@@ -3,10 +3,9 @@
 import { Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
 
-export function copyTaskLink(publicId: string): string {
-  return `${window.location.origin}/tasks/${publicId}`;
+export function copyTaskLink(publicId: string, basePath = '/tasks/'): string {
+  return `${window.location.origin}${basePath}${publicId}`;
 }
 
 export function copyToClipboard(text: string, successMsg: string, failMsg: string): void {
@@ -35,6 +34,9 @@ interface CopyLinkButtonProps {
   size?: 'sm' | 'icon-sm' | 'default';
   variant?: 'ghost' | 'outline' | 'default';
   ariaLabel?: string;
+  linkCopiedLabel?: string;
+  copyFailedLabel?: string;
+  basePath?: string;
 }
 
 export function CopyLinkButton({
@@ -42,16 +44,18 @@ export function CopyLinkButton({
   size = 'icon-sm',
   variant = 'ghost',
   ariaLabel,
+  linkCopiedLabel = 'Link copied',
+  copyFailedLabel = 'Failed to copy link',
+  basePath = '/tasks/',
 }: CopyLinkButtonProps) {
-  const t = useTranslations('tasks.board.columns');
-  const url = copyTaskLink(publicId);
+  const url = copyTaskLink(publicId, basePath);
 
   return (
     <Button
       variant={variant}
       size={size}
-      aria-label={ariaLabel || t('copy_link')}
-      onClick={() => copyToClipboard(url, t('link_copied'), t('copy_failed'))}
+      aria-label={ariaLabel}
+      onClick={() => copyToClipboard(url, linkCopiedLabel, copyFailedLabel)}
     >
       <Copy className="me-2 size-4" />
     </Button>

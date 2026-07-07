@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { useDuplicateBlueprint, useActivateBlueprint, useDeactivateBlueprint, useDeleteBlueprint } from '@/lib/api/hooks/use-blueprints';
-import { getStagesCount } from './blueprint-utils';
+import { getStagesCount } from '@/lib/utils/blueprint-utils';
 import { useState } from 'react';
 import type { BlueprintResource } from './blueprint-types';
 

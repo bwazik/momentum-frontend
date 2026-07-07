@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { localizeName } from '@/lib/utils/localize';
 import type { TaskStageInstanceResource, SlaTimerInstanceResource, BlueprintStageResource } from './workflow-types';
@@ -135,7 +136,7 @@ export function WorkflowTimelineBar({ stages, blueprintStages, slaTimers }: Time
         <div className="flex items-center gap-4 text-[10px] text-muted-foreground flex-wrap">
           {segments.map((seg, i) => (
             <span key={i} className={cn(seg.textColor)}>
-              ● {seg.stageName} ({seg.durationLabel}){seg.isOverdue ? ' ⚠' : ''}
+              ● {seg.stageName} ({seg.durationLabel}){seg.isOverdue ? <AlertTriangle className="ms-1 inline size-3 text-red-500" /> : ''}
             </span>
           ))}
         </div>

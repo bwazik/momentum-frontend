@@ -28,28 +28,10 @@ import { TaskDocumentsSkeleton } from './task-documents-skeleton';
 import { TaskDocumentItem } from './task-document-item';
 import { TaskDocumentVersionDialog } from './task-document-version-dialog';
 import { TaskDocumentPreviewDialog } from './task-document-preview-dialog';
+import { MAX_SIZE_MB, ALLOWED_MIME_TYPES, usePendingUploads, type PendingFileState } from './task-document-utils';
 import type { DocumentResource } from './task-document-types';
 
 const MAX_VISIBLE = 3;
-const MAX_SIZE_MB = 20;
-const ALLOWED_MIME_TYPES = [
-  'application/pdf',
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-];
-
-interface PendingUpload {
-  id: string;
-  file: File;
-  status: 'idle' | 'uploading' | 'error';
-  description: string;
-  error?: string;
-}
 
 interface TaskDocumentsCardProps {
   publicId: string;
@@ -63,7 +45,7 @@ export function TaskDocumentsCard({ publicId }: TaskDocumentsCardProps) {
   const uploadDocument = useUploadTaskDocument(publicId);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showAll, setShowAll] = useState(false);
-  const [pendingUploads, setPendingUploads] = useState<PendingUpload[]>([]);
+  const { pendingUploads, addPending, updateDescription, setUploading, setError, removePending } = usePendingUploads();
   const [activeDocument, setActiveDocument] = useState<DocumentResource | null>(null);
   const [dialogMode, setDialogMode] = useState<'version' | 'preview' | null>(null);
 
@@ -94,10 +76,8 @@ export function TaskDocumentsCard({ publicId }: TaskDocumentsCardProps) {
     return null;
   }
 
-  function startPendingUpload(pending: PendingUpload) {
-    setPendingUploads((prev) =>
-      prev.map((p) => (p.id === pending.id ? { ...p, status: 'uploading' as const } : p)),
-    );
+  function startUpload(pending: PendingFileState) {
+    setUploading(pending.id);
 
     const formData = new FormData();
     formData.append('file', pending.file);
@@ -105,16 +85,10 @@ export function TaskDocumentsCard({ publicId }: TaskDocumentsCardProps) {
 
     uploadDocument.mutate(formData, {
       onSuccess: () => {
-        setPendingUploads((prev) => prev.filter((p) => p.id !== pending.id));
+        removePending(pending.id);
       },
       onError: (error) => {
-        setPendingUploads((prev) =>
-          prev.map((p) =>
-            p.id === pending.id
-              ? { ...p, status: 'error' as const, error: error instanceof ApiRequestError ? error.error.message : error.message }
-              : p,
-          ),
-        );
+        setError(pending.id, error instanceof ApiRequestError ? error.error.message : error.message);
       },
     });
   }
@@ -124,35 +98,18 @@ export function TaskDocumentsCard({ publicId }: TaskDocumentsCardProps) {
     if (!file) return;
     e.target.value = '';
 
-    const id = `pending-${Date.now()}`;
     const validationError = validateFile(file);
 
     if (validationError) {
-      setPendingUploads((prev) => [
-        { id, file, status: 'error' as const, description: '', error: validationError },
-        ...prev,
-      ]);
+      addPending(file, validationError);
       return;
     }
 
-    setPendingUploads((prev) => [
-      { id, file, status: 'idle', description: '' },
-      ...prev,
-    ]);
+    addPending(file);
   }
 
-  function retryUpload(pending: PendingUpload) {
-    startPendingUpload({ ...pending, status: 'uploading' });
-  }
-
-  function removePending(id: string) {
-    setPendingUploads((prev) => prev.filter((p) => p.id !== id));
-  }
-
-  function updatePendingDescription(id: string, description: string) {
-    setPendingUploads((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, description } : p)),
-    );
+  function retryUpload(pending: PendingFileState) {
+    startUpload(pending);
   }
 
   function handleVersion(doc: DocumentResource) {
@@ -165,7 +122,7 @@ export function TaskDocumentsCard({ publicId }: TaskDocumentsCardProps) {
     setDialogMode('preview');
   }
 
-  function renderPendingUpload(pending: PendingUpload) {
+  function renderPendingUpload(pending: PendingFileState) {
     return (
       <Attachment key={pending.id} state={pending.status === 'error' ? 'error' : pending.status === 'uploading' ? 'uploading' : 'idle'} className="w-full">
         <AttachmentMedia>
@@ -184,13 +141,13 @@ export function TaskDocumentsCard({ publicId }: TaskDocumentsCardProps) {
                 <input
                   type="text"
                   value={pending.description}
-                  onChange={(e) => updatePendingDescription(pending.id, e.target.value)}
+                  onChange={(e) => updateDescription(pending.id, e.target.value)}
                   placeholder={t('description_placeholder')}
                   className="min-w-0 flex-1 rounded-md border border-border bg-transparent px-2 py-1 text-xs outline-none focus:border-ring focus:ring-1 focus:ring-ring/50"
                 />
                 <button
                   type="button"
-                  onClick={() => startPendingUpload(pending)}
+                  onClick={() => startUpload(pending)}
                   className="shrink-0 cursor-pointer rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                 >
                   {t('upload')}

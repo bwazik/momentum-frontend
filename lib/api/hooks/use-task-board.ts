@@ -1,14 +1,12 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
-import type { BoardTaskResource, TaskPriorityResource, DepartmentResource } from '@/components/domain/tasks/task-board-types';
-import type { BoardQuery } from '@/components/domain/tasks/task-board-types';
+import type { CursorPage } from '@/lib/api/types';
+import type { components, operations } from '@/lib/generated/api-types';
 
-interface CursorPage<T> {
-  data: T[];
-  next_cursor: string | null;
-  has_more: boolean;
-}
+type BoardTaskResource = components['schemas']['BoardTaskResource'];
+type TaskPriorityResource = components['schemas']['TaskPriorityResource'];
+export type BoardQuery = NonNullable<operations['followUpBoard.board']['parameters']['query']> & { cursor?: string | null };
 
 export function useTaskBoardInfinite(filters: BoardQuery) {
   return useInfiniteQuery({
@@ -32,17 +30,3 @@ export function useTaskPriorities() {
 }
 
 export { useBlueprintCategories, useBlueprintStageTypes as useStageTypes } from './use-blueprints';
-
-export function useDepartmentsInfinite() {
-  return useInfiniteQuery({
-    queryKey: queryKeys.organization.departments({ is_active: true }),
-    queryFn: ({ pageParam }) =>
-      apiClient.get<CursorPage<DepartmentResource>>('/v1/organization/departments', {
-        params: { is_active: true, per_page: 100, cursor: pageParam },
-      }),
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) =>
-      lastPage.has_more ? lastPage.next_cursor : undefined,
-    staleTime: 5 * 60 * 1000,
-  });
-}

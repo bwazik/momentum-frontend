@@ -46,8 +46,8 @@ export {
   readBoardFilters,
   toBoardQuery,
   getCurrentAssignees,
-  localizeName,
   formatTimeInStage,
   formatDueDate,
   getSlaSortValue,
 } from '@/components/domain/tasks/task-board-utils';
+export { localizeName } from '@/lib/utils/localize';

@@ -62,7 +62,7 @@ components/
 │   └── follow-up/
 │       ├── follow-up-board.tsx
 │       └── action-log.tsx
-└── shared/                 # Cross-domain reusable (planned — not yet created)
+└── shared/                 # Cross-domain reusable (~9 files)
 ```
 
 ### Route Structure
@@ -94,16 +94,23 @@ lib/
 │   ├── client.ts              # Fetch wrapper (credentials, headers, error handling, array params)
 │   ├── query-keys.ts          # Centralized query key factory
 │   ├── query-keys-extra.ts    # Extra namespaces (search, notifications)
+│   ├── types.ts               # Shared cursor-page type (CursorPage<T>) for infinite query services
 │   └── hooks/
 │       ├── use-auth.ts        # Current user, login, logout
+│       ├── use-blueprints.ts  # Blueprint list/detail + all mutation hooks + catalog + positions
 │       ├── use-capabilities.ts    # Capability checks
+│       ├── use-escalations.ts     # Escalation list/detail + mutation hooks
+│       ├── use-follow-up.ts       # Follow-up board + actions + bottleneck queries
 │       ├── use-notifications.ts   # Notifications list, count, mark-read
+│       ├── use-organization.ts    # Department, position, calendar, holiday CRUD hooks
 │       ├── use-search.ts      # Global search + recent activity
-│       ├── use-tenant.ts      # Tenant info hook
-│       ├── use-tasks.ts       # Generic task hooks (unused by board; exists for future)
 │       ├── use-task-board.ts  # Board + lookup hooks (board, priorities, categories, stage types)
+│       ├── use-task-comments.ts   # Task comments infinite query + mutations
+│       ├── use-task-create.ts     # Create/update/launch/delete task mutations
 │       ├── use-task-detail.ts # Task detail + SLA + timeline + mutation hooks
-│       └── use-blueprints.ts  # Blueprint list/detail + all mutation hooks + catalog + positions
+│       ├── use-task-documents.ts  # Task documents infinite query + upload/delete mutations
+│       ├── use-tasks.ts       # Generic task hooks (unused by board; exists for future)
+│       └── use-tenant.ts      # Tenant info hook
 ├── auth/
 │   └── server.ts              # Server-only auth utility (prefetchAuthenticatedUser)
 ├── generated/
@@ -112,20 +119,18 @@ lib/
 │   ├── use-locale-store.ts         # Locale state (used by LocaleToggle)
 │   ├── use-capability-store.ts     # Capability strings array for permission UI
 │   ├── use-brand-color-store.ts    # Persisted brand color (Zustand persist: amber/blue/emerald/rose/slate)
-│   ├── use-sidebar-store.ts        # Pre-existing scaffold — currently unused
-│   ├── use-filter-store.ts         # Pre-existing scaffold — unused (filters use URL params)
 │   ├── use-task-display-store.ts   # Shares display_id between task page and breadcrumb
-│   └── use-blueprint-builder-store.ts  # UI/selection only: selectedStageId, panelOpen, metadataDirty, blueprintName
+│   ├── use-blueprint-builder-store.ts  # UI/selection only: selectedStageId, panelOpen, metadataDirty, blueprintName
+│   └── use-task-form-store.ts      # Multi-step task creation form state (UI-only, not API data)
 ├── hooks/
-│   ├── use-debounce.ts        # Debounce hook for search input
-│   └── use-mobile.ts          # shadcn sidebar mobile detection
+│   └── use-debounce.ts        # Debounce hook for search input
 ├── tenant/
 │   └── server.ts              # Server-only tenant prefetch (getTenant)
 └── utils/
     ├── utils.ts               # Utility functions (cn, etc.)
-    ├── localize.ts            # localizeName / localizeTitle — shared locale-aware field pickers
-    ├── tenant.ts              # extract tenant slug from browser hostname subdomain
-    └── use-brand-name.ts      # useBrandName() hook + getBrandDescription()
+    ├── localize.ts            # localizeName / localizeTitle — shared locale-aware field pickers (canonical source)
+    ├── manual-assignment-utils.ts  # toApiManual() — pure utility for manual assignment conversion
+    └── tenant.ts              # extract tenant slug from browser hostname subdomain
 ```
 
 ---
@@ -981,6 +986,8 @@ While `components/ui/` is CLI-managed, the following files were **hand-edited** 
 - `dropdown-menu.tsx` — added `ms-auto` and `rtl:rotate-180` on sub-trigger chevron
 - `sidebar.tsx` — replaced `ml-0`/`ml-2` with `ms-0`/`ms-2` in inset variant selectors
 - `command.tsx` — wrapped `CommandDialog` children in `<Command>`, added `shouldFilter={false}`
+
+Additionally, `empty.tsx` was **removed** (unused — the project uses its own `EmptyState` in `components/shared/`). If reinstalled via shadcn CLI, delete it.
 
 ---
 

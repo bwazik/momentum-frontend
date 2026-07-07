@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { LockBadge, ScopeBadge } from './blueprint-badges';
 import { ActiveBadge } from '@/components/shared/active-badge';
 import { localizeName } from '@/lib/utils/localize';
-import { getStagesCount } from './blueprint-utils';
+import { getStagesCount } from '@/lib/utils/blueprint-utils';
 import type { BlueprintResource } from './blueprint-types';
 
 interface BlueprintCardListProps {

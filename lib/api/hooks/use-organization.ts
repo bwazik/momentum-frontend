@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { apiClient } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
 import type { components } from '@/lib/generated/api-types';
+import type { CursorPage } from '@/lib/api/types';
 
 type DepartmentResource = components['schemas']['DepartmentResource'];
 type DepartmentTreeResource = components['schemas']['DepartmentTreeResource'];
@@ -24,12 +25,6 @@ type StoreWorkingCalendarRequest = components['schemas']['StoreWorkingCalendarRe
 type UpdateWorkingCalendarRequest = components['schemas']['UpdateWorkingCalendarRequest'];
 type StorePublicHolidayRequest = components['schemas']['StorePublicHolidayRequest'];
 type UpdatePublicHolidayRequest = components['schemas']['UpdatePublicHolidayRequest'];
-
-interface CursorPage<T> {
-  data: T[];
-  next_cursor: string | null;
-  has_more: boolean;
-}
 
 // ---- Reads ---------------------------------------------------------------
 
@@ -66,6 +61,19 @@ export function useAuthorityGrades() {
   return useQuery({
     queryKey: queryKeys.organization.authorityGrades(),
     queryFn: () => apiClient.get<AuthorityGradeResource[]>('/v1/organization/authority-grades'),
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function usePositions(filters?: { is_active?: boolean; per_page?: number }) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.organization.positions(filters ?? {}),
+    queryFn: ({ pageParam }) =>
+      apiClient.get<CursorPage<PositionResource>>('/v1/organization/positions', {
+        params: { is_active: true, per_page: 100, ...filters, cursor: pageParam },
+      }),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => (lastPage.has_more ? lastPage.next_cursor : undefined),
     staleTime: 5 * 60 * 1000,
   });
 }

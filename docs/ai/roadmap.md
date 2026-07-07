@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F2 — Task board & task details
-**Active spec:** `024-task-documents`
+**Active spec:** `025-external-references`
 **Branch:** `main`
 
 ---

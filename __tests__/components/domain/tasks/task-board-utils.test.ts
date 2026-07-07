@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { readBoardFilters, toBoardQuery, getCurrentAssignees, localizeName, formatTimeInStage, formatDueDate, getSlaSortValue } from '@/components/domain/tasks/task-board-utils';
+import { readBoardFilters, toBoardQuery, getCurrentAssignees, formatTimeInStage, formatDueDate, getSlaSortValue } from '@/components/domain/tasks/task-board-utils';
+import { localizeName } from '@/lib/utils/localize';
 import type { BoardTaskResource } from '@/components/domain/tasks/task-board-types';
 
 describe('readBoardFilters', () => {

@@ -3,16 +3,8 @@ import { useTranslations } from 'next-intl';
 import { apiClient, ApiRequestError } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
 import { toast } from 'sonner';
-import type { components } from '@/lib/generated/api-types';
-
-export type DocumentResource = components['schemas']['DocumentResource'];
-export type DocumentVersionResource = components['schemas']['DocumentVersionResource'];
-
-interface CursorPage<T> {
-  data: T[];
-  next_cursor: string | null;
-  has_more: boolean;
-}
+import type { CursorPage } from '@/lib/api/types';
+import type { DocumentResource, DocumentVersionResource } from '@/components/domain/tasks/task-document-types';
 
 export function useTaskDocuments(taskPublicId: string, sort: 'asc' | 'desc' = 'desc') {
   return useInfiniteQuery({
@@ -59,7 +51,7 @@ export function useUploadTaskDocument(taskPublicId: string) {
     mutationFn: (formData: FormData) =>
       apiClient.post<DocumentResource>(`/v1/tasks/${taskPublicId}/documents`, formData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [...queryKeys.tasks.detail(taskPublicId), 'documents'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.documents(taskPublicId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.timeline(taskPublicId) });
       toast.success(t('toast_uploaded'));
     },
@@ -80,7 +72,7 @@ export function useUploadDocumentVersion(documentPublicId: string, taskPublicId:
       apiClient.post<DocumentResource>(`/v1/documents/${documentPublicId}/versions`, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.documents.versions(documentPublicId) });
-      queryClient.invalidateQueries({ queryKey: [...queryKeys.tasks.detail(taskPublicId), 'documents'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.documents(taskPublicId) });
       toast.success(t('toast_version_created'));
     },
     onError: (error) => {
@@ -99,7 +91,7 @@ export function useDeleteDocument(taskPublicId: string) {
     mutationFn: (documentPublicId: string) =>
       apiClient.delete<void>(`/v1/documents/${documentPublicId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [...queryKeys.tasks.detail(taskPublicId), 'documents'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.documents(taskPublicId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.timeline(taskPublicId) });
       toast.success(t('toast_deleted'));
     },

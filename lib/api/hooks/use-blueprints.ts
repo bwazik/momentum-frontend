@@ -6,6 +6,7 @@ import { queryKeys } from '@/lib/api/query-keys';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import type { components } from '@/lib/generated/api-types';
+import type { CursorPage } from '@/lib/api/types';
 
 type BlueprintResource = components['schemas']['BlueprintResource'];
 type BlueprintCategoryResource = components['schemas']['BlueprintCategoryResource'];
@@ -14,18 +15,11 @@ type SlaPolicyResource = components['schemas']['SlaPolicyResource'];
 type BlueprintStageResource = components['schemas']['BlueprintStageResource'];
 type BlueprintSubStageResource = components['schemas']['BlueprintSubStageResource'];
 type BlueprintTransitionResource = components['schemas']['BlueprintTransitionResource'];
-type PositionResource = components['schemas']['PositionResource'];
 type StoreBlueprintRequest = components['schemas']['StoreBlueprintRequest'];
 type UpdateBlueprintRequest = components['schemas']['UpdateBlueprintRequest'];
 type StoreBlueprintStageRequest = components['schemas']['StoreBlueprintStageRequest'];
 type StoreBlueprintSubStageRequest = components['schemas']['StoreBlueprintSubStageRequest'];
 type StoreBlueprintTransitionRequest = components['schemas']['StoreBlueprintTransitionRequest'];
-
-interface CursorPage<T> {
-  data: T[];
-  next_cursor: string | null;
-  has_more: boolean;
-}
 
 // --- Catalog reference data ---
 
@@ -49,21 +43,6 @@ export function useBlueprintSlaPolicies() {
   return useQuery({
     queryKey: queryKeys.blueprints.slaPolicies(),
     queryFn: () => apiClient.get<SlaPolicyResource[]>('/v1/blueprints/sla-policies'),
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
-// --- Positions ---
-
-export function usePositions(filters?: { is_active?: boolean; per_page?: number }) {
-  return useInfiniteQuery({
-    queryKey: queryKeys.organization.positions(filters ?? {}),
-    queryFn: ({ pageParam }) =>
-      apiClient.get<CursorPage<PositionResource>>('/v1/organization/positions', {
-        params: { is_active: true, per_page: 100, ...filters, cursor: pageParam },
-      }),
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => (lastPage.has_more ? lastPage.next_cursor : undefined),
     staleTime: 5 * 60 * 1000,
   });
 }

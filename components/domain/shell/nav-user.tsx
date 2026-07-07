@@ -1,6 +1,6 @@
 'use client';
 
-import { EllipsisVertical, LogOut, Palette, Sun, Moon } from 'lucide-react';
+import { Check, EllipsisVertical, LogOut, Palette, Sun, Moon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import {
@@ -115,7 +115,7 @@ export function NavUser({ user, locale = 'ar' }: NavUserProps) {
                     <DropdownMenuItem key={c} onClick={() => setBrandColor(c)} className="gap-3 cursor-pointer">
                       <span className="size-4 rounded-full border" style={{ backgroundColor: brandColorHex[c] }} />
                       <span>{ct(c)}</span>
-                      {brandColor === c && <span className="ms-auto text-xs text-muted-foreground">✓</span>}
+                      {brandColor === c && <Check className="ms-auto size-4 text-muted-foreground" />}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuSubContent>

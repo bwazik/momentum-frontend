@@ -5,11 +5,11 @@ import { ArrowUp, ArrowDown, ChevronRight, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
 import { cn } from '@/lib/utils';
 import { useReorderStages, useDeleteStage } from '@/lib/api/hooks/use-blueprints';
 import { localizeName } from '@/lib/utils/localize';
-import { formatSlaSummary, getStageTransitions } from './blueprint-utils';
+import { formatSlaSummary, getStageTransitions } from '@/lib/utils/blueprint-utils';
 import { useState } from 'react';
 import type { BlueprintStageResource, BlueprintTransitionResource } from './blueprint-types';
 
@@ -117,12 +117,13 @@ export function StageCard({ stage, transitions, stages, index, total, readOnly, 
         )}
       </div>
 
-      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <AlertDialogContent>
-          <AlertDialogHeader><AlertDialogTitle>{t('delete_stage_title')}</AlertDialogTitle><AlertDialogDescription>{t('delete_stage_description', { name })}</AlertDialogDescription></AlertDialogHeader>
-          <AlertDialogFooter><AlertDialogCancel>{t('cancel')}</AlertDialogCancel><AlertDialogAction className="text-destructive" onClick={() => del.mutate(stage.public_id, { onSuccess: () => setConfirmDelete(false) })}>{t('delete')}</AlertDialogAction></AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDeleteDialog
+        open={confirmDelete}
+        onOpenChange={setConfirmDelete}
+        title={t('delete_stage_title')}
+        description={t('delete_stage_description', { name })}
+        onConfirm={() => del.mutate(stage.public_id, { onSuccess: () => setConfirmDelete(false) })}
+      />
     </>
   );
 }

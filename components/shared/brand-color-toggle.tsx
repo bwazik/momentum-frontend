@@ -1,6 +1,6 @@
 'use client';
 
-import { Palette } from 'lucide-react';
+import { Check, Palette } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,7 +33,7 @@ export function BrandColorToggle() {
               style={{ backgroundColor: brandColorHex[c] }}
             />
             <span>{t(c)}</span>
-            {color === c && <span className="ms-auto text-xs text-muted-foreground">✓</span>}
+            {color === c && <Check className="ms-auto size-4 text-muted-foreground" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

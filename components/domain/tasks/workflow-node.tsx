@@ -189,7 +189,7 @@ export function WorkflowNode({ node, taskPublicId, isSelected, onSelect }: Workf
               ))}
               {node.instance.sub_stages.length > 3 && (
                 <div className="text-xs text-muted-foreground">
-                  +{node.instance.sub_stages.length - 3} more
+                  +{t('more_sub_stages', { n: node.instance.sub_stages.length - 3 })}
                 </div>
               )}
             </div>

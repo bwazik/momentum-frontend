@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react';
 import {
   FileText,
   FileImage,
@@ -11,6 +12,78 @@ function getLocaleSlug(): string {
   if (typeof document === 'undefined') return 'ar';
   const match = document.cookie.match(/NEXT_LOCALE=([^;]+)/);
   return match ? match[1] : 'ar';
+}
+
+export const MAX_SIZE_MB = 20;
+
+export const ALLOWED_MIME_TYPES = [
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+
+export interface PendingFileState {
+  id: string;
+  file: File;
+  status: 'idle' | 'uploading' | 'error';
+  description: string;
+  error?: string;
+}
+
+export function usePendingUploads() {
+  const [pendingUploads, setPendingUploads] = useState<PendingFileState[]>([]);
+
+  const addPending = useCallback((file: File, error?: string) => {
+    const id = `pending-${Date.now()}`;
+    setPendingUploads((prev) => [
+      { id, file, status: error ? 'error' : 'idle', description: '', error },
+      ...prev,
+    ]);
+    return id;
+  }, []);
+
+  const updateDescription = useCallback((id: string, description: string) => {
+    setPendingUploads((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, description } : p)),
+    );
+  }, []);
+
+  const setUploading = useCallback((id: string) => {
+    setPendingUploads((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, status: 'uploading' as const } : p)),
+    );
+  }, []);
+
+  const setError = useCallback((id: string, error: string) => {
+    setPendingUploads((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, status: 'error' as const, error } : p,
+      ),
+    );
+  }, []);
+
+  const removePending = useCallback((id: string) => {
+    setPendingUploads((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
+  const clearCompleted = useCallback(() => {
+    setPendingUploads((prev) => prev.filter((p) => p.status !== 'uploading'));
+  }, []);
+
+  return {
+    pendingUploads,
+    addPending,
+    updateDescription,
+    setUploading,
+    setError,
+    removePending,
+    clearCompleted,
+  };
 }
 
 export async function fetchDocumentBlob(url: string): Promise<Blob> {

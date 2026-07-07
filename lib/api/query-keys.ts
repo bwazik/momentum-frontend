@@ -60,9 +60,7 @@ export const queryKeys = {
     categories: () => [...queryKeys.blueprints.all, 'categories'] as const,
     stageTypes: () => [...queryKeys.blueprints.all, 'stage-types'] as const,
     slaPolicies: () => [...queryKeys.blueprints.all, 'sla-policies'] as const,
-    stages: (blueprintId: string) => [...queryKeys.blueprints.detail(blueprintId), 'stages'] as const,
-    subStages: (blueprintId: string, stageId: string) =>
-      [...queryKeys.blueprints.stages(blueprintId), stageId, 'sub-stages'] as const,
+
   },
   notifications: {
     all: ['notifications'] as const,

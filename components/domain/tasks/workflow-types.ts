@@ -1,14 +1,26 @@
+import type {
+  TaskDetailResource,
+  TaskSlaHealthResource,
+  TaskStageInstanceResource,
+  TaskSubStageInstanceResource,
+  TaskStageAssignmentResource,
+  SlaTimerInstanceResource,
+  BlueprintTransitionResource,
+  BlueprintStageResource,
+} from './task-detail-types';
 import type { components } from '@/lib/generated/api-types';
 
-export type TaskDetailResource = components['schemas']['TaskDetailResource'];
-export type TaskSlaHealthResource = components['schemas']['TaskSlaHealthResource'];
-export type TaskStageInstanceResource = components['schemas']['TaskStageInstanceResource'];
-export type TaskSubStageInstanceResource = components['schemas']['TaskSubStageInstanceResource'];
-export type TaskStageAssignmentResource = components['schemas']['TaskStageAssignmentResource'];
-export type SlaTimerInstanceResource = components['schemas']['SlaTimerInstanceResource'];
-export type BlueprintTransitionResource = components['schemas']['BlueprintTransitionResource'];
-export type BlueprintStageResource = components['schemas']['BlueprintStageResource'];
 export type BlueprintSubStageResource = components['schemas']['BlueprintSubStageResource'];
+export {
+  TaskDetailResource,
+  TaskSlaHealthResource,
+  TaskStageInstanceResource,
+  TaskSubStageInstanceResource,
+  TaskStageAssignmentResource,
+  SlaTimerInstanceResource,
+  BlueprintTransitionResource,
+  BlueprintStageResource,
+};
 
 export type WorkflowNodeStatus = 'pending' | 'active' | 'completed' | 'returned' | 'skipped';
 

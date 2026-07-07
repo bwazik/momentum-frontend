@@ -8,12 +8,15 @@ import { Button } from '@/components/ui/button';
 import { RtlSelect } from '@/components/shared/rtl-select';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
 import { BilingualDescriptionFields } from '@/components/shared/bilingual-description-fields';
+import { useState } from 'react';
 import { useUpdateBlueprint, useBlueprintCategories } from '@/lib/api/hooks/use-blueprints';
 import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
-import { useDepartmentsInfinite } from '@/lib/api/hooks/use-task-board';
+import { useDepartmentsInfinite } from '@/lib/api/hooks/use-organization';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import type { BlueprintResource } from './blueprint-types';
-import { useState } from 'react';
+import type { components } from '@/lib/generated/api-types';
+
+type UpdateBlueprintRequest = components['schemas']['UpdateBlueprintRequest'];
 
 function SettingsForm({ blueprint, onSuccess }: { blueprint: BlueprintResource; onSuccess: () => void }) {
   const t = useTranslations('blueprints.library.create');
@@ -56,7 +59,7 @@ function SettingsForm({ blueprint, onSuccess }: { blueprint: BlueprintResource; 
       category_id: form.category_id,
       scope: Number(form.scope) as 1 | 2,
       department_id: form.scope === '2' ? form.department_id : undefined,
-    } as never, {
+    } as UpdateBlueprintRequest, {
       onSuccess: () => { setMetadataDirty(false); onSuccess(); },
     });
   }

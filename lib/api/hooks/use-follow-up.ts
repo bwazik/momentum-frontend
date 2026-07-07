@@ -4,17 +4,12 @@ import { toast } from 'sonner';
 import { apiClient, ApiRequestError } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
 import type { components } from '@/lib/generated/api-types';
+import type { CursorPage } from '@/lib/api/types';
 
 type BoardTaskResource = components['schemas']['BoardTaskResource'];
 type BottleneckResource = components['schemas']['BottleneckResource'];
 type FollowUpActionResource = components['schemas']['FollowUpActionResource'];
 type StoreFollowUpActionRequest = components['schemas']['StoreFollowUpActionRequest'];
-
-interface CursorPage<T> {
-  data: T[];
-  next_cursor: string | null;
-  has_more: boolean;
-}
 
 export interface FollowUpBoardFilters {
   status?: string | null;

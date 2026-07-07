@@ -3,16 +3,11 @@ import { useTranslations } from 'next-intl';
 import { apiClient, ApiRequestError } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
 import { toast } from 'sonner';
+import type { CursorPage } from '@/lib/api/types';
+import type { CommentResource } from '@/components/domain/tasks/task-comment-types';
 import type { components } from '@/lib/generated/api-types';
 
-export type CommentResource = components['schemas']['CommentResource'];
 type StoreCommentRequest = components['schemas']['StoreCommentRequest'];
-
-export interface CursorPage<T> {
-  data: T[];
-  next_cursor: string | null;
-  has_more: boolean;
-}
 
 export function useTaskComments(taskPublicId: string) {
   return useInfiniteQuery({

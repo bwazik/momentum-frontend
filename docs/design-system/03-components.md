@@ -12,14 +12,14 @@ components/
 ├── ui/                 # shadcn/ui managed (hand-edited for RTL: input-group, sidebar, dropdown-menu, command)
 ├── domain/             # Business domain components
 │   ├── auth/           # Login form
-│   ├── tasks/          # Task board + task details (~28 files)
+│   ├── tasks/          # Task board, task details, board table/filters/cards (~32 files)
 │   ├── blueprints/     # Blueprint library + builder + catalog (~25 files)
 │   ├── shell/          # AppSidebar, SiteHeader, nav, notifications (~8 files)
 │   ├── search/         # Global search (command palette)
-│   ├── follow-up/      # (not yet populated)
+│   ├── follow-up/      # Follow-up board, filters, cards (~5 files)
 │   ├── analytics/      # (not yet populated)
-│   └── organization/   # (not yet populated)
-└── shared/             # Cross-domain reusable (~13 files)
+│   └── organization/   # Org chart, departments, positions (~15 files)
+└── shared/             # Cross-domain reusable (~9 files)
     ├── empty-state.tsx
     ├── error-state.tsx
     ├── page-header.tsx
@@ -36,8 +36,8 @@ components/
 ```
 
 **Rules:**
-- `ui/` is managed by shadcn CLI; 4 files hand-edited for RTL (see `coding-standards.md` Exception section) — re-apply changes after CLI reinstall
-- `domain/` components import from `ui/` and `shared/` — never from other domain folders
+- `ui/` is managed by shadcn CLI; 4 files hand-edited for RTL (see `coding-standards.md` Exception section) — re-apply changes after CLI reinstall; `empty.tsx` removed (unused)
+- `domain/` components import from `ui/` and `shared/` — cross-domain imports (e.g. follow-up importing from tasks) are tolerated when the imported component is primarily task-domain but reused
 - `shared/` components have no domain imports — generic and reusable
 
 ---

@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { useCurrentUser } from '@/lib/api/hooks/use-auth';
 import { useCapabilities, useCapability } from '@/lib/api/hooks/use-capabilities';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useBrandName } from '@/lib/utils/use-brand-name';
+import { useBrandName } from '@/lib/api/hooks/use-brand-name';
 
 export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typeof Sidebar> & { locale?: 'ar' | 'en' }) {
   const pathname = usePathname();

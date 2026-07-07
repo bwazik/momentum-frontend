@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { BoardTable } from '@/components/shared/board-table';
+import { BoardTable } from '@/components/domain/tasks/board-table';
 import { queryKeys } from '@/lib/api/query-keys';
 import { apiClient } from '@/lib/api/client';
 import { copyTaskLink, copyToClipboard } from '@/components/shared/copy-link-button';

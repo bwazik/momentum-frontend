@@ -2,90 +2,19 @@
 
 import { useState, useCallback } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { ChevronDown, Plus, Check, Lock, MoreVertical, ArrowUp, ArrowDown } from 'lucide-react';
+import { ChevronDown, Plus, Check, Lock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { StageCard } from './stage-card';
+import { CanvasSubStageCard } from './canvas-sub-stage-card';
 import { ScopeBadge } from './blueprint-badges';
 import { cn } from '@/lib/utils';
 import { localizeName } from '@/lib/utils/localize';
-import { formatSlaSummary } from './blueprint-utils';
-import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
-import { useDeleteSubStage } from '@/lib/api/hooks/use-blueprints';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { apiClient } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
-import type { BlueprintResource, BlueprintStageResource, BlueprintTransitionResource, BlueprintSubStageResource } from './blueprint-types';
-
-function CanvasSubStageCard({ subStage, index, total, stagePublicId, blueprintPublicId, readOnly, locale, onEditSubStage, onReorder, t }: {
-  subStage: BlueprintSubStageResource;
-  index: number;
-  total: number;
-  stagePublicId: string;
-  blueprintPublicId: string;
-  readOnly: boolean;
-  subStageEditId: string | null | undefined;
-  locale: string;
-  onEditSubStage?: (id: string | 'new') => void;
-  onReorder?: (subStageId: string, direction: 'up' | 'down') => void;
-  t: (key: string) => string;
-}) {
-  const tSub = useTranslations('blueprints.builder.panel.sub_stages');
-  const deleteSubStage = useDeleteSubStage(blueprintPublicId);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
-  return (
-    <div className="group flex items-start gap-1 px-0.5 py-0.5 text-xs" data-ss-order={subStage.public_id}>
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={() => onEditSubStage?.(subStage.public_id)}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onEditSubStage?.(subStage.public_id); } }}
-        className="flex-1 min-w-0 cursor-pointer rounded px-1 py-0.5 transition-colors hover:bg-muted/30"
-      >
-        <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground/60 shrink-0">{index + 1}.</span>
-          <span className="text-foreground truncate">{localizeName(locale, subStage.name_ar, subStage.name_en)}</span>
-          <span className="text-[10px] text-muted-foreground/60">
-            {subStage.sla_policy && `${t('sla')}: ${formatSlaSummary(subStage.sla_policy, t)}`}
-            {subStage.sla_policy && subStage.is_required && ' · '}
-          </span>
-          {subStage.is_required && <span className="text-[10px] text-amber-600/70 dark:text-amber-400/70">{t('required')}</span>}
-        </div>
-      </div>
-      {!readOnly && (
-        <div className="invisible group-hover:visible flex items-center gap-0.5 shrink-0 pt-0.5">
-          <Button variant="ghost" size="icon" className="size-4" disabled={index === 0} onClick={(e) => { e.stopPropagation(); onReorder?.(subStage.public_id, 'up'); }} aria-label={t('move_up')}><ArrowUp className="size-2.5" /></Button>
-          <Button variant="ghost" size="icon" className="size-4" disabled={index === total - 1} onClick={(e) => { e.stopPropagation(); onReorder?.(subStage.public_id, 'down'); }} aria-label={t('move_down')}><ArrowDown className="size-2.5" /></Button>
-          <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-              <Button variant="ghost" size="icon" className="size-4" aria-label={t('stage_actions')}>
-                <MoreVertical className="size-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setConfirmDelete(true)} className="text-destructive whitespace-nowrap text-xs">
-                {t('delete')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
-
-      <ConfirmDeleteDialog
-        open={confirmDelete}
-        onOpenChange={setConfirmDelete}
-        title={tSub('delete_title')}
-        description={tSub('delete_description', { name: localizeName(locale, subStage.name_ar, subStage.name_en) })}
-        confirmLabel={tSub('delete')}
-        cancelLabel={tSub('cancel')}
-        onConfirm={() => { deleteSubStage.mutate({ stageId: stagePublicId, subStageId: subStage.public_id }); setConfirmDelete(false); }}
-      />
-    </div>
-  );
-}
+import type { BlueprintResource, BlueprintStageResource, BlueprintTransitionResource } from './blueprint-types';
 
 interface StageCanvasProps {
   blueprint: BlueprintResource;
@@ -108,6 +37,26 @@ export function StageCanvas({ blueprint, stages, transitions, readOnly, selected
   const handleToggleExpand = useCallback((stageId: string) => {
     setExpandedStageId((prev) => (prev === stageId ? null : stageId));
   }, []);
+
+  const handleReorderSubStage = useCallback((subStageId: string, direction: 'up' | 'down', stagePublicId: string) => {
+    const stage = stages.find((s) => s.public_id === stagePublicId);
+    if (!stage) return;
+    const sortedAll = (stage.sub_stages ?? []).slice().sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order));
+    const ids = sortedAll.map((s) => s.public_id);
+    const idx = ids.indexOf(subStageId);
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= ids.length) return;
+    const newIds = [...ids];
+    [newIds[idx], newIds[swapIdx]] = [newIds[swapIdx], newIds[idx]];
+    const payload = { sub_stages: newIds.map((id, i) => ({ public_id: id, sequence_order: i + 1 })) };
+    apiClient.post(`/v1/blueprints/${blueprint.public_id}/stages/${stagePublicId}/sub-stages/reorder`, payload)
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.blueprints.detail(blueprint.public_id) });
+        toast.success(t('reorder_success'));
+      })
+      .catch(() => toast.error(t('reorder_error')));
+  }, [stages, blueprint.public_id, queryClient, t]);
+
   const sorted = [...stages].sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order));
   const name = localizeName(locale, blueprint.name_ar, blueprint.name_en);
   const description = localizeName(locale, blueprint.description_ar, blueprint.description_en);
@@ -151,6 +100,8 @@ export function StageCanvas({ blueprint, stages, transitions, readOnly, selected
                 const subStageItems = stage.sub_stages ?? [];
                 const hasSubStages = subStageItems.length > 0;
                 const isParentMode = !!subStageEditId && subStageItems.some((s) => s.public_id === subStageEditId);
+                const sortedSubStages = subStageItems.slice().sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order));
+                const displaySubStages = sortedSubStages.slice(0, 5);
                 return (
                   <li key={stage.public_id}>
                     <div className="flex items-center gap-4">
@@ -185,43 +136,21 @@ export function StageCanvas({ blueprint, stages, transitions, readOnly, selected
                     </div>
                     {isExpanded && hasSubStages && (
                       <div className="ms-16 mt-3 border-s ps-4 space-y-2">
-                        {(() => {
-                          const sortedAll = subStageItems
-                            .slice()
-                            .sort((a, b) => Number(a.sequence_order) - Number(b.sequence_order));
-                          const displayItems = sortedAll.slice(0, 5);
-                          function handleReorderSubStage(subStageId: string, direction: 'up' | 'down') {
-                            const ids = sortedAll.map((s) => s.public_id);
-                            const idx = ids.indexOf(subStageId);
-                            const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
-                            if (swapIdx < 0 || swapIdx >= ids.length) return;
-                            const newIds = [...ids];
-                            [newIds[idx], newIds[swapIdx]] = [newIds[swapIdx], newIds[idx]];
-                            const payload = { sub_stages: newIds.map((id, i) => ({ public_id: id, sequence_order: i + 1 })) };
-                            apiClient.post(`/v1/blueprints/${blueprint.public_id}/stages/${stage.public_id}/sub-stages/reorder`, payload)
-                              .then(() => {
-                                queryClient.invalidateQueries({ queryKey: queryKeys.blueprints.detail(blueprint.public_id) });
-                                toast.success(t('reorder_success'));
-                              })
-                              .catch(() => toast.error(t('reorder_error')));
-                          }
-                          return displayItems.map((ss, i) => (
-                            <CanvasSubStageCard
-                              key={ss.public_id}
-                              subStage={ss}
-                              index={i}
-                              total={displayItems.length}
-                              stagePublicId={stage.public_id}
-                              blueprintPublicId={blueprint.public_id}
-                              readOnly={readOnly}
-                              subStageEditId={subStageEditId}
-                              locale={locale}
-                              onEditSubStage={onEditSubStage}
-                              onReorder={handleReorderSubStage}
-                              t={t}
-                            />
-                          ));
-                        })()}
+                        {displaySubStages.map((ss, i) => (
+                          <CanvasSubStageCard
+                            key={ss.public_id}
+                            subStage={ss}
+                            index={i}
+                            total={displaySubStages.length}
+                            stagePublicId={stage.public_id}
+                            blueprintPublicId={blueprint.public_id}
+                            readOnly={readOnly}
+                            locale={locale}
+                            onEditSubStage={onEditSubStage}
+                            onReorder={(id, dir) => handleReorderSubStage(id, dir, stage.public_id)}
+                            t={t}
+                          />
+                        ))}
                         {subStageItems.length > 5 && (
                           <p className="text-[10px] text-muted-foreground ps-0.5">
                             +{subStageItems.length - 5} {t('more')}

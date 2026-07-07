@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { renderWithProviders } from '../../../utils/test-utils';
 import { TaskDocumentItem } from '@/components/domain/tasks/task-document-item';
-import type { DocumentResource } from '@/lib/api/hooks/use-task-documents';
+import type { DocumentResource } from '@/components/domain/tasks/task-document-types';
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'en',

@@ -109,11 +109,6 @@ export function getCurrentAssignees(task: BoardTaskResource): AssigneeDisplay[] 
   });
 }
 
-export function localizeName(locale: string, nameAr?: string | null, nameEn?: string | null): string {
-  if (locale === 'ar') return nameAr || nameEn || '';
-  return nameEn || nameAr || '';
-}
-
 function unit(n: number, day: string, days: string): string {
   return n === 1 ? day : days;
 }

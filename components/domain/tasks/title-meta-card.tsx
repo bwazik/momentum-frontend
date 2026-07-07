@@ -46,7 +46,7 @@ export function TitleMetaCard({
             <h1 className="text-xl font-bold text-foreground">{title}</h1>
           </div>
           <div className="flex items-center gap-1">
-            <CopyLinkButton publicId={publicId} ariaLabel={t('copy_id')} />
+            <CopyLinkButton publicId={publicId} ariaLabel={t('copy_id')} linkCopiedLabel={t('link_copied')} copyFailedLabel={t('copy_failed')} />
           </div>
         </div>
       </CardHeader>

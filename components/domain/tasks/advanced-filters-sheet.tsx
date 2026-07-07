@@ -13,8 +13,10 @@ import {
 } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { RtlSelect } from '@/components/shared/rtl-select';
-import { useTaskPriorities, useBlueprintCategories, useStageTypes, useDepartmentsInfinite } from '@/lib/api/hooks/use-task-board';
-import { localizeName } from '@/components/domain/tasks/task-board-utils';
+import { useTaskPriorities } from '@/lib/api/hooks/use-task-board';
+import { useBlueprintCategories, useStageTypes } from '@/lib/api/hooks/use-task-board';
+import { useDepartmentsInfinite } from '@/lib/api/hooks/use-organization';
+import { localizeName } from '@/lib/utils/localize';
 import type { TaskBoardUrlFilters } from '@/components/domain/tasks/task-board-types';
 
 interface AdvancedFiltersSheetProps {

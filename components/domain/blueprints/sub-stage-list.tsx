@@ -5,7 +5,7 @@ import { ArrowUp, ArrowDown, Plus, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { localizeName } from '@/lib/utils/localize';
-import { formatSlaSummary } from './blueprint-utils';
+import { formatSlaSummary } from '@/lib/utils/blueprint-utils';
 import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
 import { useDeleteSubStage, useReorderSubStages } from '@/lib/api/hooks/use-blueprints';
 import { useState } from 'react';

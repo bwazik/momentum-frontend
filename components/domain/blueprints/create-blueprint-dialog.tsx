@@ -13,8 +13,11 @@ import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
 import { BilingualDescriptionFields } from '@/components/shared/bilingual-description-fields';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { useCreateBlueprint, useBlueprintCategories } from '@/lib/api/hooks/use-blueprints';
-import { useDepartmentsInfinite } from '@/lib/api/hooks/use-task-board';
+import { useDepartmentsInfinite } from '@/lib/api/hooks/use-organization';
 import { useLocale } from 'next-intl';
+import type { components } from '@/lib/generated/api-types';
+
+type StoreBlueprintRequest = components['schemas']['StoreBlueprintRequest'];
 
 export function CreateBlueprintDialog() {
   const t = useTranslations('blueprints.library.create');
@@ -50,7 +53,7 @@ export function CreateBlueprintDialog() {
       category_id: form.category_id,
       scope: Number(form.scope) as 1 | 2,
       department_id: form.scope === '2' ? form.department_id : undefined,
-    } as never, {
+    } as StoreBlueprintRequest, {
       onSuccess: (data) => { setOpen(false); setForm({ name_ar: '', name_en: '', description_ar: '', description_en: '', category_id: '', scope: '1', department_id: '' }); router.push(`/blueprints/${(data as { public_id: string }).public_id}`); },
     });
   }

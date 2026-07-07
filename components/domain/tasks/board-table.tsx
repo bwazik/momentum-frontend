@@ -24,7 +24,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { SlaBadge, TaskStatusBadge, PriorityBadge, ClassificationBadge } from '@/components/domain/tasks/task-badges';
-import { getCurrentAssignees, localizeName, formatTimeInStage, formatDueDate } from '@/components/domain/tasks/task-board-utils';
+import { getCurrentAssignees, formatTimeInStage, formatDueDate } from '@/components/domain/tasks/task-board-utils';
+import { localizeName } from '@/lib/utils/localize';
 import type { BoardTaskResource } from '@/components/domain/tasks/task-board-types';
 
 const SLA_BORDER: Record<string, string> = {

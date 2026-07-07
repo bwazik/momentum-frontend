@@ -16,7 +16,7 @@ import { RtlTable } from '@/components/shared/rtl-table';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
 import { ActionsDropdown, FormDialog, CatalogSkeleton, editAction, deleteAction } from '@/components/shared/catalog-table';
 import { ConfirmDeleteDialog } from '@/components/shared/confirm-delete-dialog';
-import { SLA_UNIT_MAP } from './blueprint-utils';
+import { SLA_UNIT_MAP, normalizeSlaUnit } from '@/lib/utils/blueprint-utils';
 import type { SlaPolicyResource } from './blueprint-types';
 
 interface SlaPolicyManagerProps {
@@ -37,11 +37,6 @@ export function SlaPolicyManager({ openCreate, onOpenCreateChange }: SlaPolicyMa
   const [form, setForm] = useState({ name_ar: '', name_en: '', sla_value: '1', sla_unit: 'hours', warning_threshold_percentage: '75' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  function normalizeUnit(unit: string): string {
-    if (unit === 'hours' || unit === 'days') return unit;
-    return unit === '1' ? 'hours' : 'days';
-  }
-
   function openCreateDialog() {
     setEditItem(null); setForm({ name_ar: '', name_en: '', sla_value: '1', sla_unit: 'hours', warning_threshold_percentage: '75' }); setErrors({}); setDialogOpen(true);
   }
@@ -59,7 +54,7 @@ export function SlaPolicyManager({ openCreate, onOpenCreateChange }: SlaPolicyMa
   const items = data ?? [];
 
   function openEdit(item: SlaPolicyResource) {
-    setEditItem(item); setForm({ name_ar: item.name_ar, name_en: item.name_en ?? '', sla_value: item.sla_value, sla_unit: normalizeUnit(item.sla_unit), warning_threshold_percentage: item.warning_threshold_percentage }); setErrors({}); setDialogOpen(true);
+    setEditItem(item); setForm({ name_ar: item.name_ar, name_en: item.name_en ?? '', sla_value: item.sla_value, sla_unit: normalizeSlaUnit(item.sla_unit), warning_threshold_percentage: item.warning_threshold_percentage }); setErrors({}); setDialogOpen(true);
   }
 
   function submit() {

@@ -9,7 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { BlueprintSettingsDialog } from './blueprint-settings-dialog';
 import { useActivateBlueprint, useDeactivateBlueprint, useDuplicateBlueprint } from '@/lib/api/hooks/use-blueprints';
 import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
-import { getStagesCount } from './blueprint-utils';
+import { getStagesCount } from '@/lib/utils/blueprint-utils';
 import type { BlueprintResource } from './blueprint-types';
 
 interface BuilderTopBarProps {
@@ -20,7 +20,6 @@ interface BuilderTopBarProps {
 
 export function BuilderTopBar({ blueprint, readOnly, canManage }: BuilderTopBarProps) {
   const t = useTranslations('blueprints.builder.top_bar');
-  const ta = useTranslations('blueprints.library.actions');
   const router = useRouter();
   const activate = useActivateBlueprint(blueprint.public_id);
   const deactivate = useDeactivateBlueprint(blueprint.public_id);
@@ -76,8 +75,8 @@ export function BuilderTopBar({ blueprint, readOnly, canManage }: BuilderTopBarP
 
       <AlertDialog open={confirm === 'duplicate'} onOpenChange={(o) => !o && setConfirm(null)}>
         <AlertDialogContent>
-          <AlertDialogHeader><AlertDialogTitle>{ta('duplicate_title')}</AlertDialogTitle><AlertDialogDescription>{ta('duplicate_description')}</AlertDialogDescription></AlertDialogHeader>
-          <AlertDialogFooter><AlertDialogCancel>{t('cancel')}</AlertDialogCancel><AlertDialogAction onClick={() => { duplicate.mutate(blueprint.public_id, { onSuccess: (data) => { setConfirm(null); router.push(`/blueprints/${data.public_id}`); } }); }}>{ta('duplicate')}</AlertDialogAction></AlertDialogFooter>
+          <AlertDialogHeader><AlertDialogTitle>{t('duplicate_title')}</AlertDialogTitle><AlertDialogDescription>{t('duplicate_description')}</AlertDialogDescription></AlertDialogHeader>
+          <AlertDialogFooter><AlertDialogCancel>{t('cancel')}</AlertDialogCancel><AlertDialogAction onClick={() => { duplicate.mutate(blueprint.public_id, { onSuccess: (data) => { setConfirm(null); router.push(`/blueprints/${data.public_id}`); } }); }}>{t('duplicate')}</AlertDialogAction></AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>

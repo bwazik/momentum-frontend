@@ -4,17 +4,12 @@ import { toast } from 'sonner';
 import { apiClient, ApiRequestError } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
 import type { components } from '@/lib/generated/api-types';
+import type { CursorPage } from '@/lib/api/types';
 
 type EscalationResource = components['schemas']['EscalationResource'];
 type EscalationDetailResource = components['schemas']['EscalationDetailResource'];
 type CreateManualEscalationRequest = components['schemas']['CreateManualEscalationRequest'];
 type ResolveEscalationRequest = components['schemas']['ResolveEscalationRequest'];
-
-interface CursorPage<T> {
-  data: T[];
-  next_cursor: string | null;
-  has_more: boolean;
-}
 
 export interface EscalationFilters {
   status?: number;

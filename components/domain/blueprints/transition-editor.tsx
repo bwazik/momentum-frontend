@@ -5,7 +5,10 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Field, FieldLabel } from '@/components/ui/field';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useCreateTransition, useDeleteTransition } from '@/lib/api/hooks/use-blueprints';
-import { deriveAdvanceTargets, deriveReturnTargets, getStageTransitions } from './blueprint-utils';
+import type { components } from '@/lib/generated/api-types';
+
+type StoreBlueprintTransitionRequest = components['schemas']['StoreBlueprintTransitionRequest'];
+import { deriveAdvanceTargets, deriveReturnTargets, getStageTransitions } from '@/lib/utils/blueprint-utils';
 import { localizeName } from '@/lib/utils/localize';
 import type { BlueprintResource, BlueprintStageResource } from './blueprint-types';
 
@@ -30,7 +33,7 @@ export function TransitionEditor({ blueprint, stage, readOnly }: TransitionEdito
 
   function toggleAdvance(toStageId: string, checked: boolean) {
     if (checked) {
-      createTransition.mutate({ from_stage_id: stage.public_id, to_stage_id: toStageId, transition_type: 1 } as never);
+      createTransition.mutate({ from_stage_id: stage.public_id, to_stage_id: toStageId, transition_type: 1 } as StoreBlueprintTransitionRequest);
     } else {
       const tr = existing.find((t) => t.to_stage_id === toStageId && t.transition_type === 'advance');
       if (tr) deleteTransition.mutate(tr.public_id);
@@ -39,7 +42,7 @@ export function TransitionEditor({ blueprint, stage, readOnly }: TransitionEdito
 
   function toggleReturn(toStageId: string, checked: boolean) {
     if (checked) {
-      createTransition.mutate({ from_stage_id: stage.public_id, to_stage_id: toStageId, transition_type: 2, return_reason_required: true } as never);
+      createTransition.mutate({ from_stage_id: stage.public_id, to_stage_id: toStageId, transition_type: 2, return_reason_required: true } as StoreBlueprintTransitionRequest);
     } else {
       const tr = existingReturn.find((t) => t.to_stage_id === toStageId);
       if (tr) deleteTransition.mutate(tr.public_id);

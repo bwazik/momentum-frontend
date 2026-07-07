@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { File, Plus, RefreshCw, X, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,27 +27,8 @@ import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { useDocumentVersions, useUploadDocumentVersion } from '@/lib/api/hooks/use-task-documents';
 import { localizeName } from '@/lib/utils/localize';
 import { timeFmtFromT, formatRelativeTime } from './task-detail-utils';
-import { formatFileSize } from './task-document-utils';
+import { formatFileSize, ALLOWED_MIME_TYPES, usePendingUploads, type PendingFileState } from './task-document-utils';
 import type { DocumentResource } from './task-document-types';
-
-const ALLOWED_MIME_TYPES = [
-  'application/pdf',
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-];
-
-interface PendingVersionUpload {
-  id: string;
-  file: File;
-  status: 'idle' | 'uploading' | 'error';
-  description: string;
-  error?: string;
-}
 
 interface TaskDocumentVersionDialogProps {
   document: DocumentResource | null;
@@ -70,7 +51,7 @@ export function TaskDocumentVersionDialog({
   const versionsQuery = useDocumentVersions(document?.public_id ?? '');
   const uploadVersion = useUploadDocumentVersion(document?.public_id ?? '', taskPublicId);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [pendingUploads, setPendingUploads] = useState<PendingVersionUpload[]>([]);
+  const { pendingUploads, addPending, updateDescription, setUploading, setError, removePending } = usePendingUploads();
 
   const allVersions = useMemo(
     () => versionsQuery.data?.pages.flatMap((page) => page.data) ?? [],
@@ -81,10 +62,8 @@ export function TaskDocumentVersionDialog({
     return allVersions.reduce((max, v) => Math.max(max, parseInt(v.version_number, 10) || 0), 0);
   }, [allVersions]);
 
-  function startPendingUpload(pending: PendingVersionUpload) {
-    setPendingUploads((prev) =>
-      prev.map((p) => (p.id === pending.id ? { ...p, status: 'uploading' as const } : p)),
-    );
+  function startUpload(pending: PendingFileState) {
+    setUploading(pending.id);
 
     const formData = new FormData();
     formData.append('file', pending.file);
@@ -92,14 +71,10 @@ export function TaskDocumentVersionDialog({
 
     uploadVersion.mutate(formData, {
       onSuccess: () => {
-        setPendingUploads((prev) => prev.filter((p) => p.id !== pending.id));
+        removePending(pending.id);
       },
       onError: (error) => {
-        setPendingUploads((prev) =>
-          prev.map((p) =>
-            p.id === pending.id ? { ...p, status: 'error' as const, error: error instanceof Error ? error.message : t('error') } : p,
-          ),
-        );
+        setError(pending.id, error instanceof Error ? error.message : t('error'));
       },
     });
   }
@@ -110,26 +85,15 @@ export function TaskDocumentVersionDialog({
     e.target.value = '';
 
     if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-      setPendingUploads((prev) => [...prev, { id: `pv-${Date.now()}`, file, status: 'error', description: '', error: t('error_disallowed_type') }]);
+      addPending(file, t('error_disallowed_type'));
       return;
     }
 
-    setPendingUploads((prev) => [...prev, { id: `pv-${Date.now()}`, file, status: 'idle', description: '' }]);
+    addPending(file);
   }
 
-  function updatePendingDescription(id: string, description: string) {
-    setPendingUploads((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, description } : p)),
-    );
-  }
-
-  function retryPending(id: string) {
-    const pending = pendingUploads.find((p) => p.id === id);
-    if (pending) startPendingUpload(pending);
-  }
-
-  function removePending(id: string) {
-    setPendingUploads((prev) => prev.filter((p) => p.id !== id));
+  function retryPending(pending: PendingFileState) {
+    startUpload(pending);
   }
 
   return (
@@ -173,13 +137,13 @@ export function TaskDocumentVersionDialog({
                         <input
                           type="text"
                           value={p.description}
-                          onChange={(e) => updatePendingDescription(p.id, e.target.value)}
+                          onChange={(e) => updateDescription(p.id, e.target.value)}
                           placeholder={t('description_placeholder')}
                           className="min-w-0 flex-1 rounded-md border border-border bg-transparent px-2 py-1 text-xs outline-none focus:border-ring focus:ring-1 focus:ring-ring/50"
                         />
                         <button
                           type="button"
-                          onClick={() => startPendingUpload(p)}
+                          onClick={() => startUpload(p)}
                           className="shrink-0 cursor-pointer rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                         >
                           {t('upload')}
@@ -191,7 +155,7 @@ export function TaskDocumentVersionDialog({
                 <AttachmentActions>
                   {p.status === 'error' ? (
                     <>
-                      <AttachmentAction size="icon-xs" aria-label={t('upload')} onClick={() => retryPending(p.id)}>
+                      <AttachmentAction size="icon-xs" aria-label={t('upload')} onClick={() => retryPending(p)}>
                         <RefreshCw className="size-4" />
                       </AttachmentAction>
                       <AttachmentAction size="icon-xs" aria-label={t('cancel')} onClick={() => removePending(p.id)}>
