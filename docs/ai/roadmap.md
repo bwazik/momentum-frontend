@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F2 — Task board & task details
-**Active spec:** `023-task-comments`
+**Active spec:** `024-task-documents`
 **Branch:** `main`
 
 ---
@@ -105,7 +105,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** 🔄 In Progress
 
-**Specs:** `003` ✅, `004` ✅, `016` ✅, `023` ✅, `024` ⬜, `025` ⬜
+**Specs:** `003` ✅, `004` ✅, `016` ✅, `023` ✅, `024` ✅, `025` ⬜
 
 **Established by 003:**
 - **Board layout:** 6-column hybrid enterprise table (SLA, Task, Stage+Dept, Assignees, Time In Stage, Actions) with SLA-derived row accents and stacked avatar assignees
@@ -147,8 +147,16 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Flex max-height scroll limitation:** `ScrollArea` with `height: 100%` inside a flex item cannot resolve percentage height against the flex algorithm's assigned height in Chrome (CSS spec resolution uses *specified* `height`, not *used* height). Fixed by putting `overflow-y-auto` directly on the `max-h-[60vh]` constrained element.
 - **`timeFmtFromT` uses `tasks.detail` namespace:** Time translation keys (`time_just_now`, `time_day_one`, etc.) live under `tasks.detail`, not `tasks.comments`. Components pass `useTranslations('tasks.detail')` to `timeFmtFromT`.
 
-**F2 follow-up specs (backend now ✅ Done, UI not yet implemented):**
-- `024-task-documents` — File upload, preview, download, and version list in task details sidebar
+**Established by 024:**
+- **Inline upload with Attachment states:** Upload flow replaced the separate Dialog pattern. File selected → `Attachment state="idle"` with inline description input → click upload → `state="uploading"` (shimmer on title) → removed on success or `state="error"` (red border, retry button). Matches shadcn Attachment docs.
+- **Client-side pre-validation:** File type and size validated before any network request. Invalid files show `state="error"` immediately — no wasted round trip.
+- **Two-tier sidebar card pattern:** Card shows first 3 items inline. "View all (N)" link opens a Dialog containing all items with a "Load more" button. Same pattern as RecentActionsPanel and EscalationsPanel in follow-up center.
+- **Blob fetch for authenticated downloads:** `download_url` and `preview_url` fetched via `fetch()` with `X-Tenant` + `X-Locale` headers and `credentials: 'include'`, then served as `URL.createObjectURL()`. Direct `window.open` / `<img src>` doesn't work because the backend requires the `X-Tenant` header.
+- **Single content-area tooltip:** Combined filename + metadata tooltips into one tooltip wrapping the entire `AttachmentContent`, avoiding two separate tooltips on the same row.
+- **ScrollArea avoidance in dialogs:** Replaced Radix `ScrollArea` with plain `overflow-y-auto` div to avoid the `display: table` wrapper that breaks percentage width resolution inside grid layouts.
+- **Delete icon as outlined danger:** Delete action button uses `variant="outline"` with `text-destructive` for a red border style without background fill.
+
+**Remaining F2 specs:**
 - `025-external-references` — External reference display, add, and search in task details sidebar; external_reference filter on task board
 
 ---

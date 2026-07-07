@@ -6,6 +6,10 @@ function getLocaleSlug(): string {
   return match ? match[1] : 'ar';
 }
 
+function isFormData(body: unknown): body is FormData {
+  return typeof FormData !== 'undefined' && body instanceof FormData;
+}
+
 interface ApiErrorResponse {
   message: string;
   errors?: Record<string, string[]>;
@@ -49,12 +53,16 @@ async function request<T>(
   }
 
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
     'Accept': 'application/json',
     'X-Tenant': getTenantSlug(),
     'X-Locale': getLocaleSlug(),
     ...options?.headers,
   };
+
+  const bodyIsFormData = isFormData(body);
+  if (!bodyIsFormData) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   const xsrf = getXsrfToken();
   if (xsrf && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
@@ -65,7 +73,7 @@ async function request<T>(
     method,
     credentials: 'include',
     headers,
-    body: body ? JSON.stringify(body) : undefined,
+    body: bodyIsFormData ? body : (body ? JSON.stringify(body) : undefined),
   });
 
   if (!response.ok) {

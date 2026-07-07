@@ -2,6 +2,22 @@ import { http, HttpResponse } from 'msw';
 import { organizationHandlers } from './organization-handlers';
 import { taskCreateHandlers } from './task-create-handlers';
 
+const mockDocuments = [
+  {
+    public_id: 'doc-1',
+    original_filename: 'report.pdf',
+    mime_type: 'application/pdf',
+    mime_category: 'Pdf',
+    size_bytes: '1024000',
+    version_number: '1',
+    description: '',
+    uploader: { public_id: 'user-1', name_ar: 'أحمد', name_en: 'Ahmed' },
+    download_url: 'https://api.momentum.test/v1/documents/doc-1/download',
+    preview_url: 'https://api.momentum.test/v1/documents/doc-1/preview',
+    created_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+  },
+];
+
 export const handlers = [
   ...organizationHandlers,
   ...taskCreateHandlers,
@@ -704,6 +720,67 @@ export const handlers = [
       resolution_note: (body as { resolution_note?: string }).resolution_note,
       resolved_at: new Date().toISOString(),
     });
+  }),
+
+  // --- Document handlers ---
+
+  http.get('https://api.momentum.test/v1/tasks/:publicId/documents', () => {
+    return HttpResponse.json({
+      data: mockDocuments,
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/tasks/:publicId/documents', async ({ request }) => {
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+    const created = {
+      public_id: 'doc-new',
+      original_filename: file?.name ?? 'uploaded.bin',
+      mime_type: file?.type ?? 'application/octet-stream',
+      mime_category: 'Pdf',
+      size_bytes: String(file?.size ?? 0),
+      version_number: '1',
+      description: String(formData.get('description') ?? ''),
+      uploader: { public_id: 'current-user', name_ar: 'أنت', name_en: 'You' },
+      download_url: 'https://api.momentum.test/v1/documents/doc-new/download',
+      preview_url: null,
+      created_at: new Date().toISOString(),
+    };
+    return HttpResponse.json(created, { status: 200 });
+  }),
+
+  http.get('https://api.momentum.test/v1/documents/:documentId/versions', () => {
+    return HttpResponse.json({
+      data: mockDocuments.map((d) => ({
+        public_id: d.public_id,
+        version_number: d.version_number,
+        original_filename: d.original_filename,
+        mime_type: d.mime_type,
+        size_bytes: d.size_bytes,
+        uploader: d.uploader,
+        created_at: d.created_at,
+      })),
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/documents/:documentId/versions', async ({ request }) => {
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+    return HttpResponse.json({
+      ...mockDocuments[0],
+      public_id: 'doc-version-new',
+      original_filename: file?.name ?? 'version.pdf',
+      version_number: '2',
+      created_at: new Date().toISOString(),
+    });
+  }),
+
+  http.delete('https://api.momentum.test/v1/documents/:documentId', () => {
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
 

@@ -282,10 +282,10 @@ tasks: {
 
 ## Open Questions — Resolved
 
-- [x] **shadcn `Message` + `Bubble` installation:** **Resolved.** The shadcn registry has no `@shadcn/message` or `@shadcn/bubble` components (verified via `shadcn_search_items_in_registries`). Build custom message rows using existing shadcn primitives (`Avatar`, `Card`, `Button`, `Textarea`, `Separator`, `Tooltip`). Custom components keep us aligned with existing task-detail styling and RTL rules.
+- [x] **shadcn `Message` + `Bubble` installation:** **Resolved.** `@shadcn/message` and `@shadcn/bubble` were added to the registry after the original plan. Installed via `npx shadcn@latest add message bubble`. `TaskCommentItem` and `TaskCommentReply` use `<Message align={...}>` with `<MessageAvatar>`, `<MessageContent>`, `<MessageHeader>`, `<MessageFooter>`, and `<Bubble variant={...}>` for message rows. Bubble variants: `default` (`bg-primary`) for current user, `secondary` (`bg-secondary`) for others.
 - [x] **Generated type freshness:** **Resolved.** `CommentResource` and `StoreCommentRequest` were confirmed present in `lib/generated/api-types.ts`. No regeneration required before implementation. `DocumentResource` will be needed in spec `024-task-documents`.
 - [x] **Comment composer sticky behavior:** **Resolved.** Composer stays at the bottom of the card; the message list scrolls if it exceeds `max-h-[60vh]`. Matches the existing detail-page stacked-card pattern and avoids a floating input that overlaps other cards.
-- [x] **Current-user message alignment:** **Resolved.** Current user's own comments align to `end` (chat-style); all others align to `start`. Implemented via `flex-row-reverse` + `bg-muted` for own messages, `bg-background border` for others.
+- [x] **Current-user message alignment:** **Resolved.** Current user's own comments align to `end` (chat-style); all others align to `start`. Implemented via `<Message align="end">` + `<Bubble variant="default">` for own messages, `<Message align="start">` + `<Bubble variant="secondary">` for others.
 - [x] **Reply threading depth:** **Resolved.** Backend spec `013` enforces single-level replies only (a reply cannot have its own replies). The UI reflects this by showing a **Reply** button only on top-level comments; reply rows have no Reply button.
 
 ---

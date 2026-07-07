@@ -11,6 +11,15 @@ export const queryKeys = {
     priorities: () => [...queryKeys.tasks.all, 'priorities'] as const,
     comments: (publicId: string) =>
       [...queryKeys.tasks.detail(publicId), 'comments'] as const,
+    documents: (taskPublicId: string, filters?: { sort?: 'asc' | 'desc' }) =>
+      [...queryKeys.tasks.detail(taskPublicId), 'documents', filters] as const,
+  },
+  documents: {
+    all: ['documents'] as const,
+    detail: (documentPublicId: string) =>
+      [...queryKeys.documents.all, 'detail', documentPublicId] as const,
+    versions: (documentPublicId: string) =>
+      [...queryKeys.documents.detail(documentPublicId), 'versions'] as const,
   },
   taskBoard: {
     all: ['task-board'] as const,

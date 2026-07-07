@@ -10,7 +10,7 @@
 
 | # | Question (from spec) | Decision | Rationale |
 |---|----------------------|----------|-----------|
-| 1 | shadcn `Message` + `Bubble` installation | **Do NOT install.** The shadcn registry has no `@shadcn/message` or `@shadcn/bubble` components. Build custom message rows using existing shadcn primitives (`Avatar`, `Card`, `Button`, `Textarea`, `Separator`, `Tooltip`). | Verified via `shadcn_search_items_in_registries`. Custom components keep us aligned with existing task-detail styling and RTL rules. |
+| 1 | shadcn `Message` + `Bubble` installation | **Install.** `@shadcn/message` and `@shadcn/bubble` were added to the registry after the original plan. Installed via `npx shadcn@latest add message bubble`. Used `<Message>`, `<MessageAvatar>`, `<MessageContent>`, `<MessageHeader>`, `<MessageFooter>`, `<Bubble>`, `<BubbleContent>` for message rows. | Registry now provides the components. Bubble variant `default` (`bg-primary`) for current user, `secondary` (`bg-secondary`) for others. |
 | 2 | Generated type freshness | **`CommentResource` and `StoreCommentRequest` are already present in `lib/generated/api-types.ts`.** No regeneration required before implementation. | Confirmed by grep in `lib/generated/api-types.ts`. |
 | 3 | Composer sticky behavior | **Composer stays at the bottom of the Comments card; the message list scrolls if it exceeds `max-h-[60vh]`.** | Matches the existing detail-page stacked-card pattern and avoids a floating input that overlaps other cards. |
 | 4 | Current-user message alignment | **Current user's own comments align to `end` (chat-style); all others align to `start`.** | Improves scanability and matches common conversation UX. |
@@ -23,10 +23,10 @@
 
 ## Technical Approach
 
-**One-line summary:** Add a Comments card to the task detail main column (after Stage Timeline) using `useInfiniteQuery` for top-level comments, a `useMutation` for create/reply, and custom message-row UI built from existing shadcn primitives.
+**One-line summary:** Add a Comments card to the task detail main column (after Stage Timeline) using `useInfiniteQuery` for top-level comments, a `useMutation` for create/reply, and shadcn `Message` + `Bubble` components for message rows.
 
 **Key decisions:**
-- **No new shadcn Message/Bubble components** — they do not exist in the registry; build custom rows with `Avatar`, `Card`, `Button`, `Textarea`.
+- **Use shadcn Message + Bubble components** — `<Message>` with `align` prop handles row layout, avatar alignment, and RTL; `<Bubble>` with `variant` prop handles bubble surface styling (`default` for current user, `secondary` for others).
 - **Cursor pagination for top-level comments only** — replies are returned inline as a full list per backend 013.
 - **Single-file hook domain** — add comment hooks to a new `lib/api/hooks/use-task-comments.ts` file to keep the detail hook file from growing.
 - **Granular invalidation** — `useCreateComment` invalidates `queryKeys.tasks.comments(taskPublicId)` and `queryKeys.tasks.timeline(taskPublicId)` so Recent Activity refreshes with the `CommentAdded` event.
@@ -472,9 +472,10 @@ export function TaskCommentsList({
 **One-line summary:** Render a top-level comment row with avatar, author, timestamp, body, attachment count, reply button, and nested replies.
 
 **Key decisions:**
-- Use `flex` row with avatar at the inline-start and bubble filling remaining space.
-- Message alignment: `justify-end` when author is current user; `justify-start` otherwise.
-- Bubble background: `bg-muted` for current user (subtle primary tint could be added later via token), `bg-background border` for others.
+- Use `<Message>` with `align` prop for row layout and avatar alignment.
+- `<Bubble variant="default">` for current user (`bg-primary text-primary-foreground`); `<Bubble variant="secondary">` for others (`bg-secondary text-secondary-foreground`).
+- Author name and timestamp rendered in `<MessageHeader>`, not inside the bubble.
+- Reply button and attachment count rendered in `<MessageFooter>`.
 - Reply button is visible only on top-level comments.
 - Replies are nested in a sub-list with logical start indentation (`ps-8`).
 - Attachment count indicator: non-interactive `Paperclip` icon + count.
@@ -601,7 +602,7 @@ export function TaskCommentItem({
 2. Render current-user comment → bubble aligns to `end` (flex-row-reverse on desktop; in RTL the row-reverse still yields end alignment because the parent is LTR/RTL aware via logical properties).
 
 **Coding standards applied:**
-- `coding-standards.md` § RTL — `flex-row-reverse` for current-user alignment; `me-*`/`ps-*` logical properties; `rtl:rotate-180` on directional icons.
+- `coding-standards.md` § RTL — `<Message align="end">` handles row reversal; `me-*`/`ps-*` logical properties; `rtl:rotate-180` on directional icons.
 - `design-system/05-accessibility.md` — `aria-labelledby`, semantic `<article>`, `<ol>` for replies, icon-only/labelled actions.
 
 ---

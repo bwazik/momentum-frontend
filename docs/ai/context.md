@@ -103,7 +103,7 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 - ✅ `004-task-details` — Stage timeline, sub-stage checklist, SLA countdown, stage lifecycle actions, recent activity
 - ✅ `016-task-creation-launch` — Multi-step creation form, manual assignment, draft/edit/launch flow
 - ✅ `023-task-comments` — Comment UI, reply, threading, composer, 4 states, cursor pagination
-- ⬜ `024-task-documents` — Document attachment UI (backend `012` now ✅ Done)
+- ✅ `024-task-documents` — Document attachment UI, upload with Attachment states, version history, preview, download
 - ⬜ `025-external-references` — External reference UI (backend `014` now ✅ Done)
 
 **Milestone F3 — Blueprint Builder: ✅ Done**
