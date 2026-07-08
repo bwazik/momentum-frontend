@@ -1,13 +1,12 @@
 'use client';
 
 import { Input } from '@/components/ui/input';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
 
 interface BilingualNameFieldsProps<T extends Record<string, unknown>> {
   form: T;
   setForm?: React.Dispatch<React.SetStateAction<T>>;
   onFieldChange?: (key: string, value: string) => void;
-  errors?: Record<string, string>;
   t: (key: string) => string;
   readOnly?: boolean;
   arRequired?: boolean;
@@ -21,7 +20,6 @@ export function BilingualNameFields<T extends Record<string, unknown>>({
   form,
   setForm,
   onFieldChange,
-  errors = {},
   t,
   readOnly = false,
   arRequired = true,
@@ -46,7 +44,6 @@ export function BilingualNameFields<T extends Record<string, unknown>>({
           value={String(form[nameArKey] ?? '')}
           onChange={(e) => handleChange(nameArKey, e.target.value)}
         />
-        {errors[nameArKey] && <FieldError>{errors[nameArKey]}</FieldError>}
       </Field>
       <Field>
         <FieldLabel>{t(nameEnKey)}</FieldLabel>

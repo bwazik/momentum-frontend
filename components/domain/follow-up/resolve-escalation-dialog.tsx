@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { Textarea } from '@/components/ui/textarea';
 import { useResolveEscalation } from '@/lib/api/hooks/use-escalations';
+import { toast } from 'sonner';
 
 interface ResolveEscalationDialogProps {
   escalationPublicId: string;
@@ -18,14 +19,12 @@ export function ResolveEscalationDialog({ escalationPublicId, open, onOpenChange
   const t = useTranslations('followUp.escalations');
   const mut = useResolveEscalation();
   const [note, setNote] = useState('');
-  const [error, setError] = useState('');
 
   function handleSubmit() {
     if (!note.trim()) {
-      setError(t('resolution_required'));
+      toast.error(t('resolution_required'));
       return;
     }
-    setError('');
     mut.mutate(
       { escalationPublicId, body: { resolution_note: note } },
       { onSuccess: () => { onOpenChange(false); setNote(''); } },
@@ -33,7 +32,7 @@ export function ResolveEscalationDialog({ escalationPublicId, open, onOpenChange
   }
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { onOpenChange(o); if (!o) { setNote(''); setError(''); } }}>
+    <Dialog open={open} onOpenChange={(o) => { onOpenChange(o); if (!o) { setNote(''); } }}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('resolve_title')}</DialogTitle>
@@ -41,7 +40,7 @@ export function ResolveEscalationDialog({ escalationPublicId, open, onOpenChange
         <Field>
           <FieldLabel>{t('resolution_note')} *</FieldLabel>
           <Textarea value={note} onChange={(e) => setNote(e.target.value)} />
-          {error && <FieldError>{error}</FieldError>}
+          
         </Field>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>{t('cancel')}</Button>

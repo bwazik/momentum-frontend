@@ -21,6 +21,12 @@ interface SearchResult {
   sla_health?: string;
   department_name?: string;
   blueprint_name?: string;
+  external_references?: Array<{
+    public_id: string;
+    reference_type: string;
+    reference_number: string;
+    external_entity?: { public_id: string; name_ar: string; name_en: string };
+  }>;
 }
 import { Skeleton } from '@/components/ui/skeleton';
 import { useDebounce } from '@/lib/hooks/use-debounce';
@@ -34,7 +40,7 @@ export function GlobalSearch() {
   const router = useRouter();
 
   const { data: recentData, isLoading: recentLoading } = useRecentActivity();
-  const { data: searchData, isLoading: searchLoading } = useSearch(debouncedQuery);
+  const { data: searchData, isLoading: searchLoading } = useSearch(debouncedQuery, debouncedQuery.length >= 2 ? debouncedQuery : undefined);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -114,6 +120,11 @@ export function GlobalSearch() {
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         {result.blueprint_name && <span>{result.blueprint_name}</span>}
                         {result.department_name && <span>{result.department_name}</span>}
+                        {result.external_references?.map((ref) => (
+                          <span key={ref.public_id} className="text-xs text-muted-foreground">
+                            {ref.reference_number}
+                          </span>
+                        ))}
                       </div>
                     </div>
                     {result.sla_health && (

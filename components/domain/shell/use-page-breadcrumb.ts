@@ -79,5 +79,12 @@ export function usePageBreadcrumb(): Crumb[] | null {
     ];
   }
 
+  if (pathname === '/admin/external-entities') {
+    return [
+      { label: nav('dashboard'), href: '/' },
+      { label: nav('external_entities') },
+    ];
+  }
+
   return null;
 }

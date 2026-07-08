@@ -51,7 +51,7 @@ export function useUploadTaskDocument(taskPublicId: string) {
     mutationFn: (formData: FormData) =>
       apiClient.post<DocumentResource>(`/v1/tasks/${taskPublicId}/documents`, formData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.documents(taskPublicId) });
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.tasks.detail(taskPublicId), 'documents'] });
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.timeline(taskPublicId) });
       toast.success(t('toast_uploaded'));
     },
@@ -72,7 +72,7 @@ export function useUploadDocumentVersion(documentPublicId: string, taskPublicId:
       apiClient.post<DocumentResource>(`/v1/documents/${documentPublicId}/versions`, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.documents.versions(documentPublicId) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.documents(taskPublicId) });
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.tasks.detail(taskPublicId), 'documents'] });
       toast.success(t('toast_version_created'));
     },
     onError: (error) => {
@@ -91,7 +91,7 @@ export function useDeleteDocument(taskPublicId: string) {
     mutationFn: (documentPublicId: string) =>
       apiClient.delete<void>(`/v1/documents/${documentPublicId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.documents(taskPublicId) });
+      queryClient.invalidateQueries({ queryKey: [...queryKeys.tasks.detail(taskPublicId), 'documents'] });
       queryClient.invalidateQueries({ queryKey: queryKeys.tasks.timeline(taskPublicId) });
       toast.success(t('toast_deleted'));
     },

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { toast } from 'sonner';
 import { ArrowLeft } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
@@ -63,17 +64,19 @@ export function StagePropertiesPanel({ blueprint, stage, mode, readOnly, subStag
   const { setSelectedStage, setMetadataDirty } = useBlueprintBuilderStore();
 
   const [form, setForm] = useState<Record<string, string>>(() => getInitialForm(mode === 'add' ? null : stage));
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const subStageEditId = subStageEditIdProp ?? null;
 
   const selectedSla = slaPolicies?.find((p) => p.public_id === form.sla_policy_id) ?? null;
 
   function saveStage() {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar) newErrors.name_ar = t('name_ar_required');
-    if (!form.stage_type_id) newErrors.stage_type_id = t('stage_type_required');
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (!form.name_ar) {
+      toast.error(t('name_ar_required'));
+      return;
+    }
+    if (!form.stage_type_id) {
+      toast.error(t('stage_type_required'));
+      return;
+    }
 
     const body = {
       name_ar: form.name_ar,
@@ -142,7 +145,6 @@ export function StagePropertiesPanel({ blueprint, stage, mode, readOnly, subStag
       <StageForm
         form={form}
         setForm={setForm}
-        errors={errors}
         selectedSla={selectedSla}
         onSave={saveStage}
         isPending={createStage.isPending || updateStage.isPending}

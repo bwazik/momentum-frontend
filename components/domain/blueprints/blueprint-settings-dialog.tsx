@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { RtlSelect } from '@/components/shared/rtl-select';
@@ -13,6 +13,7 @@ import { useUpdateBlueprint, useBlueprintCategories } from '@/lib/api/hooks/use-
 import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
 import { useDepartmentsInfinite } from '@/lib/api/hooks/use-organization';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
+import { toast } from 'sonner';
 import type { BlueprintResource } from './blueprint-types';
 import type { components } from '@/lib/generated/api-types';
 
@@ -39,17 +40,12 @@ function SettingsForm({ blueprint, onSuccess }: { blueprint: BlueprintResource; 
     scope: blueprint.scope === 'department' ? '2' : '1',
     department_id: blueprint.department_id ?? '',
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   const isLocked = !!blueprint.is_locked;
 
   function submit() {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar) newErrors.name_ar = t('name_ar_required');
-    if (!form.category_id) newErrors.category_id = t('category_required');
-    if (form.scope === '2' && !form.department_id) newErrors.department_id = t('department_required');
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (!form.name_ar) { toast.error(t('name_ar_required')); return; }
+    if (!form.category_id) { toast.error(t('category_required')); return; }
+    if (form.scope === '2' && !form.department_id) { toast.error(t('department_required')); return; }
 
     update.mutate({
       name_ar: form.name_ar,
@@ -66,7 +62,7 @@ function SettingsForm({ blueprint, onSuccess }: { blueprint: BlueprintResource; 
 
   return (
     <div className="space-y-3">
-      <BilingualNameFields form={form} setForm={setForm} errors={errors} t={t} readOnly={isLocked} />
+      <BilingualNameFields form={form} setForm={setForm} t={t} readOnly={isLocked} />
       <BilingualDescriptionFields form={form} setForm={setForm} t={t} readOnly={isLocked} />
       <Field>
         <FieldLabel>{t('category')} <span className="text-destructive">*</span></FieldLabel>
@@ -74,7 +70,7 @@ function SettingsForm({ blueprint, onSuccess }: { blueprint: BlueprintResource; 
           <SelectTrigger><SelectValue placeholder={t('category_placeholder')} /></SelectTrigger>
           <SelectContent position="popper">{(categories ?? []).map((c) => <SelectItem key={c.public_id} value={c.public_id}>{locale === 'ar' ? c.name_ar : c.name_en}</SelectItem>)}</SelectContent>
         </RtlSelect>
-        {errors.category_id && <FieldError>{errors.category_id}</FieldError>}
+        
       </Field>
       <Field>
         <FieldLabel>{t('scope')} <span className="text-destructive">*</span></FieldLabel>
@@ -93,7 +89,7 @@ function SettingsForm({ blueprint, onSuccess }: { blueprint: BlueprintResource; 
                 <SelectTrigger><SelectValue placeholder={t('department_placeholder')} /></SelectTrigger>
                 <SelectContent position="popper">{departments.map((d) => <SelectItem key={d.public_id} value={d.public_id}>{locale === 'ar' ? d.name_ar : d.name_en}</SelectItem>)}</SelectContent>
           </RtlSelect>
-          {errors.department_id && <FieldError>{errors.department_id}</FieldError>}
+          
         </Field>
       )}
       <DialogFooter>

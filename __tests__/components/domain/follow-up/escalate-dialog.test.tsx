@@ -1,9 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/__tests__/utils/test-utils';
 import { EscalateDialog } from '@/components/domain/follow-up/escalate-dialog';
 import type { BoardTaskResource } from '@/components/domain/follow-up/follow-up-types';
+
+vi.mock('sonner', () => ({
+  toast: { error: vi.fn(), success: vi.fn() },
+}));
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'en',
@@ -43,12 +47,11 @@ describe('EscalateDialog', () => {
 
   it('shows validation error on empty submit', async () => {
     const user = userEvent.setup();
+    const sonner = await import('sonner');
     renderWithProviders(
       <EscalateDialog task={mockTask} open={true} onOpenChange={vi.fn()} />
     );
     await user.click(screen.getByRole('button', { name: 'Escalate' }));
-    await waitFor(() => {
-      expect(screen.getByText('Reason is required')).toBeInTheDocument();
-    });
+    expect(sonner.toast.error).toHaveBeenCalledWith('Reason is required');
   });
 });

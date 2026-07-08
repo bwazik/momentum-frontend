@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Field, FieldGroup, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus } from 'lucide-react';
 import { RtlSelect } from '@/components/shared/rtl-select';
@@ -15,6 +15,7 @@ import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { useCreateBlueprint, useBlueprintCategories } from '@/lib/api/hooks/use-blueprints';
 import { useDepartmentsInfinite } from '@/lib/api/hooks/use-organization';
 import { useLocale } from 'next-intl';
+import { toast } from 'sonner';
 import type { components } from '@/lib/generated/api-types';
 
 type StoreBlueprintRequest = components['schemas']['StoreBlueprintRequest'];
@@ -33,17 +34,12 @@ export function CreateBlueprintDialog() {
   const departments = deptPages?.pages.flatMap((p) => p.data) ?? [];
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name_ar: '', name_en: '', description_ar: '', description_en: '', category_id: '', scope: '1', department_id: '' });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   if (!canCreate) return null;
 
   function submit() {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar) newErrors.name_ar = t('name_ar_required');
-    if (!form.category_id) newErrors.category_id = t('category_required');
-    if (form.scope === '2' && !form.department_id) newErrors.department_id = t('department_required');
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (!form.name_ar) { toast.error(t('name_ar_required')); return; }
+    if (!form.category_id) { toast.error(t('category_required')); return; }
+    if (form.scope === '2' && !form.department_id) { toast.error(t('department_required')); return; }
 
     create.mutate({
       name_ar: form.name_ar,
@@ -66,7 +62,7 @@ export function CreateBlueprintDialog() {
       <DialogContent className="sm:max-w-md">
         <DialogHeader><DialogTitle>{t('title')}</DialogTitle></DialogHeader>
         <FieldGroup>
-          <BilingualNameFields form={form} setForm={setForm} errors={errors} t={t} />
+          <BilingualNameFields form={form} setForm={setForm} t={t} />
           <BilingualDescriptionFields form={form} setForm={setForm} t={t} />
           <Field>
             <FieldLabel>{t('category')} <span className="text-destructive">*</span></FieldLabel>
@@ -74,7 +70,7 @@ export function CreateBlueprintDialog() {
               <SelectTrigger><SelectValue placeholder={t('category_placeholder')} /></SelectTrigger>
               <SelectContent position="popper">{(categories ?? []).map((c) => <SelectItem key={c.public_id} value={c.public_id}>{locale === 'ar' ? c.name_ar : c.name_en}</SelectItem>)}</SelectContent>
             </RtlSelect>
-            {errors.category_id && <FieldError>{errors.category_id}</FieldError>}
+            
           </Field>
           <Field>
             <FieldLabel>{t('scope')} <span className="text-destructive">*</span></FieldLabel>
@@ -93,7 +89,7 @@ export function CreateBlueprintDialog() {
                 <SelectTrigger><SelectValue placeholder={t('department_placeholder')} /></SelectTrigger>
                 <SelectContent position="popper">{departments.map((d) => <SelectItem key={d.public_id} value={d.public_id}>{locale === 'ar' ? d.name_ar : d.name_en}</SelectItem>)}</SelectContent>
               </RtlSelect>
-              {errors.department_id && <FieldError>{errors.department_id}</FieldError>}
+              
             </Field>
           )}
         </FieldGroup>

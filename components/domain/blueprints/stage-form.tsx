@@ -1,6 +1,6 @@
 'use client';
 
-import { Field, FieldGroup, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { RtlSelect } from '@/components/shared/rtl-select';
@@ -14,7 +14,6 @@ import type { BlueprintStageResource, StageTypeResource, SlaPolicyResource, Posi
 interface StageFormProps {
   form: Record<string, string>;
   setForm: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  errors: Record<string, string>;
   selectedSla: SlaPolicyResource | null;
   onSave: () => void;
   isPending: boolean;
@@ -29,13 +28,13 @@ interface StageFormProps {
 }
 
 export function StageForm({
-  form, setForm, errors, selectedSla, onSave, isPending,
+  form, setForm, selectedSla, onSave, isPending,
   stageTypes, slaPolicies, positions, departments,
   readOnly, locale, t,
 }: StageFormProps) {
   return (
     <FieldGroup>
-      <BilingualNameFields form={form} setForm={setForm} errors={errors} t={t} readOnly={readOnly} />
+      <BilingualNameFields form={form} setForm={setForm} t={t} readOnly={readOnly} />
       <BilingualDescriptionFields form={form} setForm={setForm} t={t} readOnly={readOnly} />
       <Field>
         <FieldLabel>{t('stage_type')} <span className="text-destructive">*</span></FieldLabel>
@@ -43,7 +42,7 @@ export function StageForm({
           <SelectTrigger><SelectValue placeholder={t('stage_type_placeholder')} /></SelectTrigger>
           <SelectContent position="popper">{stageTypes.map((st) => <SelectItem key={st.public_id} value={st.public_id}>{localizeName(locale, st.name_ar, st.name_en)}</SelectItem>)}</SelectContent>
         </RtlSelect>
-        {errors.stage_type_id && <FieldError>{errors.stage_type_id}</FieldError>}
+        
       </Field>
       <AssignmentFields
         form={form}

@@ -33,6 +33,7 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
   const { data: user, isLoading } = useCurrentUser();
   const canAdmin = useCapability('iam.manage_users');
   const canManageBlueprints = useCapability('blueprint.manage');
+  const canManageEntities = useCapability('task.manage_external_entities');
   const appName = useBrandName();
 
   useCapabilities(user?.public_id);
@@ -96,11 +97,14 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {canAdmin && (
+        {(canAdmin || canManageEntities) && (
           <SidebarGroup>
             <SidebarGroupLabel>{tnav('label_admin')}</SidebarGroupLabel>
             <SidebarGroupContent>
-              <NavMain items={[{ title: tnav('admin'), url: '/admin', icon: Shield }]} pathname={pathname} />
+              <NavMain items={[
+                ...(canAdmin ? [{ title: tnav('admin'), url: '/admin', icon: Shield, isActive: (p: string) => p === '/admin' || (p.startsWith('/admin/') && !p.startsWith('/admin/external-entities')) }] : []),
+                ...(canManageEntities ? [{ title: tnav('external_entities'), url: '/admin/external-entities', icon: Building2 }] : []),
+              ]} pathname={pathname} />
             </SidebarGroupContent>
           </SidebarGroup>
         )}

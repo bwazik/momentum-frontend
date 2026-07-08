@@ -35,12 +35,9 @@ export function CategoryManager({ openCreate, onOpenCreateChange }: CategoryMana
   const [editItem, setEditItem] = useState<BlueprintCategoryResource | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState({ name_ar: '', name_en: '', display_order: '0' });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   function openCreateDialog() {
     setEditItem(null);
     setForm({ name_ar: '', name_en: '', display_order: '0' });
-    setErrors({});
     setDialogOpen(true);
   }
 
@@ -61,15 +58,11 @@ export function CategoryManager({ openCreate, onOpenCreateChange }: CategoryMana
   function openEdit(cat: BlueprintCategoryResource) {
     setEditItem(cat);
     setForm({ name_ar: cat.name_ar, name_en: cat.name_en ?? '', display_order: cat.display_order ?? '0' });
-    setErrors({});
     setDialogOpen(true);
   }
 
   function submit() {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar) newErrors.name_ar = t('name_ar_required');
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (!form.name_ar) return;
 
     const body = { name_ar: form.name_ar, name_en: form.name_en || undefined, display_order: Number(form.display_order) || 0 };
 
@@ -130,7 +123,7 @@ export function CategoryManager({ openCreate, onOpenCreateChange }: CategoryMana
         confirmLabel={editItem ? t('edit') : t('create')}
       >
         <div className="space-y-3">
-          <BilingualNameFields form={form} setForm={setForm} errors={errors} t={t} />
+          <BilingualNameFields form={form} setForm={setForm} t={t} />
           <Field>
             <FieldLabel>{t('display_order')}</FieldLabel>
             <Input type="number" placeholder={t('display_order_placeholder')} value={form.display_order} onChange={(e) => setForm({ ...form, display_order: e.target.value })} />

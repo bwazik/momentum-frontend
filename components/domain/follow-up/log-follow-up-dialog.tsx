@@ -4,11 +4,12 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCreateFollowUpAction } from '@/lib/api/hooks/use-follow-up';
+import { toast } from 'sonner';
 import type { BoardTaskResource } from './follow-up-types';
 
 interface LogFollowUpDialogProps {
@@ -24,14 +25,11 @@ export function LogFollowUpDialog({ task, open, onOpenChange }: LogFollowUpDialo
   const [noteAr, setNoteAr] = useState('');
   const [noteEn, setNoteEn] = useState('');
   const [contact, setContact] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
+
 
   function handleSubmit() {
-    const errs: Record<string, string> = {};
-    if (!actionType) errs.action_type = t('action_type_required');
-    if (!noteAr.trim()) errs.note_ar = t('note_ar_required');
-    setErrors(errs);
-    if (Object.keys(errs).length) return;
+    if (!actionType) { toast.error(t('action_type_required')); return; }
+    if (!noteAr.trim()) { toast.error(t('note_ar_required')); return; }
     mut.mutate(
       {
         action_type: Number(actionType) as 1 | 2 | 3 | 4 | 5,
@@ -48,7 +46,6 @@ export function LogFollowUpDialog({ task, open, onOpenChange }: LogFollowUpDialo
     setNoteAr('');
     setNoteEn('');
     setContact('');
-    setErrors({});
   }
 
   return (
@@ -72,12 +69,12 @@ export function LogFollowUpDialog({ task, open, onOpenChange }: LogFollowUpDialo
                 </SelectGroup>
               </SelectContent>
             </Select>
-            {errors.action_type && <FieldError>{errors.action_type}</FieldError>}
+            
           </Field>
           <Field>
             <FieldLabel>{t('note_ar')} *</FieldLabel>
             <Textarea dir="rtl" value={noteAr} onChange={(e) => setNoteAr(e.target.value)} />
-            {errors.note_ar && <FieldError>{errors.note_ar}</FieldError>}
+            
           </Field>
           <Field>
             <FieldLabel>{t('note_en')}</FieldLabel>

@@ -26,7 +26,10 @@ type StoreBlueprintTransitionRequest = components['schemas']['StoreBlueprintTran
 export function useBlueprintCategories() {
   return useQuery({
     queryKey: queryKeys.blueprints.categories(),
-    queryFn: () => apiClient.get<BlueprintCategoryResource[]>('/v1/blueprints/categories'),
+    queryFn: () =>
+      apiClient.get<BlueprintCategoryResource[]>('/v1/blueprints/categories', {
+        params: { all: true },
+      }),
     staleTime: 5 * 60 * 1000,
   });
 }

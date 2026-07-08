@@ -9,7 +9,8 @@ import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/compone
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -19,7 +20,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { DAYS, WEEK_START_SAT, asBool, extractApiErrors } from './organization-utils';
+import { DAYS, WEEK_START_SAT, asBool } from './organization-utils';
 import type { components } from '@/lib/generated/api-types';
 
 type WorkingCalendarResource = components['schemas']['WorkingCalendarResource'];
@@ -67,18 +68,14 @@ export function WorkingCalendarFormDialog({
     timezone: calendar?.timezone ?? 'Asia/Riyadh',
     is_default: asBool(calendar?.is_default),
   }));
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   const createMutation = useCreateWorkingCalendar();
   const updateMutation = useUpdateWorkingCalendar(calendar?.public_id ?? '');
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   function validate(): boolean {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar.trim()) newErrors.name_ar = t('dialogs.name_ar_required');
-    if (form.working_days.length === 0) newErrors.working_days = t('dialogs.name_ar_required');
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (!form.name_ar.trim()) { toast.error(t('dialogs.name_ar_required')); return false; }
+    if (form.working_days.length === 0) { toast.error(t('dialogs.name_ar_required')); return false; }
+    return true;
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -99,10 +96,7 @@ export function WorkingCalendarFormDialog({
     const mutation = isEdit ? updateMutation : createMutation;
     mutation.mutate(body as never, {
       onSuccess: () => onOpenChange(false),
-      onError: (err: Error) => {
-        const fieldErrors = extractApiErrors(err);
-        if (fieldErrors) setErrors(fieldErrors);
-      },
+      onError: () => {},
     });
   }
 
@@ -122,8 +116,7 @@ export function WorkingCalendarFormDialog({
           <BilingualNameFields
             form={form as unknown as Record<string, unknown>}
             setForm={setForm as unknown as React.Dispatch<React.SetStateAction<Record<string, unknown>>>}
-            errors={errors}
-            t={t}
+                  t={t}
           />
 
           <Field>
@@ -144,7 +137,7 @@ export function WorkingCalendarFormDialog({
                 );
               })}
             </ToggleGroup>
-            {errors.working_days && <FieldError>{errors.working_days}</FieldError>}
+            
           </Field>
 
           <div className="grid grid-cols-2 gap-4">

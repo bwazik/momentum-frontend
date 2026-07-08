@@ -143,8 +143,10 @@ export const handlers = [
     ]);
   }),
 
-  http.get('https://api.momentum.test/v1/blueprints/categories', () => {
-    return HttpResponse.json([
+  http.get('https://api.momentum.test/v1/blueprints/categories', ({ request }) => {
+    const url = new URL(request.url);
+    const all = url.searchParams.get('all');
+    const categories = [
       {
         public_id: 'cat-1',
         name_ar: 'تقنية',
@@ -154,7 +156,17 @@ export const handlers = [
         created_at: '2026-01-01',
         updated_at: '2026-01-01',
       },
-    ]);
+      {
+        public_id: 'cat-2',
+        name_ar: 'ملغية',
+        name_en: 'Deactivated',
+        display_order: 2,
+        is_active: false,
+        created_at: '2026-01-01',
+        updated_at: '2026-01-01',
+      },
+    ];
+    return HttpResponse.json(all ? categories : categories.filter((c) => c.is_active));
   }),
 
   http.get('https://api.momentum.test/v1/blueprints/stage-types', () => {
@@ -196,6 +208,94 @@ export const handlers = [
       ],
       next_cursor: null,
       has_more: false,
+    });
+  }),
+
+  // --- External entities handlers (must be before /v1/tasks/:publicId to avoid catch-all) ---
+
+  http.get('https://api.momentum.test/v1/tasks/external-entities', ({ request }) => {
+    const url = new URL(request.url);
+    const all = url.searchParams.get('all');
+    const allEntities = [
+      {
+        public_id: 'entity-1',
+        name_ar: 'وزارة التجارة',
+        name_en: 'Ministry of Commerce',
+        entity_type: 'governmentministry',
+        is_active: 'true',
+        created_at: '2026-01-01',
+        updated_at: '2026-01-01',
+      },
+      {
+        public_id: 'entity-2',
+        name_ar: 'شركة التقنية',
+        name_en: 'Tech Company',
+        entity_type: 'privatecompany',
+        is_active: 'true',
+        created_at: '2026-01-01',
+        updated_at: '2026-01-01',
+      },
+      {
+        public_id: 'entity-3',
+        name_ar: 'جهة ملغية',
+        name_en: 'Deactivated Entity',
+        entity_type: 'other',
+        is_active: 'false',
+        created_at: '2026-01-01',
+        updated_at: '2026-01-01',
+      },
+    ];
+    const data = all ? allEntities : allEntities.filter((e) => e.is_active === 'true');
+    return HttpResponse.json(data);
+  }),
+
+  http.post('https://api.momentum.test/v1/tasks/external-entities', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'entity-new',
+      name_ar: body.name_ar as string,
+      name_en: (body.name_en as string) ?? '',
+      entity_type: 'other',
+      is_active: 'true',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }, { status: 200 });
+  }),
+
+  http.put('https://api.momentum.test/v1/tasks/external-entities/:entity', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'entity-1',
+      name_ar: body.name_ar as string,
+      name_en: (body.name_en as string) ?? '',
+      entity_type: 'governmentministry',
+      is_active: 'true',
+      created_at: '2026-01-01',
+      updated_at: new Date().toISOString(),
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/tasks/external-entities/:entity/deactivate', () => {
+    return HttpResponse.json({
+      public_id: 'entity-1',
+      name_ar: 'وزارة التجارة',
+      name_en: 'Ministry of Commerce',
+      entity_type: 'governmentministry',
+      is_active: 'false',
+      created_at: '2026-01-01',
+      updated_at: new Date().toISOString(),
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/tasks/external-entities/:entity/reactivate', () => {
+    return HttpResponse.json({
+      public_id: 'entity-1',
+      name_ar: 'وزارة التجارة',
+      name_en: 'Ministry of Commerce',
+      entity_type: 'governmentministry',
+      is_active: 'true',
+      created_at: '2026-01-01',
+      updated_at: new Date().toISOString(),
     });
   }),
 
@@ -782,6 +882,80 @@ export const handlers = [
   http.delete('https://api.momentum.test/v1/documents/:documentId', () => {
     return new HttpResponse(null, { status: 204 });
   }),
+
+  http.get('https://api.momentum.test/v1/tasks/:task/external-references', ({ params }) => {
+    const taskId = params.task as string;
+    if (taskId === 'TASK-422') {
+      return new HttpResponse(null, { status: 422 });
+    }
+    return HttpResponse.json({
+      data: [
+        {
+          public_id: 'ref-1',
+          reference_type: 'correspondence',
+          reference_number: 'وارد-2026-00412',
+          external_entity: { public_id: 'entity-1', name_ar: 'وزارة التجارة', name_en: 'Ministry of Commerce', entity_type: 'governmentministry', is_active: 'true', created_at: '2026-01-01', updated_at: '2026-01-01' },
+          notes: '',
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+        },
+        {
+          public_id: 'ref-2',
+          reference_type: 'contract',
+          reference_number: 'CON-2026-001',
+          external_entity: { public_id: 'entity-2', name_ar: 'شركة التقنية', name_en: 'Tech Company', entity_type: 'privatecompany', is_active: 'true', created_at: '2026-01-01', updated_at: '2026-01-01' },
+          notes: 'العقد الأصلي',
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
+        },
+        {
+          public_id: 'ref-3',
+          reference_type: 'other',
+          reference_number: 'EXT-2026-003',
+          external_entity: null,
+          notes: null,
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
+        },
+        {
+          public_id: 'ref-4',
+          reference_type: 'ministerialdecision',
+          reference_number: 'MD-2026-042',
+          external_entity: { public_id: 'entity-1', name_ar: 'وزارة التجارة', name_en: 'Ministry of Commerce', entity_type: 'governmentministry', is_active: 'true', created_at: '2026-01-01', updated_at: '2026-01-01' },
+          notes: 'قرار وزاري رقم 42',
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 96).toISOString(),
+        },
+      ],
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
+  http.post('https://api.momentum.test/v1/tasks/:task/external-references', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'ref-new',
+      reference_type: body.reference_type as string,
+      reference_number: body.reference_number as string,
+      external_entity: body.external_entity_id ? { public_id: body.external_entity_id as string, name_ar: 'جهة', name_en: 'Entity', entity_type: 'other', is_active: 'true', created_at: '2026-01-01', updated_at: '2026-01-01' } : null,
+      notes: (body.notes as string) ?? null,
+      created_at: new Date().toISOString(),
+    }, { status: 200 });
+  }),
+
+  http.put('https://api.momentum.test/v1/tasks/:task/external-references/:reference', async ({ request }) => {
+    const body = await request.json() as Record<string, unknown>;
+    return HttpResponse.json({
+      public_id: 'ref-1',
+      reference_type: body.reference_type as string,
+      reference_number: body.reference_number as string,
+      external_entity: body.external_entity_id ? { public_id: body.external_entity_id as string, name_ar: 'جهة', name_en: 'Entity', entity_type: 'other', is_active: 'true', created_at: '2026-01-01', updated_at: '2026-01-01' } : null,
+      notes: (body.notes as string) ?? null,
+      created_at: new Date().toISOString(),
+    });
+  }),
+
+  http.delete('https://api.momentum.test/v1/tasks/:task/external-references/:reference', () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
 ];
 
 const mockStage = {

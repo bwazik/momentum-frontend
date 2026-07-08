@@ -5,7 +5,8 @@ import { useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
+import { toast } from 'sonner';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RtlSelect } from '@/components/shared/rtl-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -57,7 +58,6 @@ export function PositionFormDialog({
     is_department_head: asBool(position?.is_department_head),
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const createMutation = useCreatePosition();
   const updateMutation = useUpdatePosition(position?.public_id ?? '');
@@ -79,12 +79,10 @@ export function PositionFormDialog({
   );
 
   function validate(): boolean {
-    const newErrors: Record<string, string> = {};
-    if (!form.title_ar.trim()) newErrors.title_ar = t('dialogs.title_ar_required');
-    if (!form.department_id) newErrors.department_id = t('dialogs.department_required');
-    if (!form.authority_grade_id) newErrors.authority_grade_id = t('dialogs.grade_required');
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (!form.title_ar.trim()) { toast.error(t('dialogs.title_ar_required')); return false; }
+    if (!form.department_id) { toast.error(t('dialogs.department_required')); return false; }
+    if (!form.authority_grade_id) { toast.error(t('dialogs.grade_required')); return false; }
+    return true;
   }
 
   function handleSubmit() {
@@ -129,8 +127,7 @@ export function PositionFormDialog({
           <BilingualNameFields
             form={form as unknown as Record<string, unknown>}
             setForm={setForm as unknown as React.Dispatch<React.SetStateAction<Record<string, unknown>>>}
-            errors={errors}
-            t={t}
+                  t={t}
             nameArKey="title_ar"
             nameEnKey="title_en"
           />
@@ -151,7 +148,7 @@ export function PositionFormDialog({
                 ))}
               </SelectContent>
             </RtlSelect>
-            {errors.department_id && <FieldError>{errors.department_id}</FieldError>}
+            
           </Field>
 
           <Field>
@@ -170,7 +167,7 @@ export function PositionFormDialog({
                 ))}
               </SelectContent>
             </RtlSelect>
-            {errors.authority_grade_id && <FieldError>{errors.authority_grade_id}</FieldError>}
+            
           </Field>
 
           {activePositions.length > 0 && (

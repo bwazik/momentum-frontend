@@ -112,8 +112,7 @@ export function DepartmentFormDialog({
           <BilingualNameFields
             form={form}
             setForm={(updater) => setForm(updater as DeptFormState)}
-            errors={errors}
-            t={t}
+                  t={t}
           />
 
           <Field>

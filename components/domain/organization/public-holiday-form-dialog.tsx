@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCreatePublicHoliday, useUpdatePublicHoliday } from '@/lib/api/hooks/use-organization';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
-import { asBool, extractApiErrors } from './organization-utils';
+import { asBool } from './organization-utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldLabel } from '@/components/ui/field';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -52,17 +53,13 @@ export function PublicHolidayFormDialog({
     holiday_date: holiday?.holiday_date ? holiday.holiday_date.split('T')[0] : '',
     is_recurring: asBool(holiday?.is_recurring),
   }));
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   const createMutation = useCreatePublicHoliday(calendarPublicId);
   const updateMutation = useUpdatePublicHoliday(calendarPublicId, holiday?.public_id ?? '');
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   function validate(): boolean {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar.trim()) newErrors.name_ar = t('dialogs.name_ar_required');
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (!form.name_ar.trim()) { toast.error(t('dialogs.name_ar_required')); return false; }
+    return true;
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -79,10 +76,7 @@ export function PublicHolidayFormDialog({
     const mutation = isEdit ? updateMutation : createMutation;
     mutation.mutate(body, {
       onSuccess: () => onOpenChange(false),
-      onError: (err: Error) => {
-        const fieldErrors = extractApiErrors(err);
-        if (fieldErrors) setErrors(fieldErrors);
-      },
+      onError: () => {},
     });
   }
 
@@ -102,8 +96,7 @@ export function PublicHolidayFormDialog({
           <BilingualNameFields
             form={form as unknown as Record<string, unknown>}
             setForm={setForm as unknown as React.Dispatch<React.SetStateAction<Record<string, unknown>>>}
-            errors={errors}
-            t={t}
+                  t={t}
             nameArKey="name_ar"
           />
 
@@ -114,7 +107,7 @@ export function PublicHolidayFormDialog({
               value={form.holiday_date}
               onChange={(e) => setForm((prev) => ({ ...prev, holiday_date: e.target.value }))}
             />
-            {errors.holiday_date && <FieldError>{errors.holiday_date}</FieldError>}
+            
           </Field>
 
           <div className="flex items-center gap-2">

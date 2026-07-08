@@ -35,10 +35,8 @@ export function SlaPolicyManager({ openCreate, onOpenCreateChange }: SlaPolicyMa
   const [editItem, setEditItem] = useState<SlaPolicyResource | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState({ name_ar: '', name_en: '', sla_value: '1', sla_unit: 'hours', warning_threshold_percentage: '75' });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   function openCreateDialog() {
-    setEditItem(null); setForm({ name_ar: '', name_en: '', sla_value: '1', sla_unit: 'hours', warning_threshold_percentage: '75' }); setErrors({}); setDialogOpen(true);
+    setEditItem(null); setForm({ name_ar: '', name_en: '', sla_value: '1', sla_unit: 'hours', warning_threshold_percentage: '75' }); setDialogOpen(true);
   }
 
   useEffect(() => { if (openCreate) setTimeout(() => openCreateDialog(), 0); }, [openCreate]);
@@ -54,14 +52,11 @@ export function SlaPolicyManager({ openCreate, onOpenCreateChange }: SlaPolicyMa
   const items = data ?? [];
 
   function openEdit(item: SlaPolicyResource) {
-    setEditItem(item); setForm({ name_ar: item.name_ar, name_en: item.name_en ?? '', sla_value: item.sla_value, sla_unit: normalizeSlaUnit(item.sla_unit), warning_threshold_percentage: item.warning_threshold_percentage }); setErrors({}); setDialogOpen(true);
+    setEditItem(item); setForm({ name_ar: item.name_ar, name_en: item.name_en ?? '', sla_value: item.sla_value, sla_unit: normalizeSlaUnit(item.sla_unit), warning_threshold_percentage: item.warning_threshold_percentage }); setDialogOpen(true);
   }
 
   function submit() {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar) newErrors.name_ar = t('name_ar_required');
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (!form.name_ar) return;
 
     const body = {
       name_ar: form.name_ar,
@@ -125,7 +120,7 @@ export function SlaPolicyManager({ openCreate, onOpenCreateChange }: SlaPolicyMa
         confirmLabel={editItem ? t('edit') : t('create')}
       >
         <div className="space-y-3">
-          <BilingualNameFields form={form} setForm={setForm} errors={errors} t={t} />
+          <BilingualNameFields form={form} setForm={setForm} t={t} />
           <Field>
             <FieldLabel>{t('sla_value')}</FieldLabel>
             <Input type="number" min={1} placeholder={t('sla_value_placeholder')} value={form.sla_value} onChange={(e) => setForm({ ...form, sla_value: e.target.value })} />

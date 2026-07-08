@@ -48,13 +48,9 @@ export function SubStageForm({
     assignment_cardinality: subStage?.assignment_cardinality ?? 'single',
     completion_rule: subStage?.completion_rule ?? 'any_assignee',
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   function save() {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar) newErrors.name_ar = tPanel('name_ar_required');
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (!form.name_ar) return;
 
     const body = {
       name_ar: form.name_ar,
@@ -76,7 +72,7 @@ export function SubStageForm({
 
   return (
     <FieldGroup>
-      <BilingualNameFields form={form} setForm={setForm} errors={errors} t={tPanel} readOnly={readOnly} />
+      <BilingualNameFields form={form} setForm={setForm} t={tPanel} readOnly={readOnly} />
       <BilingualDescriptionFields form={form} setForm={setForm} t={tPanel} readOnly={readOnly} />
       <AssignmentFields
         form={form}

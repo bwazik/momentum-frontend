@@ -13,6 +13,9 @@ export const queryKeys = {
       [...queryKeys.tasks.detail(publicId), 'comments'] as const,
     documents: (taskPublicId: string, filters?: { sort?: 'asc' | 'desc' }) =>
       [...queryKeys.tasks.detail(taskPublicId), 'documents', filters] as const,
+    externalEntities: () => [...queryKeys.tasks.all, 'external-entities'] as const,
+    externalReferences: (taskPublicId: string, filters?: { per_page?: number }) =>
+      [...queryKeys.tasks.detail(taskPublicId), 'external-references', filters] as const,
   },
   documents: {
     all: ['documents'] as const,

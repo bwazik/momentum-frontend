@@ -27,6 +27,7 @@ import { RecentActivityCard } from './recent-activity-card';
 import { ActivityEntry } from './activity-entry';
 import { TaskCommentsCard } from './task-comments-card';
 import { TaskDocumentsCard } from './task-documents-card';
+import { TaskExternalReferencesCard } from './task-external-references-card';
 import { mapSlaHealth, buildStageActivities } from './task-detail-utils';
 
 interface TaskDetailProps {
@@ -105,6 +106,7 @@ export function TaskDetail({ publicId }: TaskDetailProps) {
       <div className="space-y-5 lg:col-span-1">
         <div className="space-y-5 lg:sticky lg:top-20">
           <DetailsCard task={task} />
+          <TaskExternalReferencesCard publicId={publicId} />
           <TaskDocumentsCard publicId={publicId} />
           <RecentActivityCard
             entries={showFullTimeline ? timelineQuery.data : stageActivities}

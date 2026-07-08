@@ -33,10 +33,8 @@ export function StageTypeManager({ openCreate, onOpenCreateChange }: StageTypeMa
   const [editItem, setEditItem] = useState<StageTypeResource | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState({ name_ar: '', name_en: '', display_order: '0' });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   function openCreateDialog() {
-    setEditItem(null); setForm({ name_ar: '', name_en: '', display_order: '0' }); setErrors({}); setDialogOpen(true);
+    setEditItem(null); setForm({ name_ar: '', name_en: '', display_order: '0' }); setDialogOpen(true);
   }
 
   useEffect(() => { if (openCreate) setTimeout(() => openCreateDialog(), 0); }, [openCreate]);
@@ -52,14 +50,11 @@ export function StageTypeManager({ openCreate, onOpenCreateChange }: StageTypeMa
   const items = data ?? [];
 
   function openEdit(item: StageTypeResource) {
-    setEditItem(item); setForm({ name_ar: item.name_ar, name_en: item.name_en ?? '', display_order: item.display_order ?? '0' }); setErrors({}); setDialogOpen(true);
+    setEditItem(item); setForm({ name_ar: item.name_ar, name_en: item.name_en ?? '', display_order: item.display_order ?? '0' }); setDialogOpen(true);
   }
 
   function submit() {
-    const newErrors: Record<string, string> = {};
-    if (!form.name_ar && !editItem?.is_system_default) newErrors.name_ar = t('name_ar_required');
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+    if (!form.name_ar && !editItem?.is_system_default) return;
 
     const body = { name_ar: form.name_ar, name_en: form.name_en || undefined, display_order: Number(form.display_order) || 0 };
 
@@ -120,7 +115,7 @@ export function StageTypeManager({ openCreate, onOpenCreateChange }: StageTypeMa
       >
         <div className="space-y-3">
           {editItem?.is_system_default && <p className="text-xs text-muted-foreground">{t('system_default_readonly')}</p>}
-          <BilingualNameFields form={form} setForm={setForm} errors={errors} t={t} readOnly={!!editItem?.is_system_default} arRequired={!editItem?.is_system_default} />
+          <BilingualNameFields form={form} setForm={setForm} t={t} readOnly={!!editItem?.is_system_default} arRequired={!editItem?.is_system_default} />
           <Field>
             <FieldLabel>{t('display_order')}</FieldLabel>
             <Input type="number" placeholder={t('display_order_placeholder')} value={form.display_order} onChange={(e) => setForm({ ...form, display_order: e.target.value })} />

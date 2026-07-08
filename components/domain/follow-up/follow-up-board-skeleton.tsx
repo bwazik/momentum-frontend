@@ -1,6 +1,7 @@
 'use client';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import { BoardTableSkeleton } from '@/components/domain/tasks/board-table-skeleton';
 
 export function FollowUpBoardSkeleton() {
   return (
@@ -14,31 +15,24 @@ export function FollowUpBoardSkeleton() {
 
       {/* Filters skeleton */}
       <div className="flex flex-col gap-3">
-        <div className="flex gap-2">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-9 w-20 rounded-lg" />
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: 7 }).map((_, i) => (
+            <Skeleton key={i} className="h-8 w-20 rounded-lg" />
           ))}
+          <Skeleton className="h-8 w-16 rounded-lg" />
+          <Skeleton className="h-8 w-8 rounded-lg" />
         </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <Skeleton className="h-10 rounded-lg" />
-          <Skeleton className="h-10 rounded-lg" />
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <Skeleton className="h-8 flex-1" />
+          <Skeleton className="h-8 flex-1" />
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 flex-1" />
+            <Skeleton className="size-8 shrink-0" />
+          </div>
         </div>
       </div>
 
-      {/* Table skeleton */}
-      <div className="hidden md:block">
-        <Skeleton className="h-12 w-full rounded-t-xl" />
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton key={i} className="h-16 w-full rounded-none border-t border-border/50" />
-        ))}
-      </div>
-
-      {/* Mobile cards skeleton */}
-      <div className="flex flex-col gap-3 md:hidden">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-52 rounded-xl" />
-        ))}
-      </div>
+      <BoardTableSkeleton />
     </div>
   );
 }

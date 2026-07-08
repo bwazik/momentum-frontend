@@ -565,7 +565,9 @@ const FilterContext = createContext(null);  // Use Zustand instead
 
 ### shadcn Field + InputGroup
 
-Forms use shadcn nova components: `Field`, `FieldGroup`, `FieldLabel`, `FieldDescription`, `FieldError`, `FieldSeparator` for layout, and `InputGroup` + `InputGroupInput` + `InputGroupAddon` for inputs with icons.
+Forms use shadcn nova components: `Field`, `FieldGroup`, `FieldLabel`, `FieldDescription`, `FieldSeparator` for layout, and `InputGroup` + `InputGroupInput` + `InputGroupAddon` for inputs with icons.
+
+**Do not use `FieldError`** — all validation errors are shown via `toast.error()` (see Toast Notifications section). The `FieldError` component is unused and should not be imported.
 
 See `npx shadcn@latest docs input-group` and `npx shadcn@latest docs field` for the full API.
 
@@ -660,7 +662,9 @@ Use shadcn `Skeleton` component to match the shape of real content. See `npx sha
 
 ### Toast Notifications
 
-Use shadcn toast for mutation feedback:
+Use sonner `toast` for all user-facing feedback — both mutation results and form validation errors.
+
+#### Mutation feedback
 
 ```tsx
 import { toast } from 'sonner';
@@ -672,6 +676,26 @@ createTask.mutate(values, {
   onError: (error) => toast.error(error.message),
 });
 ```
+
+#### Form validation errors
+
+**Do not use `FieldError` or inline error text.** All validation failures — both client-side required-field checks and 422 API responses — are shown via `toast.error()`:
+
+```tsx
+// ✅ Correct — validation errors as toasts
+function submit() {
+  if (!form.name_ar.trim()) {
+    toast.error(t('name_ar_required'));
+    return;
+  }
+  createEntity.mutate(body);
+}
+
+// ❌ Wrong — inline FieldError
+<FieldError>{errors.name_ar}</FieldError>
+```
+
+**Rationale:** Consistent UX across all forms (dialogs, sheets, full pages). Toast prevents layout shift from appearing/disappearing error text and works uniformly for single-field and multi-field forms. The `FieldError` component in `components/ui/field.tsx` is unused — do not import it in domain components.
 
 ---
 

@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCreateAuthorityGrade, useUpdateAuthorityGrade } from '@/lib/api/hooks/use-organization';
-import { extractApiErrors } from './organization-utils';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
-import { Field, FieldGroup, FieldLabel, FieldError } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -48,15 +48,12 @@ export function AuthorityGradeFormDialog({
     name_en: grade?.name_en ?? '',
     description: grade?.description ?? '',
   }));
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
   const createMutation = useCreateAuthorityGrade();
   const updateMutation = useUpdateAuthorityGrade(grade?.public_id ?? '');
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setErrors({});
 
     const body = {
       rank: Number(form.rank),
@@ -71,10 +68,7 @@ export function AuthorityGradeFormDialog({
       onSuccess: () => {
         onOpenChange(false);
       },
-      onError: (err: Error) => {
-        const fieldErrors = extractApiErrors(err);
-        if (fieldErrors) setErrors(fieldErrors);
-      },
+      onError: () => {},
     });
   }
 
@@ -102,14 +96,13 @@ export function AuthorityGradeFormDialog({
                   setForm((prev) => ({ ...prev, rank: e.target.value }))
                 }
               />
-              {errors.rank && <FieldError>{errors.rank}</FieldError>}
+              
             </Field>
 
             <BilingualNameFields
               form={form}
               setForm={(updater) => setForm(updater as GradeFormState)}
-              errors={errors}
-              t={t}
+                      t={t}
               nameArKey="name_ar"
               nameEnKey="name_en"
             />
@@ -123,9 +116,7 @@ export function AuthorityGradeFormDialog({
                   setForm((prev) => ({ ...prev, description: e.target.value }))
                 }
               />
-              {errors.description && (
-                <FieldError>{errors.description}</FieldError>
-              )}
+              
             </Field>
           </FieldGroup>
 

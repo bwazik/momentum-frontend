@@ -24,6 +24,7 @@ export interface TaskBoardUrlFilters {
   search?: string;
   sortBy?: string;
   sortDirection?: string;
+  externalReference?: string;
 }
 
 export interface AssigneeDisplay {

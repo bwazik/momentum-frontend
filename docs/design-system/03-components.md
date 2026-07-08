@@ -187,14 +187,14 @@ Shared icon + headline + CTA (empty) and message + retry button (error). Used ac
 
 ## Forms
 
-- Use shadcn `Field` + `FieldGroup` + `FieldLabel` + `FieldDescription` + `FieldError` (nova pattern)
+- Use shadcn `Field` + `FieldGroup` + `FieldLabel` + `FieldDescription` (nova pattern)
 - For inputs with icons/addons: use `InputGroup` + `InputGroupInput` + `InputGroupAddon`
 - Bilingual fields: Arabic required indicator (`*`), English optional; use `BilingualNameFields` / `BilingualDescriptionDescriptionFields` shared components
 - Date picker: support Hijri display at presentation layer
 - Select: use shadcn `Select` with `SelectTrigger`, `SelectContent`, `SelectItem`; for RTL use `RtlSelect` wrapper
 - SelectItem must be inside `SelectGroup`
 - Sentinel values for nullable selects: `'no-sla'` for SLA policy, `'none'` for escalation position (avoids empty-string conflicts)
-- Error: red text below field via `FieldError`
+- Error: `toast.error()` via sonner (see `docs/ai/coding-standards.md` § Toast Notifications)
 - Enum maps for API serialization: `ASSIGNMENT_TYPE_MAP`, `CARDINALITY_MAP`, `COMPLETION_RULE_MAP`, `SLA_UNIT_MAP` in `blueprint-utils.ts` (string → integer codes)
 
 ---

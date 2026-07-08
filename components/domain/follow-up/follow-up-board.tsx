@@ -1,11 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/shared/empty-state';
 import { ErrorState } from '@/components/shared/error-state';
 import { ApiRequestError } from '@/lib/api/client';
+import { BoardTableSkeleton } from '@/components/domain/tasks/board-table-skeleton';
 import { FollowUpBoardSkeleton } from './follow-up-board-skeleton';
 import { FollowUpBoardTable } from './follow-up-board-table';
 import { FollowUpBoardMobileList } from './follow-up-board-mobile-list';
@@ -38,8 +40,18 @@ export function FollowUpBoard({ allTasks, query, onLogFollowUp, onEscalate }: Fo
   const t = useTranslations('followUp.board');
   const router = useRouter();
   const pathname = usePathname();
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  if (query.data && !hasLoadedOnce) setHasLoadedOnce(true);
 
-  if (query.isLoading) return <FollowUpBoardSkeleton />;
+  if (query.isLoading && !hasLoadedOnce) return <FollowUpBoardSkeleton />;
+
+  if (query.isLoading) {
+    return (
+      <section className="flex flex-col gap-4">
+        <BoardTableSkeleton />
+      </section>
+    );
+  }
 
   if (query.isError) {
     const error = query.error;

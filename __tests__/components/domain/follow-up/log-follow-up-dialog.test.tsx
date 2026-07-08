@@ -1,9 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/__tests__/utils/test-utils';
 import { LogFollowUpDialog } from '@/components/domain/follow-up/log-follow-up-dialog';
 import type { BoardTaskResource } from '@/components/domain/follow-up/follow-up-types';
+
+vi.mock('sonner', () => ({
+  toast: { error: vi.fn(), success: vi.fn() },
+}));
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'en',
@@ -64,13 +68,11 @@ describe('LogFollowUpDialog', () => {
 
   it('shows validation errors on empty submit', async () => {
     const user = userEvent.setup();
+    const sonner = await import('sonner');
     renderWithProviders(
       <LogFollowUpDialog task={mockTask} open={true} onOpenChange={vi.fn()} />
     );
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
-    await waitFor(() => {
-      expect(screen.getByText('Action type is required')).toBeInTheDocument();
-    });
-    expect(screen.getByText('Arabic note is required')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /submit/i }));
+    expect(sonner.toast.error).toHaveBeenCalledWith('Action type is required');
   });
 });

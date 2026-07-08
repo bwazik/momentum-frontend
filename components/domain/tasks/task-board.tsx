@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { ApiRequestError } from '@/lib/api/client';
 import { readBoardFilters, toBoardQuery } from './task-board-utils';
 import { TaskBoardFilters } from './task-board-filters';
 import { TaskBoardSkeleton } from './task-board-skeleton';
+import { BoardTableSkeleton } from './board-table-skeleton';
 import { TaskBoardTable } from './task-board-table';
 import { TaskBoardMobileList } from './task-board-mobile-list';
 
@@ -33,6 +34,9 @@ export function TaskBoard() {
   );
 
   const query = useTaskBoardInfinite(apiFilters);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  if (query.data && !hasLoadedOnce) setHasLoadedOnce(true);
+
   const allTasks = useMemo(() => {
     const seen = new Set<string>();
     return (query.data?.pages.flatMap((page) => page.data) ?? []).filter((task) => {
@@ -42,30 +46,24 @@ export function TaskBoard() {
     });
   }, [query.data]);
 
-  if (query.isLoading) return <TaskBoardSkeleton />;
-
   if (query.isError) {
     const error = query.error;
-    if (error instanceof ApiRequestError && error.status === 403) {
-      return (
-        <EmptyState
-          title={t('no_permission_title')}
-          description={t('no_permission_description')}
-        />
-      );
-    }
-    return (
-      <ErrorState
-        message={t('error')}
-        onRetry={() => query.refetch()}
-      />
-    );
+    const errorEl = error instanceof ApiRequestError && error.status === 403
+      ? <EmptyState title={t('no_permission_title')} description={t('no_permission_description')} />
+      : <ErrorState message={t('error')} onRetry={() => query.refetch()} />;
+    return <section className="flex flex-col gap-4"><TaskBoardFilters filters={urlFilters} />{errorEl}</section>;
+  }
+
+  if (query.isLoading && !hasLoadedOnce) {
+    return <TaskBoardSkeleton />;
   }
 
   return (
     <section className="flex flex-col gap-4">
       <TaskBoardFilters filters={urlFilters} />
-      {allTasks.length === 0 ? (
+      {query.isLoading ? (
+        <BoardTableSkeleton />
+      ) : allTasks.length === 0 ? (
         <EmptyState
           title={t('empty_title')}
           description={t('empty_description')}

@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { AdvancedFiltersSheet } from '@/components/domain/tasks/advanced-filters-sheet';
+import { ExternalReferenceFilterInput } from '@/components/domain/tasks/external-reference-filter-input';
 import type { TaskBoardUrlFilters } from '@/components/domain/tasks/task-board-types';
 
 const QUICK_FILTERS = ['active', 'mine', 'overdue', 'at_risk', 'suspended', 'draft', 'all'] as const;
@@ -98,7 +99,7 @@ export function BoardFilters({ t, filters }: BoardFiltersProps) {
         <AdvancedFiltersSheet t={t} filters={filters} onParam={setParam} />
       </div>
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         <Field>
           <FieldLabel className="sr-only">{t('search')}</FieldLabel>
           <InputGroup>
@@ -112,6 +113,8 @@ export function BoardFilters({ t, filters }: BoardFiltersProps) {
             </InputGroupAddon>
           </InputGroup>
         </Field>
+
+        <ExternalReferenceFilterInput value={filters.externalReference} />
 
         <div className="flex items-center gap-2">
           <Select

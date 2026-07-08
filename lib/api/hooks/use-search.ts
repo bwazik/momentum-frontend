@@ -9,6 +9,12 @@ interface SearchResult {
   status?: string;
   snippet_ar?: string;
   snippet_en?: string;
+  external_references?: Array<{
+    public_id: string;
+    reference_type: string;
+    reference_number: string;
+    external_entity?: { public_id: string; name_ar: string; name_en: string };
+  }>;
 }
 
 interface RecentActivityItem {
@@ -20,14 +26,14 @@ interface RecentActivityItem {
   occurred_at: string;
 }
 
-export function useSearch(query: string) {
+export function useSearch(query: string, externalReference?: string) {
   return useQuery({
-    queryKey: extraQueryKeys.search.list({ q: query }),
+    queryKey: extraQueryKeys.search.list({ q: query, external_reference: externalReference }),
     queryFn: () =>
       apiClient.get<{ data: SearchResult[] }>('/v1/search', {
-        params: { q: query, per_page: 10 },
+        params: { q: query, external_reference: externalReference, per_page: 10 },
       }),
-    enabled: query.length >= 2,
+    enabled: query.length >= 2 || !!externalReference,
   });
 }
 

@@ -1,8 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/__tests__/utils/test-utils';
 import { ResolveEscalationDialog } from '@/components/domain/follow-up/resolve-escalation-dialog';
+
+vi.mock('sonner', () => ({
+  toast: { error: vi.fn(), success: vi.fn() },
+}));
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'en',
@@ -31,12 +35,11 @@ describe('ResolveEscalationDialog', () => {
 
   it('shows validation error on empty submit', async () => {
     const user = userEvent.setup();
+    const sonner = await import('sonner');
     renderWithProviders(
       <ResolveEscalationDialog escalationPublicId="esc-1" open={true} onOpenChange={vi.fn()} />
     );
     await user.click(screen.getByRole('button', { name: 'Resolve' }));
-    await waitFor(() => {
-      expect(screen.getByText('Resolution note is required')).toBeInTheDocument();
-    });
+    expect(sonner.toast.error).toHaveBeenCalledWith('Resolution note is required');
   });
 });

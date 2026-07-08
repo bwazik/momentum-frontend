@@ -18,7 +18,7 @@
 |-------|------|--------|------------------|
 | F0 | Scaffold & design system | ✅ Done | — |
 | F1 | App shell, auth, i18n/RTL | ✅ Done | M2 backend (IAM) |
-| F2 | Task board & task details | 🔄 In Progress | M4 backend |
+| F2 | Task board & task details | ✅ Done | M4 backend |
 | F3 | Blueprint builder | ✅ Done | M3 backend |
 | F4 | Follow-up & workflow viz | ✅ Done | M4–M6 backend |
 | F5 | Dashboards & analytics | 🔄 In Progress | M6 backend |
@@ -51,8 +51,8 @@
 | `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
 | `022-platform-administration` | F6 | Platform | `001-platform-tenancy`, `001-platform-admin` | ⬜ |
 | `023-task-comments` | F2 | Tasks | `013-comments-collaboration` | ✅ |
-| `024-task-documents` | F2 | Tasks | `012-documents-attachments` | ⬜ |
-| `025-external-references` | F2 | Tasks | `014-external-references` | ⬜ |
+| `024-task-documents` | F2 | Tasks | `012-documents-attachments` | ✅ |
+| `025-external-references` | F2 | Tasks | `014-external-references` | ✅ |
 
 Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API dependencies.
 
@@ -103,9 +103,9 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 ## F2 — Task Board & Task Details
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Done
 
-**Specs:** `003` ✅, `004` ✅, `016` ✅, `023` ✅, `024` ✅, `025` ⬜
+**Specs:** `003` ✅, `004` ✅, `016` ✅, `023` ✅, `024` ✅, `025` ✅
 
 **Established by 003:**
 - **Board layout:** 6-column hybrid enterprise table (SLA, Task, Stage+Dept, Assignees, Time In Stage, Actions) with SLA-derived row accents and stacked avatar assignees
@@ -156,8 +156,16 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **ScrollArea avoidance in dialogs:** Replaced Radix `ScrollArea` with plain `overflow-y-auto` div to avoid the `display: table` wrapper that breaks percentage width resolution inside grid layouts.
 - **Delete icon as outlined danger:** Delete action button uses `variant="outline"` with `text-destructive` for a red border style without background fill.
 
-**Remaining F2 specs:**
-- `025-external-references` — External reference display, add, and search in task details sidebar; external_reference filter on task board
+**Established by 025:**
+- **External References sidebar card:** Two-tier card pattern (3 inline → "View all" dialog with cursor pagination), `Attachment` component for reference rows matching `TaskDocumentItem` visual style.
+- **Dynamic icons per reference type:** `EXTERNAL_REFERENCE_TYPE_ICONS` map (Mail, FileSignature, ScrollText, Shield, ClipboardList, ExternalLink, Store, Link2) — each reference type has a distinct Lucide icon.
+- **Catalog page at `/admin/external-entities`:** Full CRUD with create/edit/deactivate/reactivate, `BilingualNameFields` + `ExternalEntityTypeSelect`, `?all=true` param for inactive entity visibility.
+- **Inline entity creation:** "Add new entity" option in reference form entity select opens a secondary dialog, auto-selects the created entity on success.
+- **Board filter by reference:** Debounced `ExternalReferenceFilterInput` in `BoardFilters`, URL-driven (`?externalReference=`), shared between task board and follow-up pages.
+- **Global search by reference:** `useSearch` passes input as both `q` and `external_reference` in a single `/v1/search` call — matched reference metadata rendered in result rows.
+- **Query invalidation with prefix matching:** `[...queryKeys.tasks.detail(publicId), 'external-references']` to match any filter variant, avoiding the `undefined` filter mismatch bug.
+- **Validation via `toast.error()` project-wide:** All `FieldError` usage replaced with `toast.error()` — consistent UX across all forms; documented in coding-standards.md.
+- **Dialog form init via `useEffect` + `setTimeout`:** Pattern from `CategoryManager` — resets form state on dialog open, avoids `set-state-in-effect` lint rule.
 
 ---
 

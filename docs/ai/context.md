@@ -98,13 +98,13 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 **Milestone F1 — App Shell, Auth, i18n/RTL: ✅ Done**
 - ✅ `001-core-shell` — Login, dashboard shell, sidebar, global search, notifications, i18n, RTL, brand theming
 
-**Milestone F2 — Task Board & Task Details: 🔄 In Progress**
+**Milestone F2 — Task Board & Task Details: ✅ Done**
 - ✅ `003-task-board` — Cursor-paginated enterprise table, SLA row accents, URL-driven filters, 4 states
 - ✅ `004-task-details` — Stage timeline, sub-stage checklist, SLA countdown, stage lifecycle actions, recent activity
 - ✅ `016-task-creation-launch` — Multi-step creation form, manual assignment, draft/edit/launch flow
 - ✅ `023-task-comments` — Comment UI, reply, threading, composer, 4 states, cursor pagination
 - ✅ `024-task-documents` — Document attachment UI, upload with Attachment states, version history, preview, download
-- ⬜ `025-external-references` — External reference UI (backend `014` now ✅ Done)
+- ✅ `025-external-references` — External reference UI, entity catalog, board filter, global search by reference
 
 **Milestone F3 — Blueprint Builder: ✅ Done**
 - ✅ `005-blueprint-builder` — Visual stage canvas, properties panel, sub-stage CRUD, transitions, lock/read-only

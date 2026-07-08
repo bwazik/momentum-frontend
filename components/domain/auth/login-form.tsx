@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Field, FieldGroup, FieldLabel, FieldError, FieldDescription } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel, FieldDescription } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { useLogin } from '@/lib/api/hooks/use-auth';
@@ -51,9 +51,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               <Field>
                 <FieldLabel htmlFor="email">{t('email')}</FieldLabel>
                 <Input id="email" type="email" placeholder={t('email_placeholder')} {...form.register('email')} />
-                {form.formState.errors.email && (
-                  <FieldError>{form.formState.errors.email.message}</FieldError>
-                )}
+                
               </Field>
               <Field>
                 <div className="flex items-center">
@@ -67,9 +65,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                   </button>
                 </div>
                 <Input id="password" type="password" placeholder={t('password_placeholder')} {...form.register('password')} />
-                {form.formState.errors.password && (
-                  <FieldError>{form.formState.errors.password.message}</FieldError>
-                )}
+                
               </Field>
               <Field>
                 <Button type="submit" className="w-full" disabled={login.isPending}>
