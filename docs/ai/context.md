@@ -115,7 +115,7 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 
 **Milestone F5 — Dashboards & Analytics: 🔄 In Progress**
 - ⬜ `002-executive-dashboard` — Executive summary, key metrics, trend charts
-- ⬜ `009-analytics-reporting` — Drill-down reports, aging analysis, bottleneck identification
+- ✅ `009-analytics-reporting` — Task aging report, read-only filterable table, capability-gated sidebar, breadcrumb
 - ⬜ `012-department-manager-dashboard` — Department-level performance, team metrics, health cards
 
 **Milestone F6 — Admin, Org, Help, Onboarding: 🔄 In Progress**

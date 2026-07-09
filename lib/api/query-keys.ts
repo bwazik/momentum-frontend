@@ -106,4 +106,10 @@ export const queryKeys = {
       [...queryKeys.escalations.lists(), filters] as const,
     detail: (publicId: string) => [...queryKeys.escalations.all, 'detail', publicId] as const,
   },
+  analytics: {
+    all: ['analytics'] as const,
+    agingLists: () => [...queryKeys.analytics.all, 'aging', 'list'] as const,
+    agingList: (filters: Record<string, unknown>) =>
+      [...queryKeys.analytics.agingLists(), filters] as const,
+  },
 } as const;

@@ -120,10 +120,22 @@ function unitAr(n: number): string {
   return 'أيام';
 }
 
-export function formatTimeInStage(seconds: string | number | null | undefined, locale?: string): string {
+export function formatTimeInStage(seconds: string | number | null | undefined, locale?: string, workingDaySeconds?: number | null): string {
   if (seconds === null || seconds === undefined) return '-';
   const totalSeconds = typeof seconds === 'string' ? parseInt(seconds, 10) : seconds;
   if (totalSeconds <= 0) return locale === 'ar' ? 'أقل من ساعة' : '< 1 hour';
+
+  if (workingDaySeconds && workingDaySeconds > 0) {
+    const days = Math.floor(totalSeconds / workingDaySeconds);
+    const hours = Math.floor((totalSeconds % workingDaySeconds) / 3600);
+    const dw = locale === 'ar' ? unitAr : (n: number) => unit(n, 'day', 'days');
+    const hw = locale === 'ar' ? (n: number) => n === 1 ? 'ساعة' : n === 2 ? 'ساعتان' : 'ساعات' : (n: number) => unit(n, 'hour', 'hours');
+
+    if (days > 0 && hours > 0) return `${days} ${dw(days)}, ${hours} ${hw(hours)}`;
+    if (days > 0) return `${days} ${dw(days)}`;
+    if (hours > 0) return `${hours} ${hw(hours)}`;
+    return locale === 'ar' ? 'أقل من ساعة' : '< 1 hour';
+  }
 
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);

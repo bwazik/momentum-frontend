@@ -1,10 +1,5 @@
-import { getTranslations } from 'next-intl/server';
+import { redirect } from 'next/navigation';
 
-export default async function AnalyticsPage() {
-  const t = await getTranslations('placeholder');
-  return (
-    <div className="flex flex-1 items-center justify-center">
-      <p className="text-muted-foreground">{t('analytics')}</p>
-    </div>
-  );
+export default function AnalyticsPage() {
+  redirect('/analytics/aging');
 }

@@ -24,6 +24,13 @@ export const handlers = [
   http.get('https://api.momentum.test/v1/follow-up/actions', () =>
     HttpResponse.json({ data: [], next_cursor: null, has_more: false }),
   ),
+  http.get('https://api.momentum.test/v1/analytics/tasks/aging', () => {
+    return HttpResponse.json({
+      data: mockAgingData,
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
   http.get('https://api.momentum.test/v1/follow-up/board', () => {
     return HttpResponse.json({
       data: [
@@ -59,6 +66,7 @@ export const handlers = [
           ],
           sla_health: 'green',
           time_at_current_stage_seconds: '3600',
+          working_day_seconds: '28800',
           department: {
             public_id: 'dept-1',
             name_ar: 'تقنية المعلومات',
@@ -98,6 +106,7 @@ export const handlers = [
           current_assignees: [],
           sla_health: 'red',
           time_at_current_stage_seconds: '7200',
+          working_day_seconds: '28800',
           department: {
             public_id: 'dept-2',
             name_ar: 'الموارد البشرية',
@@ -1131,3 +1140,57 @@ const mockBlueprintFull = {
   created_at: '2026-06-01T00:00:00Z',
   updated_at: '2026-06-10T00:00:00Z',
 };
+
+export const mockAgingData = [
+  {
+    task_public_id: '01912345-6789-7abc-def0-123456789abc',
+    title_ar: 'مهمة متأخرة',
+    title_en: 'Overdue Task',
+    priority: {
+      public_id: 'prio-1',
+      name_ar: 'عاجل',
+      name_en: 'Urgent',
+      severity_rank: 'urgent',
+      color_code: '#f59e0b',
+    },
+    current_stage_name_ar: 'مراجعة',
+    current_stage_name_en: 'Review',
+    active_assignees: [{ public_id: 'u1', name_ar: 'أحمد', name_en: 'Ahmad' }],
+    sla_health: 'red',
+    created_at: '2026-07-01T00:00:00Z',
+    entered_at: '2026-07-05T00:00:00Z',
+  },
+  {
+    task_public_id: '01922345-6789-7abc-def0-123456789abc',
+    title_ar: 'مهمة قيد المراجعة',
+    title_en: 'In Review Task',
+    priority: {
+      public_id: 'prio-2',
+      name_ar: 'عادي',
+      name_en: 'Normal',
+      severity_rank: 'routine',
+      color_code: null,
+    },
+    current_stage_name_ar: 'تدقيق',
+    current_stage_name_en: 'Audit',
+    active_assignees: [
+      { public_id: 'u2', name_ar: 'سارة', name_en: 'Sara' },
+      { public_id: 'u3', name_ar: 'محمد', name_en: 'Mohamed' },
+    ],
+    sla_health: 'green',
+    created_at: '2026-07-02T00:00:00Z',
+    entered_at: '2026-07-06T00:00:00Z',
+  },
+  {
+    task_public_id: '01932345-6789-7abc-def0-123456789abc',
+    title_ar: 'مهمة معلقة',
+    title_en: 'Suspended Task',
+    priority: null,
+    current_stage_name_ar: 'انتظار',
+    current_stage_name_en: 'Waiting',
+    active_assignees: [],
+    sla_health: 'grey',
+    created_at: '2026-06-28T00:00:00Z',
+    entered_at: '2026-06-30T00:00:00Z',
+  },
+];

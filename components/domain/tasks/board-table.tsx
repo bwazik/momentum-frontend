@@ -156,7 +156,7 @@ export function BoardTable({ tasks, columnLabels, renderActions, onRowHover }: B
               <TableCell className="text-start align-top">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm">
-                    {task.status === 'draft' || task.status === 'completed' || task.status === 'cancelled' ? '-' : formatTimeInStage(task.time_at_current_stage_seconds, locale)}
+                    {task.status === 'draft' || task.status === 'completed' || task.status === 'cancelled' ? '-' : formatTimeInStage(task.time_at_current_stage_seconds, locale, task.working_day_seconds ? Number(task.working_day_seconds) : null)}
                   </span>
                   {task.due_date && (
                     <span className={cn(

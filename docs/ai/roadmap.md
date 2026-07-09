@@ -6,8 +6,8 @@
 
 ## Current Focus
 
-**Phase:** F2 — Task board & task details
-**Active spec:** `025-external-references`
+**Phase:** F5 — Dashboards & analytics
+**Active spec:** `002-executive-dashboard`
 **Branch:** `main`
 
 ---
@@ -40,7 +40,7 @@
 | `006-workflow-visualization` | F4 | Workflow | `006-stage-lifecycle` | ✅ |
 | `007-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ✅ |
 | `008-organization-structure` | F6 | Organization | `002-organization-structure` | ✅ |
-| `009-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
+| `009-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `010-system-administration` | F6 | Tenant Admin | `003`, `005` (priorities), `015` | ⬜ |
 | `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
@@ -223,12 +223,21 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** 🔄 In Progress
 
-**Specs:** `002` ⬜, `009` ⬜, `012` ⬜
+**Specs:** `002` ⬜, `009` ✅, `012` ⬜
 
 **Pending F5 specs:**
 - `002-executive-dashboard` — Executive-level overview dashboard
-- `009-analytics-reporting` — Analytics reports and drill-downs
+- `009-analytics-reporting` — Task aging report, read-only filterable table, capability-gated sidebar, breadcrumb
 - `012-department-manager-dashboard` — Department-level manager dashboard
+
+**Established by 009:**
+- **Dedicated aging components** — `AgingReportTable` and `AgingReportCard` are purpose-built for the aging response shape, not wrappers around `BoardTable`/`BoardTaskCard`. Avoids coupling to `BoardTaskResource` which has different fields.
+- **Unknown narrowing adapter** — `narrowAgingItems()` validates and types the API response at runtime, used because OpenAPI types the aging response `data` as `string[]`. Same pattern as `getBottleneckEntities()` in follow-up.
+- **Reused `AdvancedFiltersSheet` with `hideFields`** — Extended the shared `advanced-filters-sheet.tsx` with an optional `hideFields` prop so the aging report can hide `stageTypeId` and `assigneeId` fields not supported by the aging endpoint. Backward-compatible — task board and follow-up don't pass it.
+- **Sentinel value handling in filter selects** — All "all" placeholder sentinels in `AdvancedFiltersSheet` now treat `value === 'all'` as null/clear, preventing invalid `?departmentId=all` API params. Fixed at the source component, benefiting all consumers.
+- **Working day seconds for time formatting** — `formatTimeInStage()` now accepts `workingDaySeconds` from the backend to correctly divide total working seconds by the tenant's actual working day length (e.g., 28,800s for 8h days). Falls back to calendar-day division when not provided.
+- **Breadcrumb for analytics sub-routes** — `usePageBreadcrumb()` extended to handle `/analytics/*` sub-routes, showing Dashboard → Analytics → page title.
+- **Aging time display** — `formatTimeSince()` computes calendar-time from `entered_at` timestamp, distinct from `formatTimeInStage()` which uses pre-computed working seconds from the follow-up board endpoint.
 
 All F5 specs depend on backend M6 (`009-analytics-reporting`, `010-follow-up-board`, `011-search-discovery`) which is ✅ Done and contract-stable.
 

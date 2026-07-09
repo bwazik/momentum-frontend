@@ -76,7 +76,7 @@ export function BoardTaskCard({ task, onLogFollowUp, onEscalate, actionLabels, l
             {task.department && ` · ${localizeName(locale, task.department.name_ar, task.department.name_en)}`}
           </span>
           <span>
-            {task.status === 'draft' || task.status === 'completed' || task.status === 'cancelled' ? '-' : formatTimeInStage(task.time_at_current_stage_seconds, locale)}
+            {task.status === 'draft' || task.status === 'completed' || task.status === 'cancelled' ? '-' : formatTimeInStage(task.time_at_current_stage_seconds, locale, task.working_day_seconds ? Number(task.working_day_seconds) : null)}
             {task.due_date && ` · ${formatDueDate(task.due_date, locale)}`}
           </span>
         </div>

@@ -34,14 +34,19 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
   const canAdmin = useCapability('iam.manage_users');
   const canManageBlueprints = useCapability('blueprint.manage');
   const canManageEntities = useCapability('task.manage_external_entities');
+  const canViewAnalyticsOrg = useCapability('analytics.view.organization');
+  const canViewAnalyticsDept = useCapability('analytics.view.department');
+  const canViewFollowUpScope = useCapability('task.view.follow_up_scope');
   const appName = useBrandName();
 
   useCapabilities(user?.public_id);
 
+  const canViewAnalytics = canViewAnalyticsOrg || canViewAnalyticsDept || canViewFollowUpScope;
+
   const mainItems = [
     { title: tnav('dashboard'), url: '/', icon: LayoutDashboard },
     { title: tnav('tasks'), url: '/tasks', icon: ListTodo },
-    { title: tnav('analytics'), url: '/analytics', icon: BarChart3 },
+    ...(canViewAnalytics ? [{ title: tnav('analytics'), url: '/analytics/aging', icon: BarChart3 }] : []),
   ];
 
   const catalogItems = canManageBlueprints

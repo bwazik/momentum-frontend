@@ -11,6 +11,7 @@ export interface Crumb {
 export function usePageBreadcrumb(): Crumb[] | null {
   const pathname = usePathname();
   const nav = useTranslations('nav');
+  const analytics = useTranslations('analytics');
 
   const displayId = useTaskDisplayStore((s) => s.displayId);
   const blueprintName = useBlueprintBuilderStore((s) => s.blueprintName);
@@ -69,6 +70,14 @@ export function usePageBreadcrumb(): Crumb[] | null {
     return [
       { label: nav('dashboard'), href: '/' },
       { label: nav('analytics') },
+    ];
+  }
+
+  if (pathname.startsWith('/analytics/')) {
+    return [
+      { label: nav('dashboard'), href: '/' },
+      { label: nav('analytics'), href: '/analytics' },
+      { label: analytics('aging.title') },
     ];
   }
 

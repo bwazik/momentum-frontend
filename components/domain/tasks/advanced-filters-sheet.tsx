@@ -23,9 +23,10 @@ interface AdvancedFiltersSheetProps {
   t: ReturnType<typeof useTranslations>;
   filters: TaskBoardUrlFilters;
   onParam: (key: string, value?: string | null) => void;
+  hideFields?: ('stageType' | 'assignee')[];
 }
 
-export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersSheetProps) {
+export function AdvancedFiltersSheet({ t, filters, onParam, hideFields }: AdvancedFiltersSheetProps) {
   const locale = useLocale();
   const side = locale === 'ar' ? 'left' : 'right';
   const { data: departmentsData } = useDepartmentsInfinite();
@@ -50,7 +51,7 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
         <div className="flex flex-col gap-4 px-4">
         <Field>
           <FieldLabel>{t('department')}</FieldLabel>
-          <RtlSelect value={filters.departmentId ?? ''} onValueChange={(v) => onParam('departmentId', v || null)}>
+          <RtlSelect value={filters.departmentId ?? ''} onValueChange={(v) => onParam('departmentId', v === 'all' ? null : v || null)}>
             <SelectTrigger><SelectValue placeholder={t('department')} /></SelectTrigger>
             <SelectContent position="popper">
               <SelectGroup>
@@ -63,9 +64,10 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
           </RtlSelect>
         </Field>
 
+        {!hideFields?.includes('stageType') && (
         <Field>
           <FieldLabel>{t('stage_type')}</FieldLabel>
-          <RtlSelect value={filters.stageTypeId ?? ''} onValueChange={(v) => onParam('stageTypeId', v || null)}>
+          <RtlSelect value={filters.stageTypeId ?? ''} onValueChange={(v) => onParam('stageTypeId', v === 'all' ? null : v || null)}>
             <SelectTrigger><SelectValue placeholder={t('stage_type')} /></SelectTrigger>
             <SelectContent position="popper">
               <SelectGroup>
@@ -77,10 +79,11 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
             </SelectContent>
           </RtlSelect>
         </Field>
+        )}
 
         <Field>
           <FieldLabel>{t('priority')}</FieldLabel>
-          <RtlSelect value={filters.priorityId?.[0] ?? ''} onValueChange={(v) => onParam('priorityId', v || null)}>
+          <RtlSelect value={filters.priorityId?.[0] ?? ''} onValueChange={(v) => onParam('priorityId', v === 'all' ? null : v || null)}>
             <SelectTrigger><SelectValue placeholder={t('priority')} /></SelectTrigger>
             <SelectContent position="popper">
               <SelectGroup>
@@ -95,7 +98,7 @@ export function AdvancedFiltersSheet({ t, filters, onParam }: AdvancedFiltersShe
 
         <Field>
           <FieldLabel>{t('blueprint_category')}</FieldLabel>
-          <RtlSelect value={filters.blueprintCategoryId ?? ''} onValueChange={(v) => onParam('blueprintCategoryId', v || null)}>
+          <RtlSelect value={filters.blueprintCategoryId ?? ''} onValueChange={(v) => onParam('blueprintCategoryId', v === 'all' ? null : v || null)}>
             <SelectTrigger><SelectValue placeholder={t('blueprint_category')} /></SelectTrigger>
             <SelectContent position="popper">
               <SelectGroup>

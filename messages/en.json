@@ -217,7 +217,7 @@
         "department": "Department",
         "sla": "SLA",
         "due_date": "Due Date",
-        "time_in_stage": "Time In Stage",
+        "time_in_stage": "Working Time in Stage",
         "actions": "Actions",
         "table_label": "Task board",
         "row_actions": "Row actions",
@@ -909,7 +909,7 @@
         "stage": "Stage",
         "assignees": "Assignees",
         "sla": "SLA",
-        "time_in_stage": "Time In Stage",
+        "time_in_stage": "Working Time in Stage",
         "actions": "Actions"
       }
     },
@@ -1251,6 +1251,40 @@
       "holiday_created": "Holiday created",
       "holiday_saved": "Holiday saved",
       "holiday_deleted": "Holiday deleted"
+    }
+  },
+  "analytics": {
+    "aging": {
+      "title": "Aging Report",
+      "description": "Displays tasks sorted by how long they have been in their current stage, to help identify overdue or stalled tasks.",
+      "error": "Unable to load the aging report.",
+      "empty_title": "No tasks found",
+      "empty_description": "Adjust filters or reset the report.",
+      "reset_filters": "Reset filters",
+      "load_more": "Load more",
+      "loading_more": "Loading...",
+      "no_permission_title": "No permission",
+      "no_permission_description": "You do not have permission to view analytics.",
+      "filter_active": "Active",
+      "filter_suspended": "Suspended",
+      "filter_all": "All",
+      "reset": "Reset",
+      "advanced": "Advanced filters",
+      "department": "Department",
+      "priority": "Priority",
+      "blueprint_category": "Blueprint category",
+      "date_from": "Date from",
+      "date_to": "Date to",
+      "columns": {
+        "table_label": "Aging report",
+        "sla": "SLA",
+        "task": "Task",
+        "priority": "Priority",
+        "stage": "Current Stage",
+        "assignees": "Assignees",
+        "time_at_stage": "Calendar Time in Stage",
+        "created_at": "Created At"
+      }
     }
   }
 }

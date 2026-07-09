@@ -212,12 +212,12 @@
         "task": "المهمة",
         "status": "الحالة",
         "priority": "الأولوية",
-        "stage": "المرحلة",
-        "assignees": "المكلفون",
+      "stage": "المرحلة الحالية",
+      "assignees": "المكلفون",
         "department": "القسم",
         "sla": "ا.م.خ",
         "due_date": "تاريخ الاستحقاق",
-        "time_in_stage": "الوقت في المرحلة",
+        "time_in_stage": "وقت العمل في المرحلة",
         "actions": "الإجراءات",
         "table_label": "لوحة المهام",
         "row_actions": "إجراءات الصف",
@@ -907,10 +907,10 @@
       "escalate": "تصعيد",
       "columns": {
         "task": "المهمة",
-        "stage": "المرحلة",
+        "stage": "المرحلة الحالية",
         "assignees": "المسؤولون",
         "sla": "ا.م.خ",
-        "time_in_stage": "الوقت في المرحلة",
+        "time_in_stage": "وقت العمل في المرحلة",
         "actions": "الإجراءات"
       }
     },
@@ -1252,6 +1252,40 @@
       "holiday_created": "تم إنشاء يوم العطلة",
       "holiday_saved": "تم حفظ يوم العطلة",
       "holiday_deleted": "تم حذف يوم العطلة"
+    }
+  },
+  "analytics": {
+    "aging": {
+      "title": "تقرير تقادم المهام",
+      "description": "يعرض المهام مرتبة حسب مدة بقائها في مرحلتها الحالية، للمساعدة في اكتشاف المهام المتأخرة أو المتوقفة.",
+      "error": "تعذر تحميل تقرير الشيخوخة.",
+      "empty_title": "لا توجد مهام",
+      "empty_description": "عدل الفلاتر أو أعد تعيين التقرير.",
+      "reset_filters": "إعادة تعيين الفلاتر",
+      "load_more": "تحميل المزيد",
+      "loading_more": "جاري التحميل...",
+      "no_permission_title": "لا توجد صلاحية",
+      "no_permission_description": "ليس لديك صلاحية لعرض التحليلات.",
+      "filter_active": "نشطة",
+      "filter_suspended": "معلّقة",
+      "filter_all": "الكل",
+      "reset": "إعادة تعيين",
+      "advanced": "تصفية متقدمة",
+      "department": "القسم",
+      "priority": "الأولوية",
+      "blueprint_category": "تصنيف النموذج",
+      "date_from": "من تاريخ",
+      "date_to": "إلى تاريخ",
+      "columns": {
+        "table_label": "تقرير الشيخوخة",
+        "sla": "ا.م.خ",
+        "task": "المهمة",
+        "priority": "الأولوية",
+        "stage": "المرحلة الحالية",
+        "assignees": "المكلفون",
+        "time_at_stage": "الوقت التقويمي في المرحلة",
+        "created_at": "تاريخ الإنشاء"
+      }
     }
   }
 }
