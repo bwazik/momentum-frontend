@@ -56,7 +56,7 @@ function buildSegments(
       const end = (new Date(stage.exited_at).getTime() - startDate) / 86400000;
       segments.push({
         stageName: name, startDay: start, endDay: end,
-        color: 'bg-emerald-100', textColor: 'text-emerald-700',
+        color: 'bg-emerald-100 dark:bg-emerald-950', textColor: 'text-emerald-700 dark:text-emerald-400',
         label: `${t('timeline_day')} ${Math.round(start)}-${Math.round(end)}`,
         durationLabel: durDays(start, end), isOverdue: false,
       });
@@ -68,8 +68,8 @@ function buildSegments(
       const isWarning = timer?.status === 'warning';
       segments.push({
         stageName: name, startDay: start, endDay: now, deadlineDay: deadline,
-        color: isOverdue ? 'bg-red-100' : isWarning ? 'bg-amber-100' : 'bg-blue-100',
-        textColor: isOverdue ? 'text-red-700' : isWarning ? 'text-amber-700' : 'text-blue-700',
+        color: isOverdue ? 'bg-red-100 dark:bg-red-950' : isWarning ? 'bg-amber-100 dark:bg-amber-950' : 'bg-blue-100 dark:bg-blue-950',
+        textColor: isOverdue ? 'text-red-700 dark:text-red-400' : isWarning ? 'text-amber-700 dark:text-amber-400' : 'text-blue-700 dark:text-blue-400',
         label: `${t('timeline_day')} ${Math.round(start)}-${Math.round(now)}`,
         durationLabel: durDays(start, now), isOverdue,
       });
@@ -78,7 +78,7 @@ function buildSegments(
       const end = (new Date(stage.exited_at).getTime() - startDate) / 86400000;
       segments.push({
         stageName: name, startDay: start, endDay: end,
-        color: 'bg-slate-100', textColor: 'text-slate-500',
+        color: 'bg-slate-100 dark:bg-slate-900', textColor: 'text-slate-500 dark:text-slate-400',
         label: `${t('timeline_day')} ${Math.round(start)}-${Math.round(end)}`,
         durationLabel: durDays(start, end), isOverdue: false,
       });
@@ -136,7 +136,7 @@ export function WorkflowTimelineBar({ stages, blueprintStages, slaTimers }: Time
         <div className="flex items-center gap-4 text-[10px] text-muted-foreground flex-wrap">
           {segments.map((seg, i) => (
             <span key={i} className={cn(seg.textColor)}>
-              ● {seg.stageName} ({seg.durationLabel}){seg.isOverdue ? <AlertTriangle className="ms-1 inline size-3 text-red-500" /> : ''}
+              ● {seg.stageName} ({seg.durationLabel}){seg.isOverdue ? <AlertTriangle className="ms-1 inline size-3 text-red-500 dark:text-red-400" /> : ''}
             </span>
           ))}
         </div>

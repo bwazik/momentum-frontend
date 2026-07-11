@@ -111,5 +111,21 @@ export const queryKeys = {
     agingLists: () => [...queryKeys.analytics.all, 'aging', 'list'] as const,
     agingList: (filters: Record<string, unknown>) =>
       [...queryKeys.analytics.agingLists(), filters] as const,
+    executive: {
+      summaries: () => [...queryKeys.analytics.all, 'executive', 'summary'] as const,
+      summary: (filters: Record<string, unknown>) =>
+        [...queryKeys.analytics.executive.summaries(), filters] as const,
+      departmentHealths: () => [...queryKeys.analytics.all, 'executive', 'department-health'] as const,
+      departmentHealth: (filters: Record<string, unknown>) =>
+        [...queryKeys.analytics.executive.departmentHealths(), filters] as const,
+      bottlenecks: (filters: Record<string, unknown>) =>
+        [...queryKeys.analytics.all, 'executive', 'bottlenecks', filters] as const,
+      drillDowns: () => [...queryKeys.analytics.all, 'executive', 'drill-down'] as const,
+      drillDown: (metric: string, filters: Record<string, unknown>) =>
+        [...queryKeys.analytics.executive.drillDowns(), metric, filters] as const,
+      bottleneckDrillDowns: () => [...queryKeys.analytics.all, 'executive', 'bottleneck-drill-down'] as const,
+      bottleneckDrillDown: (stageType: string, filters: Record<string, unknown>) =>
+        [...queryKeys.analytics.executive.bottleneckDrillDowns(), stageType, filters] as const,
+    },
   },
 } as const;

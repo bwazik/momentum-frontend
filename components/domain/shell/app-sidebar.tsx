@@ -46,7 +46,6 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
   const mainItems = [
     { title: tnav('dashboard'), url: '/', icon: LayoutDashboard },
     { title: tnav('tasks'), url: '/tasks', icon: ListTodo },
-    ...(canViewAnalytics ? [{ title: tnav('analytics'), url: '/analytics/aging', icon: BarChart3 }] : []),
   ];
 
   const catalogItems = canManageBlueprints
@@ -87,6 +86,15 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
             <NavMain items={mainItems} pathname={pathname} />
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {canViewAnalytics && (
+          <SidebarGroup>
+            <SidebarGroupLabel>{tnav('analytics')}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <NavMain items={[{ title: tnav('aging_report'), url: '/analytics/aging', icon: BarChart3 }]} pathname={pathname} />
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
         <SidebarGroup>
           <SidebarGroupLabel>{tnav('label_blueprints')}</SidebarGroupLabel>

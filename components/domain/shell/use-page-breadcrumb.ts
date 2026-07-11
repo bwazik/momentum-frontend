@@ -66,6 +66,30 @@ export function usePageBreadcrumb(): Crumb[] | null {
     ];
   }
 
+  const metricDrillDown = pathname.match(/^\/analytics\/executive\/drill-down\/([^/]+)$/);
+  if (metricDrillDown) {
+    return [
+      { label: nav('dashboard'), href: '/' },
+      { label: nav('analytics'), href: '/analytics' },
+      { label: analytics(`executive.drill_down_title_${metricDrillDown[1]}`) },
+    ];
+  }
+
+  const bottleneckDrillDown = pathname.match(/^\/analytics\/executive\/bottlenecks\/([^/]+)\/drill-down$/);
+  if (bottleneckDrillDown) {
+    return [
+      { label: nav('dashboard'), href: '/' },
+      { label: nav('analytics'), href: '/analytics' },
+      { label: analytics('executive.bottleneck_drill_down_title') },
+    ];
+  }
+
+  if (pathname === '/') {
+    return [
+      { label: nav('dashboard') },
+    ];
+  }
+
   if (pathname === '/analytics') {
     return [
       { label: nav('dashboard'), href: '/' },

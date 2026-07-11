@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F5 — Dashboards & analytics
-**Active spec:** `002-executive-dashboard`
+**Active spec:** `012-department-manager-dashboard`
 **Branch:** `main`
 
 ---
@@ -33,7 +33,7 @@
 | Spec | Milestone | Domain | Requires backend specs | Status |
 |------|-----------|--------|------------------------|--------|
 | `001-core-shell` | F1 | Core | `003-iam-abac`, `008-notifications`, `011-search-discovery` | ✅ |
-| `002-executive-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
+| `002-executive-dashboard` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `003-task-board` | F2 | Tasks | `005-task-execution`, `014` | ✅ |
 | `004-task-details` | F2 | Tasks | `005`, `006`, `012`, `013` | ✅ |
 | `005-blueprint-builder` | F3 | Blueprints | `004-blueprint-engine` | ✅ |
@@ -223,12 +223,15 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** 🔄 In Progress
 
-**Specs:** `002` ⬜, `009` ✅, `012` ⬜
+**Specs:** `002` ✅, `009` ✅, `012` ⬜
 
-**Pending F5 specs:**
-- `002-executive-dashboard` — Executive-level overview dashboard
-- `009-analytics-reporting` — Task aging report, read-only filterable table, capability-gated sidebar, breadcrumb
-- `012-department-manager-dashboard` — Department-level manager dashboard
+**Established by 002:**
+- **Shared `StatCard` component** — Extracted `components/shared/stat-card.tsx` used by both executive dashboard and Follow-Up center. Configurable `variant`, `iconVariant`, `valueSize`, `valueSuffix`, and `subtitle` (string or ReactNode).
+- **Department health micro bar** — Pure CSS stacked bar (emerald/amber/red) per department row showing task-health proportion at a glance. No chart libraries.
+- **Runtime narrowing adapters** — `narrowExecutiveSummary()`, `narrowDepartmentHealthItem()`, `narrowBottleneckItem()`, `narrowDrillDownTaskItem()` convert string-serialized OpenAPI numeric fields to typed numbers using `unknown` + validation.
+- **Filter forwarding to drill-downs** — URL search params from dashboard filters are forwarded to drill-down routes, preserving filtered context.
+- **Filter button in PageHeader** — Reuses `AdvancedFiltersSheet` from the aging report, placed in the page header `actions` slot (same pattern as `TaskTopBarActions`).
+- **Executive dashboard as home page** — The executive dashboard replaced the placeholder at `/`, making it the default landing page after login.
 
 **Established by 009:**
 - **Dedicated aging components** — `AgingReportTable` and `AgingReportCard` are purpose-built for the aging response shape, not wrappers around `BoardTable`/`BoardTaskCard`. Avoids coupling to `BoardTaskResource` which has different fields.
@@ -239,7 +242,8 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Breadcrumb for analytics sub-routes** — `usePageBreadcrumb()` extended to handle `/analytics/*` sub-routes, showing Dashboard → Analytics → page title.
 - **Aging time display** — `formatTimeSince()` computes calendar-time from `entered_at` timestamp, distinct from `formatTimeInStage()` which uses pre-computed working seconds from the follow-up board endpoint.
 
-All F5 specs depend on backend M6 (`009-analytics-reporting`, `010-follow-up-board`, `011-search-discovery`) which is ✅ Done and contract-stable.
+**Remaining F5 specs:**
+- `012-department-manager-dashboard` — Department-level manager dashboard (requires `009-analytics-reporting` — ✅ Done on backend)
 
 ## F6 — Admin, Org, Help, Onboarding
 

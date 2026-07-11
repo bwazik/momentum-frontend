@@ -24,6 +24,34 @@ export const handlers = [
   http.get('https://api.momentum.test/v1/follow-up/actions', () =>
     HttpResponse.json({ data: [], next_cursor: null, has_more: false }),
   ),
+  http.get('https://api.momentum.test/v1/analytics/executive/summary', () => {
+    return HttpResponse.json(mockExecutiveSummary);
+  }),
+
+  http.get('https://api.momentum.test/v1/analytics/executive/department-health', () => {
+    return HttpResponse.json(mockDepartmentHealth);
+  }),
+
+  http.get('https://api.momentum.test/v1/analytics/executive/bottlenecks', () => {
+    return HttpResponse.json(mockBottlenecks);
+  }),
+
+  http.get('https://api.momentum.test/v1/analytics/executive/summary/drill-down/:metric', () => {
+    return HttpResponse.json({
+      data: mockDrillDownTasks,
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
+  http.get('https://api.momentum.test/v1/analytics/executive/bottlenecks/:stageType/drill-down', () => {
+    return HttpResponse.json({
+      data: mockDrillDownTasks,
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
+
   http.get('https://api.momentum.test/v1/analytics/tasks/aging', () => {
     return HttpResponse.json({
       data: mockAgingData,
@@ -1140,6 +1168,97 @@ const mockBlueprintFull = {
   created_at: '2026-06-01T00:00:00Z',
   updated_at: '2026-06-10T00:00:00Z',
 };
+
+const mockExecutiveSummary = {
+  active: '142',
+  overdue: '23',
+  at_risk: '18',
+  suspended: '7',
+  completed: '456',
+  cancelled: '12',
+  completion_rate: '0.75',
+};
+
+const mockDepartmentHealth = [
+  {
+    department_public_id: 'dept-1',
+    department_name_ar: 'تقنية المعلومات',
+    department_name_en: 'IT',
+    health: 'red',
+    health_label: 'Overdue',
+    active_tasks: '45',
+    overdue_tasks: '12',
+    at_risk_tasks: '8',
+  },
+  {
+    department_public_id: 'dept-2',
+    department_name_ar: 'الموارد البشرية',
+    department_name_en: 'HR',
+    health: 'amber',
+    health_label: 'At Risk',
+    active_tasks: '32',
+    overdue_tasks: '3',
+    at_risk_tasks: '7',
+  },
+  {
+    department_public_id: 'dept-3',
+    department_name_ar: 'المالية',
+    department_name_en: 'Finance',
+    health: 'green',
+    health_label: 'On Track',
+    active_tasks: '65',
+    overdue_tasks: '0',
+    at_risk_tasks: '3',
+  },
+];
+
+const mockBottlenecks = [
+  {
+    stage_type: { public_id: 'st-1', name_ar: 'مراجعة', name_en: 'Review' },
+    department: { public_id: 'dept-1', name_ar: 'تقنية المعلومات', name_en: 'IT' },
+    overdue_count: '5',
+    at_risk_count: '3',
+    score: '8',
+    average_time_at_stage_seconds: '86400',
+  },
+  {
+    stage_type: { public_id: 'st-2', name_ar: 'اعتماد', name_en: 'Approval' },
+    department: { public_id: 'dept-2', name_ar: 'الموارد البشرية', name_en: 'HR' },
+    overdue_count: '2',
+    at_risk_count: '4',
+    score: '6',
+    average_time_at_stage_seconds: '43200',
+  },
+];
+
+const mockDrillDownTasks = [
+  {
+    task_public_id: '01912345-6789-7abc-def0-123456789abc',
+    display_id: 'T-2026-0001',
+    title_ar: 'مهمة متأخرة',
+    title_en: 'Overdue Task',
+    status: 'active',
+    priority: { public_id: 'prio-1', name_ar: 'عالية', name_en: 'High', severity_rank: 'urgent', color_code: '#d97706' },
+    current_stage_name_ar: 'مراجعة',
+    current_stage_name_en: 'Review',
+    owning_department_public_id: 'dept-1',
+    sla_health: 'red',
+    created_at: '2026-07-01T00:00:00Z',
+  },
+  {
+    task_public_id: '01922345-6789-7abc-def0-123456789abc',
+    display_id: 'T-2026-0002',
+    title_ar: 'مهمة قيد المراجعة',
+    title_en: 'In Review Task',
+    status: 'active',
+    priority: null,
+    current_stage_name_ar: 'تدقيق',
+    current_stage_name_en: 'Audit',
+    owning_department_public_id: 'dept-2',
+    sla_health: 'green',
+    created_at: '2026-07-02T00:00:00Z',
+  },
+];
 
 export const mockAgingData = [
   {

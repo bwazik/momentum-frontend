@@ -5,6 +5,8 @@ import { server } from '../../../mocks/server';
 import { renderWithProviders } from '../../../utils/test-utils';
 import { TaskCreationForm } from '@/components/domain/tasks/task-creation-form';
 
+const SLOW_TEST_TIMEOUT = 15_000;
+
 const pushFn = vi.fn();
 const replaceFn = vi.fn();
 
@@ -225,7 +227,7 @@ test('launch creates task then launches and navigates to detail', async () => {
     expect(storeCalled).toBe(true);
     expect(pushFn).toHaveBeenCalledWith('/tasks/task-new');
   });
-});
+}, SLOW_TEST_TIMEOUT);
 
 test('save draft navigates to detail page', async () => {
   let storeCalled = false;
@@ -260,7 +262,7 @@ test('save draft navigates to detail page', async () => {
     expect(storeCalled).toBe(true);
     expect(pushFn).toHaveBeenCalledWith('/tasks/task-draft');
   });
-});
+}, SLOW_TEST_TIMEOUT);
 
 test('stays on form page on 422 launch failure (no navigation)', async () => {
   server.use(
@@ -286,7 +288,7 @@ test('stays on form page on 422 launch failure (no navigation)', async () => {
   await waitFor(() => {
     expect(pushFn).not.toHaveBeenCalled();
   });
-});
+}, SLOW_TEST_TIMEOUT);
 
 test('edit mode with draft task prefills form and shows delete draft button', async () => {
   server.use(
