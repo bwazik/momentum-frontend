@@ -42,6 +42,7 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
   useCapabilities(user?.public_id);
 
   const canViewAnalytics = canViewAnalyticsOrg || canViewAnalyticsDept || canViewFollowUpScope;
+  const canViewDepartmentDashboard = canViewAnalyticsOrg || canViewAnalyticsDept;
 
   const mainItems = [
     { title: tnav('dashboard'), url: '/', icon: LayoutDashboard },
@@ -91,7 +92,10 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
           <SidebarGroup>
             <SidebarGroupLabel>{tnav('analytics')}</SidebarGroupLabel>
             <SidebarGroupContent>
-              <NavMain items={[{ title: tnav('aging_report'), url: '/analytics/aging', icon: BarChart3 }]} pathname={pathname} />
+              <NavMain items={[
+                ...(canViewDepartmentDashboard ? [{ title: tnav('department_dashboard'), url: '/analytics/department', icon: BarChart3 }] : []),
+                { title: tnav('aging_report'), url: '/analytics/aging', icon: BarChart3 },
+              ]} pathname={pathname} />
             </SidebarGroupContent>
           </SidebarGroup>
         )}

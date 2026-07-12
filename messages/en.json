@@ -50,7 +50,8 @@
     "blueprint_catalog": "Catalog",
     "external_entities": "External Entities",
     "executive_dashboard": "Executive Dashboard",
-    "aging_report": "Aging Report"
+    "aging_report": "Aging Report",
+    "department_dashboard": "Department Dashboard"
   },
   "not_found": {
     "title": "Page Not Found",
@@ -1335,6 +1336,48 @@
         "stage": "Current Stage",
         "assignees": "Assignees",
         "time_at_stage": "Calendar Time in Stage",
+        "created_at": "Created At"
+      }
+    },
+    "department": {
+      "title": "Department Dashboard",
+      "description": "Department-level task performance and team workload.",
+      "error": "Unable to load the department dashboard.",
+      "empty_title": "No dashboard data",
+      "empty_description": "No analytics data is available for this department.",
+      "empty_filtered_title": "No results match your filters",
+      "empty_filtered_description": "Try adjusting or removing the active filters.",
+      "reset_filters": "Reset filters",
+      "loading_more": "Loading...",
+      "load_more": "Load more",
+      "no_permission_title": "No permission",
+      "no_permission_description": "You do not have permission to view this department dashboard.",
+      "select_department_title": "Select a department",
+      "select_department_description": "Choose a department to view its dashboard.",
+      "department_label": "Department",
+      "select_department": "Select department",
+      "stat_active": "Total Active",
+      "stat_active_sub": "Tasks in progress across the department",
+      "stat_overdue": "Overdue",
+      "stat_overdue_sub": "Requires immediate action",
+      "stat_at_risk": "At Risk",
+      "stat_at_risk_sub": "Approaching SLA deadline",
+      "stat_avg_delay": "Avg Stage Delay",
+      "stat_avg_delay_sub": "Mean time to complete a stage",
+      "panel_team": "Team Workload",
+      "panel_drill_down": "Tasks",
+      "team_active": "{count} active tasks",
+      "team_overdue": "{count} overdue",
+      "team_completed": "{count} stages completed",
+      "drill_down_error": "Unable to load tasks.",
+      "drill_down_empty_title": "No tasks found",
+      "drill_down_empty_description": "Adjust filters or reset the view.",
+      "columns": {
+        "table_label": "Department tasks",
+        "sla": "SLA",
+        "task": "Task",
+        "priority": "Priority",
+        "stage": "Current Stage",
         "created_at": "Created At"
       }
     }

@@ -3110,6 +3110,7 @@ export interface components {
             current_assignees: string;
             sla_health: string | "green";
             time_at_current_stage_seconds: string | 0;
+            working_day_seconds: string | 0;
             department: {
                 public_id: string;
                 name_ar: string;
@@ -4352,12 +4353,17 @@ export interface components {
             title_ar: string;
             title_en: string;
             status: string;
-            priority_public_id: string;
+            priority: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+                severity_rank: string;
+                color_code: string;
+            } | null;
             current_stage_name_ar: string;
             current_stage_name_en: string;
             owning_department_public_id: string;
-            /** @constant */
-            sla_health: "none";
+            sla_health: string | "none";
             created_at: string;
             created_at_hijri: string | null;
             completed_at: string;
@@ -4510,6 +4516,8 @@ export interface components {
         /** TeamMetricsResource */
         TeamMetricsResource: {
             user_public_id: string;
+            name_ar: string;
+            name_en: string;
             active_assignments: string;
             overdue_assignments: string;
             completed_stages: string;
@@ -4826,6 +4834,7 @@ export interface components {
             preferred_language: string;
             is_active: boolean;
             is_out_of_office: boolean;
+            current_position?: components["schemas"]["PositionAssignmentResource"] | null;
             created_at: string;
             updated_at: string;
         };
@@ -7094,6 +7103,7 @@ export interface operations {
                 priority_id?: string | null;
                 status?: string | null;
                 blueprint_category_id?: string | null;
+                assignee_id?: string | null;
                 calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
@@ -7103,7 +7113,7 @@ export interface operations {
             };
             path: {
                 /** @description The department public id */
-                department: number;
+                department: string;
             };
             cookie?: never;
         };
@@ -7131,6 +7141,7 @@ export interface operations {
                 priority_id?: string | null;
                 status?: string | null;
                 blueprint_category_id?: string | null;
+                assignee_id?: string | null;
                 calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
@@ -7140,7 +7151,7 @@ export interface operations {
             };
             path: {
                 /** @description The department public id */
-                department: number;
+                department: string;
             };
             cookie?: never;
         };
@@ -7168,6 +7179,8 @@ export interface operations {
                 priority_id?: string | null;
                 status?: string | null;
                 blueprint_category_id?: string | null;
+                assignee_id?: string | null;
+                metric?: string | null;
                 calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
@@ -7177,7 +7190,7 @@ export interface operations {
             };
             path: {
                 /** @description The department public id */
-                department: number;
+                department: string;
             };
             cookie?: never;
         };
@@ -7380,6 +7393,7 @@ export interface operations {
         parameters: {
             query?: {
                 per_page?: number;
+                sort?: string;
             };
             header: {
                 /** @description Tenant slug or public ID for multi-tenant resolution. */
@@ -7446,6 +7460,7 @@ export interface operations {
         parameters: {
             query?: {
                 per_page?: number;
+                sort?: string;
             };
             header: {
                 /** @description Tenant slug or public ID for multi-tenant resolution. */
@@ -7512,6 +7527,7 @@ export interface operations {
         parameters: {
             query?: {
                 per_page?: number;
+                sort?: string;
             };
             header: {
                 /** @description Tenant slug or public ID for multi-tenant resolution. */
@@ -7578,6 +7594,7 @@ export interface operations {
         parameters: {
             query?: {
                 per_page?: number;
+                sort?: string;
             };
             header: {
                 /** @description Tenant slug or public ID for multi-tenant resolution. */

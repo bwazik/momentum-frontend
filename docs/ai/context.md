@@ -113,10 +113,10 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 - ✅ `006-workflow-visualization` — Workflow graph, stage nodes, advance/return arrows, timeline bar
 - ✅ `007-follow-up-center` — Board, overdue/at-risk panels, bottlenecks, escalations, action log
 
-**Milestone F5 — Dashboards & Analytics: 🔄 In Progress**
+**Milestone F5 — Dashboards & Analytics: ✅ Done**
 - ✅ `002-executive-dashboard` — KPI stat cards, department health panel, bottleneck ranking, drill-down routes, shared StatCard
 - ✅ `009-analytics-reporting` — Task aging report, read-only filterable table, capability-gated sidebar, breadcrumb
-- ⬜ `012-department-manager-dashboard` — Department-level performance, team metrics, health cards
+- ✅ `012-department-manager-dashboard` — Department KPI stat cards, team workload panel, cursor-paginated drill-down, department selector
 
 **Milestone F6 — Admin, Org, Help, Onboarding: 🔄 In Progress**
 - ✅ `008-organization-structure` — Org chart, department/position/grade CRUD, working calendars, holidays

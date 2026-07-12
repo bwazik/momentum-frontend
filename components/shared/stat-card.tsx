@@ -9,11 +9,12 @@ import type { ReactNode } from 'react';
 
 interface StatCardProps {
   label: string;
-  value: number;
+  value: number | string;
   icon: LucideIcon;
   variant?: 'active' | 'amber' | 'red' | 'emerald' | 'suspended';
   subtitle?: string | ReactNode;
   href?: string;
+  onClick?: () => void;
   iconVariant?: 'boxed' | 'muted';
   valueSize?: '2xl' | '3xl';
   valueSuffix?: string;
@@ -42,11 +43,16 @@ export function StatCard({
   variant,
   subtitle,
   href,
+  onClick,
   iconVariant = 'boxed',
   valueSize = '3xl',
   valueSuffix,
 }: StatCardProps) {
   const locale = useLocale();
+
+  const formattedValue = typeof value === 'number'
+    ? new Intl.NumberFormat(locale).format(value)
+    : value;
 
   const card = (
     <Card
@@ -54,13 +60,17 @@ export function StatCard({
         'p-5 transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 motion-reduce:hover:translate-y-0',
         variant && 'border-s-4',
         variant && BORDER_ACCENTS[variant],
+        (onClick || href) && 'cursor-pointer',
       )}
+      onClick={onClick}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter') onClick(); } : undefined}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-1">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
           <p className={cn(valueSize === '3xl' ? 'text-3xl' : 'text-2xl', 'font-bold text-foreground')}>
-            {new Intl.NumberFormat(locale).format(value)}
+            {formattedValue}
             {valueSuffix && <span className="text-sm font-medium text-muted-foreground ms-1">{valueSuffix}</span>}
           </p>
           {subtitle && <p className="text-xs text-muted-foreground whitespace-nowrap">{subtitle}</p>}

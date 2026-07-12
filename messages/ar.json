@@ -50,7 +50,8 @@
     "blueprint_catalog": "الكتالوج",
     "external_entities": "الجهات الخارجية",
     "executive_dashboard": "لوحة التحكم التنفيذية",
-    "aging_report": "تقرير التقادم"
+    "aging_report": "تقرير التقادم",
+    "department_dashboard": "لوحة تحكم القسم"
   },
   "not_found": {
     "title": "الصفحة غير موجودة",
@@ -1336,6 +1337,48 @@
         "stage": "المرحلة الحالية",
         "assignees": "المكلفون",
         "time_at_stage": "الوقت التقويمي في المرحلة",
+        "created_at": "تاريخ الإنشاء"
+      }
+    },
+    "department": {
+      "title": "لوحة تحكم القسم",
+      "description": "أداء المهام على مستوى القسم وعبء عمل الفريق.",
+      "error": "تعذر تحميل لوحة تحكم القسم.",
+      "empty_title": "لا توجد بيانات للوحة التحكم",
+      "empty_description": "لا تتوفر بيانات تحليلات لهذا القسم.",
+      "empty_filtered_title": "لا توجد نتائج تطابق الفلاتر",
+      "empty_filtered_description": "حاول تعديل أو إزالة الفلاتر النشطة.",
+      "reset_filters": "إعادة تعيين الفلاتر",
+      "loading_more": "جاري التحميل...",
+      "load_more": "تحميل المزيد",
+      "no_permission_title": "لا توجد صلاحية",
+      "no_permission_description": "ليس لديك صلاحية لعرض لوحة تحكم هذا القسم.",
+      "select_department_title": "اختر قسمًا",
+      "select_department_description": "اختر قسمًا لعرض لوحة التحكم الخاصة به.",
+      "department_label": "القسم",
+      "select_department": "اختر القسم",
+      "stat_active": "إجمالي النشطة",
+      "stat_active_sub": "المهام قيد التنفيذ في القسم",
+      "stat_overdue": "متأخرة",
+      "stat_overdue_sub": "تتطلب إجراء فوريًا",
+      "stat_at_risk": "قريبة من الموعد",
+      "stat_at_risk_sub": "تقترب من مهلة الإنجاز",
+      "stat_avg_delay": "متوسط تأخير المرحلة",
+      "stat_avg_delay_sub": "متوسط الوقت لإكمال المرحلة",
+      "panel_team": "عبء عمل الفريق",
+      "panel_drill_down": "المهام",
+      "team_active": "{count} مهام نشطة",
+      "team_overdue": "{count} متأخرة",
+      "team_completed": "{count} مراحل مكتملة",
+      "drill_down_error": "تعذر تحميل المهام.",
+      "drill_down_empty_title": "لا توجد مهام",
+      "drill_down_empty_description": "عدل الفلاتر أو أعد تعيين العرض.",
+      "columns": {
+        "table_label": "مهام القسم",
+        "sla": "ا.م.خ",
+        "task": "المهمة",
+        "priority": "الأولوية",
+        "stage": "المرحلة الحالية",
         "created_at": "تاريخ الإنشاء"
       }
     }

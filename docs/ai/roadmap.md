@@ -6,8 +6,8 @@
 
 ## Current Focus
 
-**Phase:** F5 — Dashboards & analytics
-**Active spec:** `012-department-manager-dashboard`
+**Phase:** F6 — Admin, Org, Help, Onboarding
+**Active spec:** `010-system-administration`
 **Branch:** `main`
 
 ---
@@ -21,7 +21,7 @@
 | F2 | Task board & task details | ✅ Done | M4 backend |
 | F3 | Blueprint builder | ✅ Done | M3 backend |
 | F4 | Follow-up & workflow viz | ✅ Done | M4–M6 backend |
-| F5 | Dashboards & analytics | 🔄 In Progress | M6 backend |
+| F5 | Dashboards & analytics | ✅ Done | M6 backend |
 | F6 | Admin, org, help, onboarding | 🔄 In Progress | M1–M2, M7 backend |
 
 **Legend:** ✅ Done · 🔄 In Progress · ⬜ Not Started · 🚧 Blocked
@@ -43,7 +43,7 @@
 | `009-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `010-system-administration` | F6 | Tenant Admin | `003`, `005` (priorities), `015` | ⬜ |
 | `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
-| `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ⬜ |
+| `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `016-task-creation-launch` | F2 | Tasks | `005-task-execution` | ✅ |
 | `017-user-settings-delegation` | F6 | Settings | `016` | ⬜ |
 | `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ⬜ |
@@ -221,9 +221,9 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 ## F5 — Dashboards & Analytics
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Done
 
-**Specs:** `002` ✅, `009` ✅, `012` ⬜
+**Specs:** `002` ✅, `009` ✅, `012` ✅
 
 **Established by 002:**
 - **Shared `StatCard` component** — Extracted `components/shared/stat-card.tsx` used by both executive dashboard and Follow-Up center. Configurable `variant`, `iconVariant`, `valueSize`, `valueSuffix`, and `subtitle` (string or ReactNode).
@@ -242,8 +242,16 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Breadcrumb for analytics sub-routes** — `usePageBreadcrumb()` extended to handle `/analytics/*` sub-routes, showing Dashboard → Analytics → page title.
 - **Aging time display** — `formatTimeSince()` computes calendar-time from `entered_at` timestamp, distinct from `formatTimeInStage()` which uses pre-computed working seconds from the follow-up board endpoint.
 
-**Remaining F5 specs:**
-- `012-department-manager-dashboard` — Department-level manager dashboard (requires `009-analytics-reporting` — ✅ Done on backend)
+**Established by 012:**
+- **StatCard `onClick` prop** — Extended shared `StatCard` to accept an `onClick` callback and `value: number | string` for clickable metric cards and duration display. When `value` is a string, `Intl.NumberFormat` is skipped.
+- **Department auto-resolution via `/me`** — `useCurrentUser`'s `UserResource` regenerated to include `current_position`. When no `departmentId` is in the URL, the component resolves it from `user.current_position.position.department.public_id` and writes it via `router.replace`.
+- **Runtime narrowing adapters for department endpoints** — `narrowDepartmentPerformance()`, `narrowTeamMember()`, and `sortTeamMembers()` convert string-serialized numeric fields and sort by overdue desc → active desc → name.
+- **Capability-gated department selector** — `DepartmentSelector` is split into two code paths: org-wide users see a `RtlSelect` populated from `useDepartmentsInfinite()` (lazy-loaded in a separate sub-component); scoped users see a read-only label fetched via `useDepartment()`.
+- **Skeleton retention during refetch** — The main loading check includes `isFetching` in addition to `isLoading`, keeping the skeleton visible during retries and preventing a 403 flash followed by success.
+- **Breadcrumb matching sidebar groups** — `usePageBreadcrumb()` now shows the sidebar group label as the first breadcrumb segment (e.g., `Main > Tasks`, `Analytics > Department Dashboard`). Group labels are not clickable; only nav items are.
+- **Department drill-down with internal skeleton** — `DepartmentDrillDownList` has its own skeleton component (`DepartmentDrillDownSkeleton`) reused in both the page-level skeleton and drill-down refetch loading states.
+- **Team workload drill-down via `assignee_id`** — Each team row sets `assigneeId` URL param, which the backend passes as `assignee_id` to filter the drill-down. The param is correctly snake_case-converted in the query builder.
+- **SLA health drill-down filters** — Stat cards for overdue/at-risk send `sla_health=red|amber` to the backend, which filters by SLA health value at the API level.
 
 ## F6 — Admin, Org, Help, Onboarding
 

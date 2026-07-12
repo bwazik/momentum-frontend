@@ -74,3 +74,54 @@ export function useExecutiveBottleneckDrillDown(stageType: string, filters: Exec
     getNextPageParam: (lastPage) => (lastPage.has_more ? lastPage.next_cursor : undefined),
   });
 }
+
+// ---- Department Dashboard Hooks -------------------------------------------
+
+export type DepartmentPerformanceQuery = NonNullable<
+  operations['departmentDashboard.performance']['parameters']['query']
+>;
+
+export type DepartmentTeamQuery = NonNullable<
+  operations['departmentDashboard.team']['parameters']['query']
+> & { sla_health?: string; assignee_id?: string };
+
+export type DepartmentDrillDownQuery = NonNullable<
+  operations['departmentDashboard.drillDown']['parameters']['query']
+> & { sla_health?: string; assignee_id?: string };
+
+export function useDepartmentPerformance(departmentPublicId: string, filters: DepartmentPerformanceQuery) {
+  return useQuery({
+    queryKey: queryKeys.analytics.department.performance(departmentPublicId, filters as unknown as Record<string, unknown>),
+    queryFn: () =>
+      apiClient.get<unknown>(`/v1/analytics/departments/${departmentPublicId}/performance`, {
+        params: filters,
+      }),
+    refetchInterval: 60_000,
+    enabled: !!departmentPublicId,
+  });
+}
+
+export function useDepartmentTeam(departmentPublicId: string, filters: DepartmentTeamQuery) {
+  return useQuery({
+    queryKey: queryKeys.analytics.department.team(departmentPublicId, filters as unknown as Record<string, unknown>),
+    queryFn: () =>
+      apiClient.get<unknown[]>(`/v1/analytics/departments/${departmentPublicId}/team`, {
+        params: filters,
+      }),
+    enabled: !!departmentPublicId,
+  });
+}
+
+export function useDepartmentDrillDownInfinite(departmentPublicId: string, filters: DepartmentDrillDownQuery) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.analytics.department.drillDown(departmentPublicId, filters as unknown as Record<string, unknown>),
+    queryFn: ({ pageParam }) =>
+      apiClient.get<CursorPage<unknown>>(
+        `/v1/analytics/departments/${departmentPublicId}/performance/drill-down`,
+        { params: { ...filters, cursor: pageParam } },
+      ),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => (lastPage.has_more ? lastPage.next_cursor : undefined),
+    enabled: !!departmentPublicId,
+  });
+}

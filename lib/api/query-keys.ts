@@ -127,5 +127,16 @@ export const queryKeys = {
       bottleneckDrillDown: (stageType: string, filters: Record<string, unknown>) =>
         [...queryKeys.analytics.executive.bottleneckDrillDowns(), stageType, filters] as const,
     },
+    department: {
+      performances: () => [...queryKeys.analytics.all, 'department', 'performance'] as const,
+      performance: (departmentPublicId: string, filters: Record<string, unknown>) =>
+        [...queryKeys.analytics.department.performances(), departmentPublicId, filters] as const,
+      teams: () => [...queryKeys.analytics.all, 'department', 'team'] as const,
+      team: (departmentPublicId: string, filters: Record<string, unknown>) =>
+        [...queryKeys.analytics.department.teams(), departmentPublicId, filters] as const,
+      drillDowns: () => [...queryKeys.analytics.all, 'department', 'drill-down'] as const,
+      drillDown: (departmentPublicId: string, filters: Record<string, unknown>) =>
+        [...queryKeys.analytics.department.drillDowns(), departmentPublicId, filters] as const,
+    },
   },
 } as const;

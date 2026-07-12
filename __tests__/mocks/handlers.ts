@@ -59,6 +59,64 @@ export const handlers = [
       has_more: false,
     });
   }),
+
+  // --- Department Dashboard handlers ---
+
+  http.get('https://api.momentum.test/v1/analytics/departments/:department/performance', () => {
+    return HttpResponse.json({
+      department_public_id: 'dept-1',
+      active_tasks: '5',
+      overdue_tasks: '1',
+      at_risk_tasks: '0',
+      average_stage_delay_seconds: '3600',
+    });
+  }),
+
+  http.get('https://api.momentum.test/v1/analytics/departments/:department/team', () => {
+    return HttpResponse.json([
+      {
+        user_public_id: 'user-1',
+        name_ar: 'أحمد',
+        name_en: 'Ahmad',
+        active_assignments: '3',
+        overdue_assignments: '1',
+        completed_stages: '5',
+      },
+      {
+        user_public_id: 'user-2',
+        name_ar: 'سارة',
+        name_en: 'Sara',
+        active_assignments: '2',
+        overdue_assignments: '0',
+        completed_stages: '8',
+      },
+    ]);
+  }),
+
+  http.get('https://api.momentum.test/v1/analytics/departments/:department/performance/drill-down', () => {
+    return HttpResponse.json({
+      data: [
+        {
+          task_public_id: 'task-1',
+          display_id: 'T-2026-0001',
+          title_ar: 'مهمة اختبارية',
+          title_en: 'Test Task',
+          status: 'active',
+          priority: { public_id: 'p1', name_ar: 'عاجل', name_en: 'Urgent', severity_rank: '1', color_code: '#dc2626' },
+          current_stage_name_ar: 'مراجعة',
+          current_stage_name_en: 'Review',
+          owning_department_public_id: 'dept-1',
+          sla_health: 'red',
+          created_at: '2026-07-01T00:00:00Z',
+          created_at_hijri: null,
+          completed_at: '',
+          completed_at_hijri: null,
+        },
+      ],
+      next_cursor: null,
+      has_more: false,
+    });
+  }),
   http.get('https://api.momentum.test/v1/follow-up/board', () => {
     return HttpResponse.json({
       data: [
