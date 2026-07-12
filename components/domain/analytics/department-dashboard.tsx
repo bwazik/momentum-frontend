@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { Lock } from 'lucide-react';
@@ -43,23 +43,17 @@ export function DepartmentDashboard() {
   const canViewOrg = useCapability('analytics.view.organization');
 
   const urlFilters = useMemo(() => readDepartmentDashboardFilters(searchParams), [searchParams]);
-  const [resolvingDept, setResolvingDept] = useState(true);
+
+  const userDeptId = (user as { current_position?: { position?: { department?: { public_id?: string } } } } | undefined)
+    ?.current_position?.position?.department?.public_id;
 
   useEffect(() => {
-    if (urlFilters.departmentId) {
-      setResolvingDept(false);
-      return;
-    }
-    if (!user) return;
-    const deptId = (user as { current_position?: { position?: { department?: { public_id?: string } } } }).current_position?.position?.department?.public_id;
-    if (deptId) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('departmentId', deptId);
-      router.replace(`${pathname}?${params.toString()}`);
-      return;
-    }
-    setResolvingDept(false);
-  }, [user, urlFilters.departmentId, pathname, router, searchParams]);
+    if (urlFilters.departmentId) return;
+    if (!user || !userDeptId) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('departmentId', userDeptId);
+    router.replace(`${pathname}?${params.toString()}`);
+  }, [user, userDeptId, urlFilters.departmentId, pathname, router, searchParams]);
 
   const performanceFilters = useMemo(() => toDepartmentPerformanceQuery(urlFilters), [urlFilters]);
   const teamFilters = useMemo(() => toDepartmentTeamQuery(urlFilters), [urlFilters]);
@@ -82,13 +76,14 @@ export function DepartmentDashboard() {
     );
   }, [teamQuery.data, locale]);
 
+  const noDeptToResolve = !!user && !userDeptId;
   const isFetchingOrLoading =
     performanceQuery.isLoading || performanceQuery.isFetching ||
     teamQuery.isLoading || teamQuery.isFetching ||
     drillDownQuery.isLoading || drillDownQuery.isFetching;
   const isLoading =
     isUserLoading ||
-    (!urlFilters.departmentId && resolvingDept) ||
+    (!urlFilters.departmentId && !noDeptToResolve) ||
     isFetchingOrLoading;
   const hasPermanentError =
     (performanceQuery.isError && !performanceQuery.isFetching) ||

@@ -1,6 +1,6 @@
 import type { components, operations } from '@/lib/generated/api-types';
 
-export type BoardTaskResource = components['schemas']['BoardTaskResource'] & { working_day_seconds?: string | null };
+export type BoardTaskResource = components['schemas']['BoardTaskResource'];
 export type TaskPriorityResource = components['schemas']['TaskPriorityResource'];
 export type DepartmentResource = components['schemas']['DepartmentResource'];
 export type BlueprintCategoryResource = components['schemas']['BlueprintCategoryResource'];
