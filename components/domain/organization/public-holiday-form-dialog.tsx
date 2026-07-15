@@ -4,10 +4,9 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useCreatePublicHoliday, useUpdatePublicHoliday } from '@/lib/api/hooks/use-organization';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
+import { DatePicker } from '@/components/shared/date-picker';
 import { asBool } from './organization-utils';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Field, FieldLabel } from '@/components/ui/field';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -53,6 +52,7 @@ export function PublicHolidayFormDialog({
     holiday_date: holiday?.holiday_date ? holiday.holiday_date.split('T')[0] : '',
     is_recurring: asBool(holiday?.is_recurring),
   }));
+  const [calendarSystem, setCalendarSystem] = useState<'gregorian' | 'hijri'>('gregorian');
   const createMutation = useCreatePublicHoliday(calendarPublicId);
   const updateMutation = useUpdatePublicHoliday(calendarPublicId, holiday?.public_id ?? '');
   const isPending = createMutation.isPending || updateMutation.isPending;
@@ -71,6 +71,7 @@ export function PublicHolidayFormDialog({
       name_en: form.name_en || undefined,
       holiday_date: form.holiday_date,
       is_recurring: form.is_recurring,
+      calendar_system: calendarSystem === 'hijri' ? 'hijri' : undefined,
     } as unknown as StorePublicHolidayRequest;
 
     const mutation = isEdit ? updateMutation : createMutation;
@@ -100,15 +101,17 @@ export function PublicHolidayFormDialog({
             nameArKey="name_ar"
           />
 
-          <Field>
-            <FieldLabel>{t('dialogs.date')} <span className="text-destructive">*</span></FieldLabel>
-            <Input
-              type="date"
-              value={form.holiday_date}
-              onChange={(e) => setForm((prev) => ({ ...prev, holiday_date: e.target.value }))}
-            />
-            
-          </Field>
+          <DatePicker
+            id="holiday-date"
+            label={t('dialogs.date')}
+            value={form.holiday_date}
+            calendarSystem={calendarSystem}
+            onChange={(value, nextCalendar) => {
+              setForm((prev) => ({ ...prev, holiday_date: value ?? '' }));
+              if (nextCalendar !== calendarSystem) setCalendarSystem(nextCalendar);
+            }}
+            required
+          />
 
           <div className="flex items-center gap-2">
             <Checkbox

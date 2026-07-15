@@ -24,11 +24,12 @@ export function DepartmentDashboardFilters() {
       status: searchParams.get('status') ?? undefined,
       slaHealth: searchParams.get('slaHealth') ?? undefined,
       assigneeId: searchParams.get('assigneeId') ?? undefined,
+      calendarSystem: (searchParams.get('calendarSystem') as TaskBoardUrlFilters['calendarSystem']) ?? undefined,
     }),
     [searchParams],
   );
 
-  const activeCount = [filters.dateFrom, filters.dateTo, filters.priorityId, filters.blueprintCategoryId, filters.status, filters.slaHealth, filters.assigneeId].filter(
+  const activeCount = [filters.dateFrom, filters.dateTo, filters.priorityId, filters.blueprintCategoryId, filters.status, filters.slaHealth, filters.assigneeId, filters.calendarSystem].filter(
     Boolean,
   ).length;
 
@@ -38,6 +39,7 @@ export function DepartmentDashboardFilters() {
       blueprintCategoryId: filters.blueprintCategoryId,
       dateFrom: filters.dateFrom,
       dateTo: filters.dateTo,
+      calendarSystem: filters.calendarSystem,
     }),
     [filters],
   );
@@ -47,6 +49,18 @@ export function DepartmentDashboardFilters() {
       const params = new URLSearchParams(searchParams.toString());
       if (value && value !== 'all') params.set(key, value);
       else params.delete(key);
+      router.replace(`${pathname}?${params.toString()}`);
+    },
+    [searchParams, router, pathname],
+  );
+
+  const setBatchParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      for (const [key, value] of Object.entries(updates)) {
+        if (value && value !== 'all') params.set(key, value);
+        else params.delete(key);
+      }
       router.replace(`${pathname}?${params.toString()}`);
     },
     [searchParams, router, pathname],
@@ -65,6 +79,7 @@ export function DepartmentDashboardFilters() {
         t={ta as unknown as ReturnType<typeof useTranslations>}
         filters={mappedFilters}
         onParam={(key, value) => setParam(key, value === 'all' ? null : value)}
+        onBatchParams={(updates) => setBatchParams(updates)}
         hideFields={['stageType', 'assignee']}
       />
       {activeCount > 0 && (

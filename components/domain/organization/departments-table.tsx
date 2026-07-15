@@ -7,6 +7,7 @@ import { TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/compon
 import { ActiveBadge } from '@/components/shared/active-badge';
 import { OrgActionMenu, type OrgAction } from './org-action-menu';
 import { LoadMoreButton } from './load-more-button';
+import { WorkingCalendarBadge } from './working-calendar-badge';
 import { localizeName, asBool } from './organization-utils';
 import type { components } from '@/lib/generated/api-types';
 
@@ -47,6 +48,7 @@ export function DepartmentsTable({
           <TableRow>
             <TableHead className="text-start">{t('departments.columns.name')}</TableHead>
             <TableHead className="text-start">{t('departments.columns.parent')}</TableHead>
+            <TableHead className="text-start">{t('departments.columns.calendar')}</TableHead>
             <TableHead className="text-start">{t('departments.columns.status')}</TableHead>
             {canManage && <TableHead className="w-12 text-end" />}
           </TableRow>
@@ -90,6 +92,9 @@ export function DepartmentsTable({
                   {dept.parent_department_id
                     ? parentMap.get(dept.parent_department_id) ?? '—'
                     : '—'}
+                </TableCell>
+                <TableCell className="text-start">
+                  <WorkingCalendarBadge calendar={dept.working_calendar} />
                 </TableCell>
                 <TableCell className="text-start">
                   <ActiveBadge

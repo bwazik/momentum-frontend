@@ -139,4 +139,10 @@ export const queryKeys = {
         [...queryKeys.analytics.department.drillDowns(), departmentPublicId, filters] as const,
     },
   },
+  localization: {
+    all: ['localization'] as const,
+    context: () => [...queryKeys.localization.all, 'context'] as const,
+    dateConversion: (params: Record<string, string>) =>
+      [...queryKeys.localization.all, 'date-conversion', params] as const,
+  },
 } as const;

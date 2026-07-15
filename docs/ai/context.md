@@ -124,7 +124,7 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 - ⬜ `011-help-center` — Help center CMS (requires `020-help-center` — ✅ Done on backend)
 - ⬜ `017-user-settings-delegation` — User settings and delegation (requires `016-delegation-oof` — ✅ Done on backend)
 - ⬜ `019-confidential-access` — Confidential task access (requires `017-confidentiality-access` — ✅ Done on backend)
-- ⬜ `020-localization-calendar` — Hijri calendar settings (requires `018-localization-calendar` — ✅ Done on backend)
+- ✅ `020-localization-calendar` — Hijri date picker, dual date display, calendar system filter, department calendar assignment
 - ⬜ `021-onboarding-training` — Onboarding module (requires `019-onboarding-training` — ✅ Done on backend)
 - ⬜ `022-platform-administration` — Platform tenant management (requires `001-platform-tenancy/admin` — ✅ Done on backend)
 

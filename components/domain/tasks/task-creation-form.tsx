@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -57,6 +57,7 @@ export function TaskCreationForm({ mode, publicId }: Props) {
   const launchTask = useLaunchTask();
   const canManage = useCapability('task.manage');
   const canClassifyConfidential = useCapability('task.classify.confidential');
+  const [dueDateCalendarSystem, setDueDateCalendarSystem] = useState<'gregorian' | 'hijri'>('gregorian');
 
   const detail = useTaskDetail(publicId ?? '');
   const { data: prioritiesData } = useTaskPriorities();
@@ -179,23 +180,25 @@ export function TaskCreationForm({ mode, publicId }: Props) {
           description_en: descEn || undefined,
           classification_level: classificationLevel,
           due_date: dueDate ?? undefined,
+          calendar_system: dueDateCalendarSystem === 'hijri' ? 'hijri' : undefined,
           manual_assignments: Object.keys(manualBody).length > 0
             ? toApiManual(manualBody)
             : undefined,
         });
         return created.public_id;
       } else {
-        await updateTask.mutateAsync({
-          publicId: publicId!,
-          body: {
-            title_ar: titleAr,
-            title_en: titleEn || undefined,
-            description_ar: descAr,
-            description_en: descEn || undefined,
-            classification_level: classificationLevel,
-            due_date: dueDate ?? undefined,
-          } as components['schemas']['UpdateTaskRequest'],
-        });
+          await updateTask.mutateAsync({
+            publicId: publicId!,
+            body: {
+              title_ar: titleAr,
+              title_en: titleEn || undefined,
+              description_ar: descAr,
+              description_en: descEn || undefined,
+              classification_level: classificationLevel,
+              due_date: dueDate ?? undefined,
+              calendar_system: dueDateCalendarSystem === 'hijri' ? 'hijri' : undefined,
+            } as components['schemas']['UpdateTaskRequest'],
+          });
         return publicId!;
       }
     } catch (e) {
@@ -233,6 +236,8 @@ export function TaskCreationForm({ mode, publicId }: Props) {
             mode={mode}
             manualItems={manualItems}
             canClassifyConfidential={canClassifyConfidential}
+            dueDateCalendarSystem={dueDateCalendarSystem}
+            onDueDateCalendarSystemChange={setDueDateCalendarSystem}
           />
         </FieldGroup>
 

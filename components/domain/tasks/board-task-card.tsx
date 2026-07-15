@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { ExternalLink, GitBranch, Copy, PhoneCall, ShieldAlert } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { DualDateDisplay } from '@/components/shared/dual-date-display';
 import { SlaBadge, TaskStatusBadge, PriorityBadge, ClassificationBadge } from '@/components/domain/tasks/task-badges';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { getCurrentAssignees, formatTimeInStage, formatDueDate } from '@/components/domain/tasks/task-board-utils';
@@ -77,8 +78,13 @@ export function BoardTaskCard({ task, onLogFollowUp, onEscalate, actionLabels, l
           </span>
           <span>
             {task.status === 'draft' || task.status === 'completed' || task.status === 'cancelled' ? '-' : formatTimeInStage(task.time_at_current_stage_seconds, locale, task.working_day_seconds ? Number(task.working_day_seconds) : null)}
-            {task.due_date && ` · ${formatDueDate(task.due_date, locale)}`}
+            {task.due_date && (' \u00B7 ' + formatDueDate(task.due_date, locale))}
           </span>
+          {task.due_date && (
+            <div className="text-xs text-muted-foreground">
+              <DualDateDisplay gregorian={task.due_date} hijri={task.due_date_hijri} variant="stacked" />
+            </div>
+          )}
         </div>
 
         {assignees.length > 0 && (

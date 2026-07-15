@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F6 — Admin, Org, Help, Onboarding
-**Active spec:** `010-system-administration`
+**Active spec:** `017-user-settings-delegation` (next)
 **Branch:** `main`
 
 ---
@@ -47,7 +47,7 @@
 | `016-task-creation-launch` | F2 | Tasks | `005-task-execution` | ✅ |
 | `017-user-settings-delegation` | F6 | Settings | `016` | ⬜ |
 | `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ⬜ |
-| `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ⬜ |
+| `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ✅ |
 | `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
 | `022-platform-administration` | F6 | Platform | `001-platform-tenancy`, `001-platform-admin` | ⬜ |
 | `023-task-comments` | F2 | Tasks | `013-comments-collaboration` | ✅ |
@@ -257,7 +257,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** 🔄 In Progress
 
-**Specs:** `008` ✅, `010` ⬜, `011` ⬜, `017` ⬜, `019` ⬜, `020` ⬜, `021` ⬜, `022` ⬜
+**Specs:** `008` ✅, `010` ⬜, `011` ⬜, `017` ⬜, `019` ⬜, `020` ✅, `021` ⬜, `022` ⬜
 
 **Established by 008:**
 - **Visual org chart pattern:** Gradient avatar cards with initials, tiered layout with CSS connector lines, progressive disclosure via click, zoom controls (`ZoomIn`/`ZoomOut`). Works for org chart browsing, not just list trees.
@@ -271,12 +271,24 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Holiday query invalidation:** Prefix match without trailing `undefined` — invalidation key `['organization', 'working-calendars', calId, 'holidays']` matches all year-filtered query keys.
 - **DRY shared components pattern:** Domain-local shared components (`PermissionDenied`, `VacantBadge`, `LoadMoreButton`) avoid coupling to shared/ while eliminating 15+ duplicated code blocks.
 
+**Established by 020:**
+- **Unified DatePicker component:** Single `DatePicker` component handles both Gregorian and Hijri modes via a `calendarSystem` prop. Gregorian uses native `Calendar` with `captionLayout="dropdown"` + `arSA` locale. Hijri uses the same `Calendar` with `formatCaption`/`formatDay` formatters via `Intl.DateTimeFormat('...-u-ca-islamic-umalqura')`. Toggle built in. `hideToggle` prop available for external toggle scenarios.
+- **Unified DateRangePicker:** Single `Calendar mode="range"` for both modes — Gregorian with `numberOfMonths=2` + dropdowns, Hijri with Islamic formatters. Local `pending` state delays URL commit until both dates selected. `dateToLocalIso()` eliminates UTC timezone off-by-one bugs.
+- **CalendarSystemToggle shared component:** Two-button toggle (Hijri/Gregorian) with `flex` + `flex-1` for 50:50 split. `role="group"` + `aria-pressed` for accessibility. Used standalone (advanced filters) or inside `DatePicker`.
+- **DualDateDisplay pattern:** Every date display (task detail, board table, timeline, notifications, holidays) uses `DualDateDisplay` for Gregorian + Hijri companion. Uses `formatGregorianDate` for timezone-safe formatting and `formatHijriIso` to display API `*_hijri` fields directly (no client-side recomputation).
+- **Timezone-safe date conversion:** `dateToLocalIso()` uses `getFullYear/getMonth/getDate` (local timezone) instead of `toISOString()` (UTC). Applied across `DatePicker`, `DateRangePicker`, `DualDateDisplay`, and stage timeline.
+- **Hijri date input with visual calendar:** Task due date and public holiday forms use `DatePicker` with a visual `Calendar` popover for both modes — shadcn `Calendar` for Gregorian, same component with Islamic `Intl.DateTimeFormat` formatters for Hijri. Replaces the spec's original ISO text-input-only approach.
+- **Calendar system URL filter:** `?calendarSystem=hijri` URL param drives the Advanced Filters Sheet's date range picker. `readBoardFilters`/`toBoardQuery` map it to `calendar_system` API param. Switching clears `dateFrom`/`dateTo` to prevent mixed-calendar submissions.
+- **Date converter widget:** Lazy-loaded `DateConverterDialog` in site header. Uses `GET /v1/localization/date-conversion` with `useDateConversion` (staleTime: Infinity). `CalendarSystemToggle` for input calendar, `DatePicker hideToggle` for date selection, formatted result with timezone. `Enter` key triggers conversion.
+- **Localization context sync:** `LocalizationContextSection` displays resolved locale, direction, timezone, and Hijri variant. On first load (no `NEXT_LOCALE` cookie), syncs backend's resolved locale to the cookie — ensures fresh login respects the user's saved language preference without overriding manual toggles.
+- **Department calendar assignment:** `DepartmentCalendarSelect` (RtlSelect with "Default Calendar" sentinel) added to department create/edit dialog. `WorkingCalendarBadge` shows assigned calendar in departments table. Saves `working_calendar_id: null` for tenant default.
+- **Batched URL params for sheet filters:** `onBatchParams` pattern added to `AdvancedFiltersSheet` and its parents. Batches multiple `router.replace` calls into one to prevent stale `searchParams` overwrites. Used by CalendarSystemToggle (clears date range on switch) and DateRangePicker (commits both dates).
+
 **Remaining F6 specs:**
 - `010-system-administration` — Tenant admin screens (requires `015-audit-trail` — ✅ Done on backend)
 - `011-help-center` — Help center CMS screens (requires `020-help-center` — ✅ Done on backend)
 - `017-user-settings-delegation` — User settings and delegation UI (requires `016-delegation-oof` — ✅ Done on backend)
 - `019-confidential-access` — Confidential task access management (requires `017-confidentiality-access` — ✅ Done on backend)
-- `020-localization-calendar` — Hijri calendar and localization settings (requires `018-localization-calendar` — ✅ Done on backend)
 - `021-onboarding-training` — Onboarding and training module (requires `019-onboarding-training` — ✅ Done on backend)
 - `022-platform-administration` — Platform-level tenant management (requires `001-platform-tenancy`/`admin` — ✅ Done on backend)
 

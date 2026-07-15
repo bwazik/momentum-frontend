@@ -25,9 +25,11 @@ interface Props {
   mode: 'create' | 'edit';
   manualItems: ManualItem[];
   canClassifyConfidential: boolean;
+  dueDateCalendarSystem?: 'gregorian' | 'hijri';
+  onDueDateCalendarSystemChange?: (value: 'gregorian' | 'hijri') => void;
 }
 
-export function TaskFormFields({ mode, manualItems, canClassifyConfidential }: Props) {
+export function TaskFormFields({ mode, manualItems, canClassifyConfidential, dueDateCalendarSystem = 'gregorian', onDueDateCalendarSystemChange }: Props) {
   const t = useTranslations('tasks.new');
   const titleAr = useTaskFormStore((s) => s.title_ar);
   const titleEn = useTaskFormStore((s) => s.title_en);
@@ -82,7 +84,10 @@ export function TaskFormFields({ mode, manualItems, canClassifyConfidential }: P
             <>
               <PrioritySelect priorities={priorities} />
               <ClassificationSelect canClassifyConfidential={canClassifyConfidential} />
-              <DueDateField />
+              <DueDateField
+                calendarSystem={dueDateCalendarSystem}
+                onCalendarSystemChange={onDueDateCalendarSystemChange ?? (() => {})}
+              />
             </>
           )}
         </div>

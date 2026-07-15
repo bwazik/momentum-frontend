@@ -9,6 +9,7 @@ export interface Notification {
   type: string;
   read_at: string | null;
   created_at: string;
+  created_at_hijri?: string | null;
   data: {
     title_ar?: string;
     title_en?: string;

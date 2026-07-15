@@ -23,7 +23,8 @@
     },
     "logout": "تسجيل الخروج",
     "theme": "المظهر",
-    "brand_color": "اللون الأساسي"
+    "brand_color": "لون العلامة",
+    "localization": "التوطين"
   },
   "locale": {
     "switch_to_english": "Switch to English",
@@ -209,6 +210,7 @@
         "date_to": "إلى تاريخ",
         "date_field": "حقل التاريخ",
         "external_reference": "رقم الإشارة",
+        "calendar_system": "نظام التقويم",
         "external_reference_placeholder": "ابحث برقم الإشارة..."
       },
       "columns": {
@@ -1059,6 +1061,7 @@
       "columns": {
         "name": "الاسم",
         "parent": "القسم الرئيسي",
+        "calendar": "تقويم العمل",
         "status": "الحالة"
       },
       "create_title": "إضافة قسم",
@@ -1068,6 +1071,9 @@
       "parent": "القسم الرئيسي",
       "parent_placeholder": "اختر القسم الرئيسي",
       "no_parent": "مستوى رئيسي",
+      "calendar": "تقويم العمل",
+      "calendar_placeholder": "اختر تقويم عمل",
+      "default_calendar": "التقويم الافتراضي",
       "deactivate_title": "تعطيل القسم",
       "deactivate_description": "هل أنت متأكد من تعطيل {name}؟",
       "cascade_to_children": "تعطيل جميع الأقسام الفرعية أيضًا",
@@ -1327,6 +1333,7 @@
       "department": "القسم",
       "priority": "الأولوية",
       "blueprint_category": "تصنيف النموذج",
+      "calendar_system": "نظام التقويم",
       "date_from": "من تاريخ",
       "date_to": "إلى تاريخ",
       "columns": {
@@ -1381,6 +1388,32 @@
         "stage": "المرحلة الحالية",
         "created_at": "تاريخ الإنشاء"
       }
+    }
+  },
+  "localization": {
+    "gregorian": "ميلادي",
+    "hijri": "هجري",
+    "hijri_prefix": "",
+    "hijri_suffix": "هـ",
+    "hijri_date_label": "التاريخ الهجري",
+    "calendar_system_label": "نظام التقويم",
+    "date_converter_label": "محول التواريخ",
+    "date_converter_title": "محول التاريخ",
+    "from_calendar": "من تقويم",
+    "date_label": "التاريخ",
+    "convert": "تحويل",
+    "converter_empty": "أدخل تاريخاً ثم اضغط تحويل",
+    "gregorian_placeholder": "YYYY-MM-DD",
+    "gregorian_range_placeholder": "YYYY-MM-DD – YYYY-MM-DD",
+    "hijri_placeholder": "1447-02-15",
+    "hijri_range_placeholder": "1447-01-01 – 1447-01-30",
+    "hijri_hint": "مثال: ١٤٤٧-٠٢-١٥",
+    "context": {
+      "title": "التوطين",
+      "locale": "اللغة",
+      "direction": "الاتجاه",
+      "timezone": "المنطقة الزمنية",
+      "variant": "نوع التقويم الهجري"
     }
   }
 }

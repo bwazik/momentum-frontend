@@ -158,6 +158,7 @@ export function useUpdateDepartment(publicId: string) {
     onSuccess: () => {
       qiDepartments(qc);
       qc.invalidateQueries({ queryKey: queryKeys.organization.department(publicId) });
+      qc.invalidateQueries({ queryKey: queryKeys.organization.workingCalendars() });
       toast.success(t('dept_saved'));
     },
     onError: (e: Error) => toast.error(e.message),

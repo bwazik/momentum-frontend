@@ -5,8 +5,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { CalendarDays, Pencil, Trash2 } from 'lucide-react';
 import { usePublicHolidays, useDeletePublicHoliday } from '@/lib/api/hooks/use-organization';
+import { DualDateDisplay } from '@/components/shared/dual-date-display';
 import { localizeName, asBool } from './organization-utils';
-import { formatDualDate } from '@/lib/utils/date-utils';
 import { PublicHolidayFormDialog } from './public-holiday-form-dialog';
 import { OrgSkeleton } from './org-skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
@@ -101,7 +101,7 @@ export function PublicHolidaysSubView({ calendar, canManage }: PublicHolidaysSub
               <TableRow key={holiday.public_id}>
                 <TableCell className="text-start font-medium">{localizeName(holiday, locale)}</TableCell>
                 <TableCell className="text-start text-muted-foreground">
-                  {formatDualDate(holiday.holiday_date, locale)}
+                  <DualDateDisplay gregorian={holiday.holiday_date} hijri={holiday.holiday_date_hijri} />
                 </TableCell>
                 <TableCell className="text-start">
                   {asBool(holiday.is_recurring) && (

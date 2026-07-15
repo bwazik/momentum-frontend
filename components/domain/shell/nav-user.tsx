@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, EllipsisVertical, LogOut, Palette, Sun, Moon } from 'lucide-react';
+import { Check, EllipsisVertical, LogOut, Palette, Sun, Moon, Globe } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import {
@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/sidebar';
 import { useLogout } from '@/lib/api/hooks/use-auth';
 import { useBrandColorStore, type BrandColor, brandColorHex } from '@/lib/stores/use-brand-color-store';
+import { LocalizationContextSection } from './localization-context-section';
 import type { components } from '@/lib/generated/api-types';
 
 type UserResource = components['schemas']['UserResource'];
@@ -118,6 +119,15 @@ export function NavUser({ user, locale = 'ar' }: NavUserProps) {
                       {brandColor === c && <Check className="ms-auto size-4 text-muted-foreground" />}
                     </DropdownMenuItem>
                   ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger className="cursor-pointer">
+                  <Globe data-slot="sidebar-menu-button-icon" />
+                  <span>{t('localization')}</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <LocalizationContextSection />
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
             </DropdownMenuGroup>

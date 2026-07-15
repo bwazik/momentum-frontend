@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { useMarkNotificationRead } from '@/lib/api/hooks/use-notifications';
+import { DualDateDisplay } from '@/components/shared/dual-date-display';
 import { cn } from '@/lib/utils';
 
 import type { Notification } from '@/lib/api/hooks/use-notifications';
@@ -45,7 +46,7 @@ export function NotificationItem({ notification, onClose }: NotificationItemProp
       </div>
       {body && <span className="line-clamp-2 text-xs text-muted-foreground">{body}</span>}
       <span className="text-[10px] text-muted-foreground/60">
-        {new Date(notification.created_at).toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US')}
+        <DualDateDisplay gregorian={notification.created_at} hijri={notification.created_at_hijri} />
       </span>
     </button>
   );

@@ -30,6 +30,15 @@ export function AgingReportFilters({ filters }: AgingReportFiltersProps) {
     router.replace(`${pathname}?${params.toString()}`);
   }, [searchParams, router, pathname]);
 
+  const setBatchParams = useCallback((updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      if (value) params.set(key, value);
+      else params.delete(key);
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+  }, [searchParams, router, pathname]);
+
   function resetFilters() {
     router.replace(pathname);
   }
@@ -47,7 +56,8 @@ export function AgingReportFilters({ filters }: AgingReportFiltersProps) {
     blueprintCategoryId: filters.blueprintCategoryId,
     dateFrom: filters.dateFrom,
     dateTo: filters.dateTo,
-  }), [filters.departmentId, filters.priorityId, filters.blueprintCategoryId, filters.dateFrom, filters.dateTo]);
+    calendarSystem: filters.calendarSystem,
+  }), [filters.departmentId, filters.priorityId, filters.blueprintCategoryId, filters.dateFrom, filters.dateTo, filters.calendarSystem]);
 
   return (
     <div className="flex flex-col gap-3 py-3">
@@ -69,6 +79,7 @@ export function AgingReportFilters({ filters }: AgingReportFiltersProps) {
           t={t as unknown as ReturnType<typeof useTranslations>}
           filters={mappedFilters}
           onParam={(key, value) => setParam(key, value === 'all' ? null : value)}
+          onBatchParams={(updates) => setBatchParams(updates)}
           hideFields={['stageType']}
         />
       </div>

@@ -5,6 +5,8 @@ import { Check, Undo2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { DualDateDisplay } from '@/components/shared/dual-date-display';
+import { formatHijriIso, formatGregorianDate } from '@/lib/utils/date-utils';
 import { useCurrentUser } from '@/lib/api/hooks/use-auth';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';
 import { useLocale, useTranslations } from 'next-intl';
@@ -186,9 +188,31 @@ export function StageTimelineNode({
         )}
 
         {stage.entered_at && (
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            {tw('tooltip_duration')}: {formatDuration(stage.entered_at, stage.exited_at || null, timeFmt)}
-          </p>
+          <div className="mt-0.5 text-xs text-muted-foreground">
+            <p>
+              {tw('tooltip_duration')}: {formatDuration(stage.entered_at, stage.exited_at || null, timeFmt)}
+            </p>
+            {(() => {
+              const gStart = formatGregorianDate(stage.entered_at, locale);
+              const hStart = stage.entered_at_hijri ? formatHijriIso(stage.entered_at_hijri, locale) : null;
+              if (stage.exited_at) {
+                const gEnd = formatGregorianDate(stage.exited_at, locale);
+                const hEnd = stage.exited_at_hijri ? formatHijriIso(stage.exited_at_hijri, locale) : null;
+                return (
+                  <div className="flex flex-col gap-0.5">
+                    <span>{gStart} {locale === 'ar' ? '←' : '→'} {gEnd}</span>
+                    {hStart && hEnd && <span className="text-muted-foreground">{hStart} {locale === 'ar' ? '←' : '→'} {hEnd}</span>}
+                  </div>
+                );
+              }
+              return (
+                <div className="flex flex-col gap-0.5">
+                  <span>{gStart}</span>
+                  {hStart && <span className="text-muted-foreground">{hStart}</span>}
+                </div>
+              );
+            })()}
+          </div>
         )}
 
         {status === 'active' && slaInline && (

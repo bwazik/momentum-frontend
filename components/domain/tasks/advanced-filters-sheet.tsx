@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { RtlSelect } from '@/components/shared/rtl-select';
+import { CalendarSystemToggle } from '@/components/shared/calendar-system-toggle';
+import { DateRangePicker } from '@/components/shared/date-range-picker';
 import { useTaskPriorities } from '@/lib/api/hooks/use-task-board';
 import { useBlueprintCategories, useStageTypes } from '@/lib/api/hooks/use-task-board';
 import { useDepartmentsInfinite } from '@/lib/api/hooks/use-organization';
@@ -23,10 +25,11 @@ interface AdvancedFiltersSheetProps {
   t: ReturnType<typeof useTranslations>;
   filters: TaskBoardUrlFilters;
   onParam: (key: string, value?: string | null) => void;
+  onBatchParams?: (updates: Record<string, string | null>) => void;
   hideFields?: ('stageType' | 'assignee')[];
 }
 
-export function AdvancedFiltersSheet({ t, filters, onParam, hideFields }: AdvancedFiltersSheetProps) {
+export function AdvancedFiltersSheet({ t, filters, onParam, onBatchParams, hideFields }: AdvancedFiltersSheetProps) {
   const locale = useLocale();
   const side = locale === 'ar' ? 'left' : 'right';
   const { data: departmentsData } = useDepartmentsInfinite();
@@ -111,26 +114,40 @@ export function AdvancedFiltersSheet({ t, filters, onParam, hideFields }: Advanc
           </RtlSelect>
         </Field>
 
-        <div className="grid grid-cols-2 gap-3">
-          <Field>
-            <FieldLabel>{t('date_from')}</FieldLabel>
-            <input
-              type="date"
-              className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-              value={filters.dateFrom ?? ''}
-              onChange={(e) => onParam('dateFrom', e.target.value || null)}
-            />
-          </Field>
-          <Field>
-            <FieldLabel>{t('date_to')}</FieldLabel>
-            <input
-              type="date"
-              className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
-              value={filters.dateTo ?? ''}
-              onChange={(e) => onParam('dateTo', e.target.value || null)}
-            />
-          </Field>
-        </div>
+        <Field>
+          <FieldLabel>{t('calendar_system')}</FieldLabel>
+          <CalendarSystemToggle
+            value={filters.calendarSystem ?? 'gregorian'}
+            onChange={(v) => {
+              if (onBatchParams) {
+                onBatchParams({
+                  calendarSystem: v === 'gregorian' ? null : v,
+                  dateFrom: null,
+                  dateTo: null,
+                });
+              } else {
+                onParam('calendarSystem', v === 'gregorian' ? null : v);
+                onParam('dateFrom', null);
+                onParam('dateTo', null);
+              }
+            }}
+            className="w-full"
+          />
+        </Field>
+
+        <DateRangePicker
+          from={filters.dateFrom ?? null}
+          to={filters.dateTo ?? null}
+          onChange={(from, to) => {
+            if (onBatchParams) {
+              onBatchParams({ dateFrom: from, dateTo: to });
+            } else {
+              onParam('dateFrom', from);
+              onParam('dateTo', to);
+            }
+          }}
+          calendarSystem={filters.calendarSystem ?? 'gregorian'}
+        />
         </div>
       </SheetContent>
     </Sheet>

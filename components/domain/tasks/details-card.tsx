@@ -3,7 +3,8 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ClassificationBadge, TaskStatusBadge } from './task-badges';
-import { localizeName, formatDualDate } from './task-detail-utils';
+import { DualDateDisplay } from '@/components/shared/dual-date-display';
+import { localizeName } from '@/lib/utils/localize';
 import type { TaskDetailResource } from './task-detail-types';
 
 interface DetailsCardProps {
@@ -67,17 +68,20 @@ export function DetailsCard({ task }: DetailsCardProps) {
           {departmentName && (
             <DetailRow label={t('department')} value={departmentName} />
           )}
-          <DetailRow label={t('created')} value={formatDualDate(task.created_at, locale)} />
+          <DetailRow
+            label={t('created')}
+            value={<DualDateDisplay gregorian={task.created_at} hijri={task.created_at_hijri} />}
+          />
           <DetailRow
             label={t('due_date')}
-            value={task.due_date ? formatDualDate(task.due_date, locale) : '-'}
+            value={task.due_date ? <DualDateDisplay gregorian={task.due_date} hijri={task.due_date_hijri} /> : '-'}
           />
           <DetailRow
             label={t('confidentiality')}
             value={<ClassificationBadge level={task.classification_level} />}
           />
           {task.suspended_at && (
-            <DetailRow label={t('suspended_at')} value={formatDualDate(task.suspended_at, locale)} />
+            <DetailRow label={t('suspended_at')} value={<DualDateDisplay gregorian={task.suspended_at} />} />
           )}
           {task.suspension_reason && (
             <DetailRow
@@ -86,10 +90,7 @@ export function DetailsCard({ task }: DetailsCardProps) {
             />
           )}
           {task.cancelled_at && (
-            <DetailRow
-              label={t('cancelled_at')}
-              value={formatDualDate(task.cancelled_at, locale)}
-            />
+            <DetailRow label={t('cancelled_at')} value={<DualDateDisplay gregorian={task.cancelled_at} />} />
           )}
           {task.cancellation_reason && (
             <DetailRow

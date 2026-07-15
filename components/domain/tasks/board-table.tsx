@@ -23,6 +23,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { DualDateDisplay } from '@/components/shared/dual-date-display';
 import { SlaBadge, TaskStatusBadge, PriorityBadge, ClassificationBadge } from '@/components/domain/tasks/task-badges';
 import { getCurrentAssignees, formatTimeInStage, formatDueDate } from '@/components/domain/tasks/task-board-utils';
 import { localizeName } from '@/lib/utils/localize';
@@ -159,12 +160,20 @@ export function BoardTable({ tasks, columnLabels, renderActions, onRowHover }: B
                     {task.status === 'draft' || task.status === 'completed' || task.status === 'cancelled' ? '-' : formatTimeInStage(task.time_at_current_stage_seconds, locale, task.working_day_seconds ? Number(task.working_day_seconds) : null)}
                   </span>
                   {task.due_date && (
-                    <span className={cn(
-                      'text-xs text-muted-foreground',
-                      formatDueDate(task.due_date, locale).includes('overdue') && 'font-semibold',
-                    )}>
-                      {formatDueDate(task.due_date, locale)}
-                    </span>
+                    <div className="flex flex-col gap-0.5">
+                      <span className={cn(
+                        'text-xs text-muted-foreground',
+                        formatDueDate(task.due_date, locale).includes('overdue') && 'font-semibold text-red-600',
+                      )}>
+                        {formatDueDate(task.due_date, locale)}
+                      </span>
+                      <DualDateDisplay
+                        gregorian={task.due_date}
+                        hijri={task.due_date_hijri}
+                        variant="stacked"
+                        className="text-xs text-muted-foreground"
+                      />
+                    </div>
                   )}
                 </div>
               </TableCell>

@@ -57,6 +57,7 @@ export function readBoardFilters(params: URLSearchParams): TaskBoardUrlFilters {
     sortBy: params.get('sortBy') ?? undefined,
     sortDirection: params.get('sortDirection') ?? undefined,
     externalReference: params.get('externalReference') ?? undefined,
+    calendarSystem: (params.get('calendarSystem') as TaskBoardUrlFilters['calendarSystem']) ?? undefined,
   };
 }
 
@@ -82,6 +83,7 @@ export function toBoardQuery(
     date_field: filters.dateField ? asDateField(filters.dateField) : null,
     search: filters.search ?? null,
     external_reference: filters.externalReference ?? null,
+    calendar_system: filters.calendarSystem === 'hijri' ? 'hijri' : undefined,
     sort_by: filters.sortBy ? asSortField(filters.sortBy) : undefined,
     sort_direction: filters.sortDirection ? asSortDirection(filters.sortDirection) : undefined,
     per_page: 15,

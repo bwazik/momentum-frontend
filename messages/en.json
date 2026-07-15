@@ -23,7 +23,8 @@
     },
     "logout": "Log out",
     "theme": "Theme",
-    "brand_color": "Brand Color"
+    "brand_color": "Brand Color",
+    "localization": "Localization"
   },
   "locale": {
     "switch_to_english": "Switch to English",
@@ -208,6 +209,7 @@
         "date_from": "Date from",
         "date_to": "Date to",
         "date_field": "Date field",
+        "calendar_system": "Calendar System",
         "external_reference": "Reference Number",
         "external_reference_placeholder": "Search by reference..."
       },
@@ -1058,6 +1060,7 @@
       "columns": {
         "name": "Name",
         "parent": "Parent",
+        "calendar": "Working Calendar",
         "status": "Status"
       },
       "create_title": "Add Department",
@@ -1067,6 +1070,9 @@
       "parent": "Parent Department",
       "parent_placeholder": "Select parent department",
       "no_parent": "Top-level",
+      "calendar": "Working Calendar",
+      "calendar_placeholder": "Select a working calendar",
+      "default_calendar": "Default Calendar",
       "deactivate_title": "Deactivate Department",
       "deactivate_description": "Are you sure you want to deactivate {name}?",
       "cascade_to_children": "Also deactivate all child departments",
@@ -1326,6 +1332,7 @@
       "department": "Department",
       "priority": "Priority",
       "blueprint_category": "Blueprint category",
+      "calendar_system": "Calendar System",
       "date_from": "Date from",
       "date_to": "Date to",
       "columns": {
@@ -1380,6 +1387,32 @@
         "stage": "Current Stage",
         "created_at": "Created At"
       }
+    }
+  },
+  "localization": {
+    "gregorian": "Gregorian",
+    "hijri": "Hijri",
+    "hijri_prefix": "",
+"hijri_suffix": " AH",
+    "hijri_date_label": "Hijri date",
+    "calendar_system_label": "Calendar system",
+    "date_converter_label": "Date Converter",
+    "date_converter_title": "Date Converter",
+    "from_calendar": "From calendar",
+    "date_label": "Date",
+    "convert": "Convert",
+    "converter_empty": "Enter a date and press Convert",
+    "gregorian_placeholder": "YYYY-MM-DD",
+    "gregorian_range_placeholder": "YYYY-MM-DD – YYYY-MM-DD",
+    "hijri_placeholder": "1447-02-15",
+    "hijri_range_placeholder": "1447-01-01 – 1447-01-30",
+    "hijri_hint": "e.g. 1447-02-15",
+    "context": {
+      "title": "Localization",
+      "locale": "Locale",
+      "direction": "Direction",
+      "timezone": "Timezone",
+      "variant": "Hijri Calendar"
     }
   }
 }

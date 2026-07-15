@@ -62,6 +62,15 @@ export function BoardFilters({ t, filters }: BoardFiltersProps) {
     router.replace(`${pathname}?${params.toString()}`);
   }
 
+  function setBatchParams(updates: Record<string, string | null>) {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [key, value] of Object.entries(updates)) {
+      if (value) params.set(key, value);
+      else params.delete(key);
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+  }
+
   function resetFilters() {
     router.replace(pathname);
   }
@@ -96,7 +105,7 @@ export function BoardFilters({ t, filters }: BoardFiltersProps) {
         <Button variant="ghost" onClick={resetFilters}>
           {t('reset')}
         </Button>
-        <AdvancedFiltersSheet t={t} filters={filters} onParam={setParam} />
+        <AdvancedFiltersSheet t={t} filters={filters} onParam={setParam} onBatchParams={setBatchParams} />
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">

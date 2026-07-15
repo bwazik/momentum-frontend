@@ -25,6 +25,7 @@ export interface TaskBoardUrlFilters {
   sortBy?: string;
   sortDirection?: string;
   externalReference?: string;
+  calendarSystem?: 'gregorian' | 'hijri';
 }
 
 export interface AssigneeDisplay {

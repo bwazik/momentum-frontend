@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCreateDepartment, useUpdateDepartment } from '@/lib/api/hooks/use-organization';
+import { DepartmentCalendarSelect } from './department-calendar-select';
 import { localizeName, flattenTree, extractApiErrors } from './organization-utils';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
 import { RtlSelect } from '@/components/shared/rtl-select';
@@ -24,6 +25,7 @@ type DepartmentTreeResource = components['schemas']['DepartmentTreeResource'];
 type StoreDepartmentRequest = components['schemas']['StoreDepartmentRequest'];
 
 const NONE_SENTINEL = '__none__';
+const DEFAULT_CALENDAR_SENTINEL = 'default';
 
 interface DepartmentFormDialogProps {
   open: boolean;
@@ -36,6 +38,7 @@ interface DeptFormState {
   name_ar: string;
   name_en: string;
   parent_department_id: string;
+  working_calendar_id: string;
   [key: string]: unknown;
 }
 
@@ -53,6 +56,7 @@ export function DepartmentFormDialog({
     name_ar: department?.name_ar ?? '',
     name_en: department?.name_en ?? '',
     parent_department_id: department?.parent_department_id ?? NONE_SENTINEL,
+    working_calendar_id: department?.working_calendar?.public_id ?? DEFAULT_CALENDAR_SENTINEL,
   }));
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -77,6 +81,10 @@ export function DepartmentFormDialog({
         form.parent_department_id === NONE_SENTINEL
           ? null
           : form.parent_department_id,
+      working_calendar_id:
+        form.working_calendar_id === DEFAULT_CALENDAR_SENTINEL
+          ? null
+          : form.working_calendar_id,
     };
 
     const mutation = isEdit
@@ -140,6 +148,14 @@ export function DepartmentFormDialog({
             {errors.parent_department_id && (
               <p className="text-sm text-destructive">{errors.parent_department_id}</p>
             )}
+          </Field>
+
+          <Field>
+            <FieldLabel>{t('departments.calendar')}</FieldLabel>
+            <DepartmentCalendarSelect
+              value={form.working_calendar_id === DEFAULT_CALENDAR_SENTINEL ? null : form.working_calendar_id}
+              onChange={(v) => setForm((prev) => ({ ...prev, working_calendar_id: v ?? DEFAULT_CALENDAR_SENTINEL }))}
+            />
           </Field>
 
           <DialogFooter>

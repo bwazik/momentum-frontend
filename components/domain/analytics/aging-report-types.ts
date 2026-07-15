@@ -11,6 +11,7 @@ export interface AgingReportUrlFilters {
   blueprintCategoryId?: string;
   dateFrom?: string;
   dateTo?: string;
+  calendarSystem?: 'gregorian' | 'hijri';
 }
 
 export interface AgingAssignee {
