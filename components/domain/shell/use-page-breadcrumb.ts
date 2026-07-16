@@ -127,5 +127,11 @@ export function usePageBreadcrumb(): Crumb[] | null {
     ];
   }
 
+  if (pathname === '/settings') {
+    return [
+      { label: nav('settings') },
+    ];
+  }
+
   return null;
 }

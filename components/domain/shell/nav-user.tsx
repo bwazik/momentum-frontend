@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, EllipsisVertical, LogOut, Palette, Sun, Moon, Globe } from 'lucide-react';
+import { Check, EllipsisVertical, LogOut, Palette, Sun, Moon, Globe, Settings } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import {
@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import Link from 'next/link';
 import { useLogout } from '@/lib/api/hooks/use-auth';
 import { useBrandColorStore, type BrandColor, brandColorHex } from '@/lib/stores/use-brand-color-store';
 import { LocalizationContextSection } from './localization-context-section';
@@ -37,7 +38,7 @@ interface NavUserProps {
   locale?: 'ar' | 'en';
 }
 
-const brandColors: BrandColor[] = ['amber', 'blue', 'emerald', 'rose', 'slate'];
+const brandColors: BrandColor[] = ['amber', 'al_adaam', 'blue', 'emerald', 'rose', 'slate'];
 const themes = ['light', 'dark', 'system'] as const;
 
 export function NavUser({ user, locale = 'ar' }: NavUserProps) {
@@ -129,9 +130,16 @@ export function NavUser({ user, locale = 'ar' }: NavUserProps) {
                 <DropdownMenuSubContent>
                   <LocalizationContextSection />
                 </DropdownMenuSubContent>
-              </DropdownMenuSub>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+                </DropdownMenuSub>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild className="cursor-pointer">
+                <Link href="/settings" className="flex items-center gap-2">
+                  <Settings data-slot="sidebar-menu-button-icon" />
+                  <span>{t('preferences')}</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => logout.mutate()} disabled={logout.isPending} className="cursor-pointer">
               <LogOut data-slot="sidebar-menu-button-icon" />
               {t('logout')}

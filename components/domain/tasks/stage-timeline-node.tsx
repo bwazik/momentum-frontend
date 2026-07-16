@@ -5,7 +5,6 @@ import { Check, Undo2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { DualDateDisplay } from '@/components/shared/dual-date-display';
 import { formatHijriIso, formatGregorianDate } from '@/lib/utils/date-utils';
 import { useCurrentUser } from '@/lib/api/hooks/use-auth';
 import { useCapability } from '@/lib/api/hooks/use-capabilities';

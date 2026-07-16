@@ -24,7 +24,8 @@
     "logout": "تسجيل الخروج",
     "theme": "المظهر",
     "brand_color": "لون العلامة",
-    "localization": "التوطين"
+    "localization": "التوطين",
+    "preferences": "الإعدادات"
   },
   "locale": {
     "switch_to_english": "Switch to English",
@@ -52,7 +53,8 @@
     "external_entities": "الجهات الخارجية",
     "executive_dashboard": "لوحة التحكم التنفيذية",
     "aging_report": "تقرير التقادم",
-    "department_dashboard": "لوحة تحكم القسم"
+    "department_dashboard": "لوحة تحكم القسم",
+    "settings": "الإعدادات"
   },
   "not_found": {
     "title": "الصفحة غير موجودة",
@@ -68,7 +70,8 @@
       "analytics": "التحليلات",
       "follow_up": "المتابعة",
       "organization": "الهيكل التنظيمي",
-      "admin": "الإدارة"
+      "admin": "الإدارة",
+      "settings": "الإعدادات"
     },
     "skip_to_main": "تخطي إلى المحتوى الرئيسي",
     "brand_color": "اختيار اللون الأساسي",
@@ -106,6 +109,7 @@
   },
   "colors": {
     "amber": "عنبر",
+    "al_adaam": "العنابي",
     "blue": "أزرق",
     "emerald": "زمرد",
     "rose": "وردي",
@@ -1414,6 +1418,123 @@
       "direction": "الاتجاه",
       "timezone": "المنطقة الزمنية",
       "variant": "نوع التقويم الهجري"
+    }
+  },
+  "settings": {
+    "page_title": "الإعدادات",
+    "page_description": "إدارة ملفك الشخصي والتفويضات",
+    "tabs": {
+      "profile": "الملف الشخصي",
+      "delegations": "التفويضات النشطة"
+    },
+    "profile": {
+      "title": "الملف الشخصي",
+      "save": "حفظ",
+      "saving": "جاري الحفظ...",
+      "error": "تعذر تحميل الملف الشخصي",
+      "name_ar": "الاسم بالعربية",
+      "name_ar_placeholder": "أدخل الاسم بالعربية",
+      "name_en": "الاسم بالإنجليزية",
+      "name_en_placeholder": "أدخل الاسم بالإنجليزية",
+      "mobile": "رقم الجوال",
+      "mobile_hint": "أدخل الرقم بدون + (مثال: 974XXXXXXXX)",
+      "preferred_language": "اللغة المفضلة",
+      "language_arabic": "العربية",
+      "language_english": "English",
+      "email": "البريد الإلكتروني",
+      "employee_id": "رقم الموظف",
+      "position": "المنصب الحالي",
+      "name_ar_required": "الاسم بالعربية مطلوب",
+      "toast": {
+        "profile_saved": "تم حفظ الملف الشخصي"
+      }
+    },
+    "availability": {
+      "title": "التوفر",
+      "status_label": "الحالة",
+      "status_in_office": "متاح",
+      "status_out_of_office": "خارج المكتب",
+      "toggle_aria": "تبديل التوفر",
+      "delegate_label": "البديل",
+      "delegate_placeholder": "اختر بديلاً",
+      "delegate_warning": "بدون اختيار بديل لن يتم توجيه المهام لأي شخص.",
+      "back_in_office": "العودة للمكتب",
+      "returning": "جاري التحديث...",
+      "error": "تعذر تحميل حالة التوفر",
+      "toast": {
+        "marked_out_of_office": "تم تسجيلك كغير متاح",
+        "marked_back_in_office": "تم تسجيلك كمتاح"
+      }
+    },
+    "delegations": {
+      "title": "التفويضات النشطة",
+      "error": "تعذر تحميل التفويضات",
+      "empty_title": "لا توجد تفويضات نشطة",
+      "empty_description": "لا يوجد تفويض ساري حالياً.",
+      "load_more": "تحميل المزيد",
+      "loading_more": "جاري التحميل...",
+      "columns": {
+        "delegator": "المفوض",
+        "delegate": "البديل",
+        "scope": "النطاق",
+        "dates": "الفترة",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "status_active": "نشط",
+      "scope_all": "جميع الأعمال",
+      "scope_category": "فئة الخطة",
+      "scope_stage_type": "نوع المرحلة",
+      "scope_category_and_stage": "فئة + نوع مرحلة",
+      "filters": {
+        "delegator": "المفوض",
+        "delegate": "البديل",
+        "category": "فئة الخطة",
+        "stage_type": "نوع المرحلة",
+        "all_categories": "جميع التصنيفات",
+        "all_stage_types": "جميع أنواع المراحل",
+        "reset": "إعادة ضبط"
+      },
+      "form": {
+        "create_title": "إنشاء تفويض",
+        "edit_title": "تعديل تفويض",
+        "create": "إنشاء",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "saving": "جاري الحفظ...",
+        "delegator_label": "التفويض نيابة عن",
+        "delegator_placeholder": "اختر مستخدماً",
+        "delegate_label": "البديل",
+        "delegate_placeholder": "اختر بديلاً",
+        "delegate_required": "البديل مطلوب",
+        "starts_at": "تاريخ البدء",
+        "ends_at": "تاريخ الانتهاء",
+        "dates_required": "تاريخا البدء والانتهاء مطلوبان",
+        "scope_label": "نطاق التفويض",
+        "scope_all": "جميع المهام",
+        "scope_blueprint_category": "تصنيف محدد",
+        "scope_stage_type": "نوع مرحلة محدد",
+        "scope_blueprint_category_and_stage_type": "تصنيف ونوع مرحلة",
+        "category_label": "التصنيف",
+        "select_category": "اختر تصنيف",
+        "category_required": "التصنيف مطلوب",
+        "stage_type_label": "نوع المرحلة",
+        "select_stage_type": "اختر نوع مرحلة",
+        "stage_type_required": "نوع المرحلة مطلوب"
+      },
+      "revoke": {
+        "button": "إلغاء",
+        "title": "إلغاء التفويض",
+        "description": "سيتوقف توجيه المهام الجديدة لهذا البديل. لا يمكن التراجع عن هذا الإجراء.",
+        "cancel": "تراجع",
+        "confirm": "إلغاء التفويض",
+        "revoking": "جاري الإلغاء..."
+      },
+      "toast": {
+        "delegation_created": "تم إنشاء التفويض",
+        "delegation_updated": "تم تحديث التفويض",
+        "delegation_revoked": "تم إلغاء التفويض"
+      }
     }
   }
 }

@@ -44,6 +44,7 @@ export function SiteHeader() {
     '/follow-up': t('page_titles.follow_up'),
     '/organization': t('page_titles.organization'),
     '/admin': t('page_titles.admin'),
+    '/settings': t('page_titles.settings'),
   };
   const pageTitle = pageTitles[pathname] ?? appName;
 

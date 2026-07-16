@@ -24,7 +24,8 @@
     "logout": "Log out",
     "theme": "Theme",
     "brand_color": "Brand Color",
-    "localization": "Localization"
+    "localization": "Localization",
+    "preferences": "Preferences"
   },
   "locale": {
     "switch_to_english": "Switch to English",
@@ -52,7 +53,8 @@
     "external_entities": "External Entities",
     "executive_dashboard": "Executive Dashboard",
     "aging_report": "Aging Report",
-    "department_dashboard": "Department Dashboard"
+    "department_dashboard": "Department Dashboard",
+    "settings": "Settings"
   },
   "not_found": {
     "title": "Page Not Found",
@@ -68,7 +70,8 @@
       "analytics": "Analytics",
       "follow_up": "Follow-up",
       "organization": "Organization",
-      "admin": "Administration"
+      "admin": "Administration",
+      "settings": "Settings"
     },
     "skip_to_main": "Skip to main content",
     "brand_color": "Choose primary color",
@@ -106,6 +109,7 @@
   },
   "colors": {
     "amber": "Amber",
+    "al_adaam": "Al Adaam",
     "blue": "Blue",
     "emerald": "Emerald",
     "rose": "Rose",
@@ -1413,6 +1417,123 @@
       "direction": "Direction",
       "timezone": "Timezone",
       "variant": "Hijri Calendar"
+    }
+  },
+  "settings": {
+    "page_title": "Settings",
+    "page_description": "Manage your profile and delegations",
+    "tabs": {
+      "profile": "Profile",
+      "delegations": "Active Delegations"
+    },
+    "profile": {
+      "title": "Profile",
+      "save": "Save",
+      "saving": "Saving...",
+      "error": "Failed to load profile",
+      "name_ar": "Arabic Name",
+      "name_ar_placeholder": "Enter Arabic name",
+      "name_en": "English Name",
+      "name_en_placeholder": "Enter English name",
+      "mobile": "Mobile Number",
+      "mobile_hint": "Enter number without the + (e.g. 974XXXXXXXX)",
+      "preferred_language": "Preferred Language",
+      "language_arabic": "العربية",
+      "language_english": "English",
+      "email": "Email",
+      "employee_id": "Employee ID",
+      "position": "Current Position",
+      "name_ar_required": "Arabic name is required",
+      "toast": {
+        "profile_saved": "Profile saved successfully"
+      }
+    },
+    "availability": {
+      "title": "Availability",
+      "status_label": "Status",
+      "status_in_office": "In Office",
+      "status_out_of_office": "Out of Office",
+      "toggle_aria": "Toggle availability",
+      "delegate_label": "Delegate",
+      "delegate_placeholder": "Select a delegate",
+      "delegate_warning": "Without selecting a delegate, no tasks will be routed to anyone.",
+      "back_in_office": "Back in Office",
+      "returning": "Updating...",
+      "error": "Failed to load availability status",
+      "toast": {
+        "marked_out_of_office": "You are now marked as out of office",
+        "marked_back_in_office": "You are now marked as back in office"
+      }
+    },
+    "delegations": {
+      "title": "Active Delegations",
+      "error": "Failed to load delegations",
+      "empty_title": "No Active Delegations",
+      "empty_description": "No delegation is currently in effect.",
+      "load_more": "Load more",
+      "loading_more": "Loading...",
+      "columns": {
+        "delegator": "Delegator",
+        "delegate": "Delegate",
+        "scope": "Scope",
+        "dates": "Period",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status_active": "Active",
+      "scope_all": "All Work",
+      "scope_category": "Blueprint Category",
+      "scope_stage_type": "Stage Type",
+      "scope_category_and_stage": "Category + Stage Type",
+      "filters": {
+        "delegator": "Delegator",
+        "delegate": "Delegate",
+        "category": "Blueprint Category",
+        "stage_type": "Stage Type",
+        "all_categories": "All Categories",
+        "all_stage_types": "All Stage Types",
+        "reset": "Reset"
+      },
+      "form": {
+        "create_title": "Create Delegation",
+        "edit_title": "Edit Delegation",
+        "create": "Create",
+        "save": "Save",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "delegator_label": "Delegating on behalf of",
+        "delegator_placeholder": "Select a user",
+        "delegate_label": "Delegate",
+        "delegate_placeholder": "Select a delegate",
+        "delegate_required": "Delegate is required",
+        "starts_at": "Start Date",
+        "ends_at": "End Date",
+        "dates_required": "Start and end dates are required",
+        "scope_label": "Delegation Scope",
+        "scope_all": "All Work",
+        "scope_blueprint_category": "Blueprint Category",
+        "scope_stage_type": "Stage Type",
+        "scope_blueprint_category_and_stage_type": "Blueprint Category and Stage Type",
+        "category_label": "Blueprint Category",
+        "select_category": "Select a category",
+        "category_required": "Blueprint category is required",
+        "stage_type_label": "Stage Type",
+        "select_stage_type": "Select a stage type",
+        "stage_type_required": "Stage type is required"
+      },
+      "revoke": {
+        "button": "Revoke",
+        "title": "Revoke Delegation",
+        "description": "Future task routing to this delegate will stop. This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Revoke Delegation",
+        "revoking": "Revoking..."
+      },
+      "toast": {
+        "delegation_created": "Delegation created successfully",
+        "delegation_updated": "Delegation updated successfully",
+        "delegation_revoked": "Delegation revoked successfully"
+      }
     }
   }
 }

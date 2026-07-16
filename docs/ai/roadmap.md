@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F6 — Admin, Org, Help, Onboarding
-**Active spec:** `017-user-settings-delegation` (next)
+**Active spec:** `019-confidential-access`
 **Branch:** `main`
 
 ---
@@ -45,7 +45,7 @@
 | `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `016-task-creation-launch` | F2 | Tasks | `005-task-execution` | ✅ |
-| `017-user-settings-delegation` | F6 | Settings | `016` | ⬜ |
+| `017-user-settings-delegation` | F6 | Settings | `016` | ✅ |
 | `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ⬜ |
 | `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ✅ |
 | `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
@@ -257,7 +257,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** 🔄 In Progress
 
-**Specs:** `008` ✅, `010` ⬜, `011` ⬜, `017` ⬜, `019` ⬜, `020` ✅, `021` ⬜, `022` ⬜
+**Specs:** `008` ✅, `010` ⬜, `011` ⬜, `017` ✅, `019` ⬜, `020` ✅, `021` ⬜, `022` ⬜
 
 **Established by 008:**
 - **Visual org chart pattern:** Gradient avatar cards with initials, tiered layout with CSS connector lines, progressive disclosure via click, zoom controls (`ZoomIn`/`ZoomOut`). Works for org chart browsing, not just list trees.
@@ -284,10 +284,18 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Department calendar assignment:** `DepartmentCalendarSelect` (RtlSelect with "Default Calendar" sentinel) added to department create/edit dialog. `WorkingCalendarBadge` shows assigned calendar in departments table. Saves `working_calendar_id: null` for tenant default.
 - **Batched URL params for sheet filters:** `onBatchParams` pattern added to `AdvancedFiltersSheet` and its parents. Batches multiple `router.replace` calls into one to prevent stale `searchParams` overwrites. Used by CalendarSystemToggle (clears date range on switch) and DateRangePicker (commits both dates).
 
+**Established by 017:**
+- **`/settings` page with tabs pattern:** Tab state is URL-driven (`?tab=profile|delegations`); invalid/missing tab defaults to profile. Delegations tab is capability-gated (hidden without `iam.view_delegations` or `iam.manage_users`). Create button in PageHeader actions slot only when delegations tab is active.
+- **Profile + OOO mutations in `use-auth.ts`:** `useUpdateProfile` calls `PUT /v1/iam/profile`; `useMarkOutOfOffice`/`useMarkBackInOffice` call `POST /v1/iam/users/{user}/out-of-office` and `back-in-office`. All invalidate `queryKeys.auth.me`. Language change sets `NEXT_LOCALE` cookie and reloads only when the language actually changed.
+- **Delegation hooks in `use-delegations.ts`:** `useActiveDelegationsInfinite` with 30s stale time and window-focus refetch. Mutations (`useCreateDelegation`, `useUpdateDelegation`, `useRevokeDelegation`) invalidate `queryKeys.delegations.all` with `refetchType: 'all'`. Generated OpenAPI types used for all request/response shapes.
+- **Delegation filters as flex row:** Matching the org positions toolbar pattern — `flex items-center gap-2` with `flex-1` wraps around each filter control. Reset preserves the active `tab` param.
+- **Delegation row actions as DropdownMenu:** Three-dot `Ellipsis` button opens a `DropdownMenu` with Edit (Pencil icon) and Revoke (Ban icon) items, matching the blueprints row actions pattern. State managed locally via `editOpen`/`revokeOpen`. `ActiveBadge` shared component for status column.
+- **UserSearchCombobox ID resolution:** Added a separate `useQuery` with `public_ids[]` param to resolve pre-populated user names, matching `MultiUserCombobox` pattern. Solves the empty display label when a `public_id` is provided without a prior search.
+- **Mobile input with `+` prefix:** Used `InputGroup` + `InputGroupAddon` pattern from shadcn for the mobile number field, showing a `+` prefix and numeric-only input to match E.164 validation.
+
 **Remaining F6 specs:**
 - `010-system-administration` — Tenant admin screens (requires `015-audit-trail` — ✅ Done on backend)
 - `011-help-center` — Help center CMS screens (requires `020-help-center` — ✅ Done on backend)
-- `017-user-settings-delegation` — User settings and delegation UI (requires `016-delegation-oof` — ✅ Done on backend)
 - `019-confidential-access` — Confidential task access management (requires `017-confidentiality-access` — ✅ Done on backend)
 - `021-onboarding-training` — Onboarding and training module (requires `019-onboarding-training` — ✅ Done on backend)
 - `022-platform-administration` — Platform-level tenant management (requires `001-platform-tenancy`/`admin` — ✅ Done on backend)

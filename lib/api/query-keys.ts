@@ -145,4 +145,12 @@ export const queryKeys = {
     dateConversion: (params: Record<string, string>) =>
       [...queryKeys.localization.all, 'date-conversion', params] as const,
   },
+  delegations: {
+    all: ['delegations'] as const,
+    activeLists: () => [...queryKeys.delegations.all, 'active', 'list'] as const,
+    activeList: (filters: Record<string, unknown>) =>
+      [...queryKeys.delegations.activeLists(), filters] as const,
+    detail: (publicId: string) =>
+      [...queryKeys.delegations.all, 'detail', publicId] as const,
+  },
 } as const;

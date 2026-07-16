@@ -3,10 +3,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type BrandColor = 'amber' | 'blue' | 'emerald' | 'rose' | 'slate';
+export type BrandColor = 'amber' | 'al_adaam' | 'blue' | 'emerald' | 'rose' | 'slate';
 
 export const brandColorHex: Record<BrandColor, string> = {
   amber: '#9A3B00',
+  al_adaam: '#8A1538',
   blue: '#1d4ed8',
   emerald: '#059669',
   rose: '#be123c',
