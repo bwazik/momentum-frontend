@@ -3837,11 +3837,11 @@ export interface components {
                 public_id: string;
                 title_ar: string;
                 title_en: string;
-                department?: {
+                department: {
                     public_id: string;
                     name_ar: string;
                 };
-                authority_grade?: {
+                authority_grade: {
                     public_id: string;
                     rank: string;
                     name_ar: string;
@@ -4762,6 +4762,7 @@ export interface components {
             name_en?: string | null;
             mobile?: string | null;
             preferred_language?: components["schemas"]["PreferredLanguage"];
+            employee_id?: string | null;
             /** @enum {integer} */
             account_type?: 1 | 2 | 3;
             password?: string;
@@ -4835,6 +4836,7 @@ export interface components {
             is_active: boolean;
             is_out_of_office: boolean;
             current_position?: components["schemas"]["PositionAssignmentResource"] | null;
+            effective_capabilities: string;
             created_at: string;
             updated_at: string;
         };
@@ -7104,6 +7106,7 @@ export interface operations {
                 status?: string | null;
                 blueprint_category_id?: string | null;
                 assignee_id?: string | null;
+                sla_health?: "red" | "amber" | "green" | "grey" | "none" | null;
                 calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
@@ -7113,7 +7116,7 @@ export interface operations {
             };
             path: {
                 /** @description The department public id */
-                department: string;
+                department: number;
             };
             cookie?: never;
         };
@@ -7142,6 +7145,7 @@ export interface operations {
                 status?: string | null;
                 blueprint_category_id?: string | null;
                 assignee_id?: string | null;
+                sla_health?: "red" | "amber" | "green" | "grey" | "none" | null;
                 calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
@@ -7151,7 +7155,7 @@ export interface operations {
             };
             path: {
                 /** @description The department public id */
-                department: string;
+                department: number;
             };
             cookie?: never;
         };
@@ -7180,7 +7184,7 @@ export interface operations {
                 status?: string | null;
                 blueprint_category_id?: string | null;
                 assignee_id?: string | null;
-                metric?: string | null;
+                sla_health?: "red" | "amber" | "green" | "grey" | "none" | null;
                 calendar_system?: components["schemas"]["CalendarSystem"];
                 per_page?: number | null;
             };
@@ -7190,7 +7194,7 @@ export interface operations {
             };
             path: {
                 /** @description The department public id */
-                department: string;
+                department: number;
             };
             cookie?: never;
         };
@@ -12084,6 +12088,21 @@ export interface operations {
             };
             401: components["responses"]["AuthenticationException"];
             404: components["responses"]["ModelNotFoundException"];
+            /** @description An error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /**
+                         * @description Error overview.
+                         * @example Cannot delegate to yourself.
+                         */
+                        message: string;
+                    };
+                };
+            };
         };
     };
     "user.markBackInOffice": {

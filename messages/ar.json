@@ -54,7 +54,8 @@
     "executive_dashboard": "لوحة التحكم التنفيذية",
     "aging_report": "تقرير التقادم",
     "department_dashboard": "لوحة تحكم القسم",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "governance_participants": "مشاركو الحوكمة"
   },
   "not_found": {
     "title": "الصفحة غير موجودة",
@@ -221,8 +222,8 @@
         "task": "المهمة",
         "status": "الحالة",
         "priority": "الأولوية",
-      "stage": "المرحلة الحالية",
-      "assignees": "المكلفون",
+        "stage": "المرحلة الحالية",
+        "assignees": "المكلفون",
         "department": "القسم",
         "sla": "ا.م.خ",
         "due_date": "تاريخ الاستحقاق",
@@ -255,7 +256,8 @@
       "classification": {
         "public": "عام",
         "internal": "داخلية",
-        "confidential": "سرية"
+        "confidential": "سرية",
+        "aria_confidential": "تصنيف: سري"
       }
     },
     "detail": {
@@ -478,7 +480,8 @@
       "no_permission_title": "لا تملك صلاحية",
       "no_permission_desc": "لا يمكنك تعديل هذه المسودة.",
       "not_found_title": "المهمة غير موجودة",
-      "back_to_tasks": "العودة إلى قائمة المهام"
+      "back_to_tasks": "العودة إلى قائمة المهام",
+      "confidential_explainer": "المهام السرية لا تظهر إلا للمشاركين المسمّين ومناصب الرقابة المكوّنة."
     },
     "references": {
       "title": "الإشارات الخارجية",
@@ -499,7 +502,7 @@
       "reference_type_other": "أخرى",
       "reference_number": "رقم الإشارة",
       "reference_number_required": "رقم الإشارة مطلوب",
-"reference_number_placeholder": "مثال: وارد-2026-00413",
+      "reference_number_placeholder": "مثال: وارد-2026-00413",
       "issuing_entity": "الجهة المصدرة",
       "select_entity": "اختر الجهة",
       "loading_entities": "جاري تحميل الجهات...",
@@ -824,13 +827,13 @@
       "sla_unit_hours": "ساعات",
       "sla_unit_days": "أيام",
       "warning_threshold": "حد التحذير (%)",
-        "name_ar_placeholder": "أدخل الاسم بالعربية",
-        "name_en_placeholder": "أدخل الاسم بالإنجليزية",
-        "display_order_placeholder": "أدخل ترتيب العرض",
-        "sla_value_placeholder": "أدخل قيمة ا.م.خ",
-        "sla_unit_placeholder": "اختر الوحدة",
-        "warning_threshold_placeholder": "أدخل حد التحذير",
-        "deactivate": "إلغاء التفعيل",
+      "name_ar_placeholder": "أدخل الاسم بالعربية",
+      "name_en_placeholder": "أدخل الاسم بالإنجليزية",
+      "display_order_placeholder": "أدخل ترتيب العرض",
+      "sla_value_placeholder": "أدخل قيمة ا.م.خ",
+      "sla_unit_placeholder": "اختر الوحدة",
+      "warning_threshold_placeholder": "أدخل حد التحذير",
+      "deactivate": "إلغاء التفعيل",
       "reactivate": "إعادة التفعيل",
       "deactivate_category_title": "إلغاء تفعيل التصنيف",
       "deactivate_category_description": "هل أنت متأكد من رغبتك في إلغاء تفعيل هذا التصنيف؟",
@@ -952,15 +955,15 @@
       "date_to": "إلى تاريخ",
       "date_field": "حقل التاريخ"
     },
-      "bottlenecks": {
-        "title": "اختناقات المراحل حسب الإدارة",
-        "overdue": "متأخرة",
-        "at_risk": "معرضة للخطر",
-        "empty_title": "لا توجد اختناقات",
-        "empty_description": "لم يتم اكتشاف اختناقات في المراحل.",
-        "error_title": "تعذر تحميل الاختناقات",
-        "view_all_stages": "عرض جميع اختناقات المراحل ({count})"
-      },
+    "bottlenecks": {
+      "title": "اختناقات المراحل حسب الإدارة",
+      "overdue": "متأخرة",
+      "at_risk": "معرضة للخطر",
+      "empty_title": "لا توجد اختناقات",
+      "empty_description": "لم يتم اكتشاف اختناقات في المراحل.",
+      "error_title": "تعذر تحميل الاختناقات",
+      "view_all_stages": "عرض جميع اختناقات المراحل ({count})"
+    },
     "recent_actions": {
       "title": "آخر إجراءات المتابعة",
       "empty_title": "لا توجد إجراءات حديثة",
@@ -1535,6 +1538,126 @@
         "delegation_updated": "تم تحديث التفويض",
         "delegation_revoked": "تم إلغاء التفويض"
       }
+    }
+  },
+  "confidential": {
+    "participants": {
+      "title": "المشاركون السريون",
+      "add_placeholder": "ابحث عن مستخدم للإضافة...",
+      "empty_title": "لا يوجد مشاركون بعد",
+      "empty_description": "أضف مشاركين مسمّين لمنحهم حق الوصول إلى هذه المهمة السرية.",
+      "loading": "جارٍ التحميل...",
+      "load_more": "تحميل المزيد",
+      "remove_title": "إزالة مشارك",
+      "remove_description": "هل أنت متأكد من رغبتك في إزالة {name} من هذه المهمة؟",
+      "remove_confirm": "إزالة",
+      "remove_cancel": "إلغاء",
+      "remove_aria": "إزالة {name}",
+      "toast": {
+        "added": "تمت إضافة المشارك",
+        "removed": "تمت إزالة المشارك"
+      }
+    },
+    "metadata": {
+      "alert_title": "وصول مقيّد",
+      "alert_description": "أنت تشاهد بيانات وصفية مقيّدة فقط. المحتوى الكامل غير متاح بصلاحياتك الحالية.",
+      "department": "القسم المالك",
+      "responsible_position": "المنصب المسؤول",
+      "status": "الحالة",
+      "sla_health": "مؤشر الأداء",
+      "due_date": "تاريخ الاستحقاق",
+      "open_content": "فتح المحتوى السري"
+    },
+    "override": {
+      "title": "فتح المحتوى السري",
+      "description": "سيتم تسجيل هذا الإجراء في سجل التدقيق.",
+      "audit_notice": "يتم تدقيق هذا الوصول وتسجيله. لا تقم بالوصول إلى المحتوى السري إلا لسبب مشروع.",
+      "reason_label": "سبب الوصول",
+      "reason_placeholder": "أدخل سبب الوصول إلى هذا المحتوى السري...",
+      "reason_hint": "مطلوب 10 أحرف على الأقل",
+      "reason_too_short": "يجب أن يكون السبب 10 أحرف على الأقل",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد",
+      "session_title": "جلسة وصول مراقبة",
+      "session_description": "السبب: {reason}",
+      "toast": {
+        "opened": "تم بدء جلسة التجاوز"
+      }
+    },
+    "governance": {
+      "page_title": "مشاركو الحوكمة السرية",
+      "page_description": "إدارة المناصب التي لديها وصول إشرافي تلقائي على المهام السرية.",
+      "title": "قواعد المشاركة في الحوكمة",
+      "add_rule": "إضافة قاعدة",
+      "edit": "تعديل",
+      "revoke": "إلغاء",
+      "active": "نشط",
+      "revoked_status": "ملغى",
+      "all_categories": "جميع الفئات",
+      "scope_tenant_label": "على مستوى المؤسسة",
+      "loading": "جارٍ التحميل...",
+      "load_more": "تحميل المزيد",
+      "error": "فشل تحميل قواعد الحوكمة",
+      "empty_title": "لا توجد قواعد مهيّأة",
+      "empty_description": "أضف قواعد المشاركة في الحوكمة لتضمين مناصب معينة تلقائياً في المهام السرية.",
+      "revoke_title": "إلغاء القاعدة",
+      "revoke_description": "هل أنت متأكد من رغبتك في إلغاء قاعدة الحوكمة لـ {name}؟",
+      "revoke_confirm": "تأكيد الإلغاء",
+      "revoke_cancel": "إلغاء",
+      "filter_scope": "تصفية حسب النطاق",
+      "filter_status": "تصفية حسب الحالة",
+      "all_scopes": "جميع النطاقات",
+      "all_statuses": "جميع الحالات",
+      "columns": {
+        "position": "المنصب",
+        "scope": "النطاق",
+        "target": "الهدف",
+        "category": "الفئة",
+        "classification": "التصنيف",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "form": {
+        "create_title": "إضافة قاعدة حوكمة",
+        "edit_title": "تعديل قاعدة حوكمة",
+        "position": "المنصب",
+        "select_position": "اختر منصباً...",
+        "scope_type": "نوع النطاق",
+        "scope_tenant": "على مستوى المؤسسة",
+        "scope_specific_department": "قسم محدد",
+        "scope_department_tree": "شجرة الأقسام",
+        "department": "القسم",
+        "select_department": "اختر قسماً...",
+        "blueprint_category": "التصنيف (اختياري)",
+        "classification_level": "مستوى التصنيف",
+        "classification_public": "عام",
+        "classification_internal": "داخلي",
+        "classification_confidential": "سري",
+        "cancel": "إلغاء",
+        "create": "إنشاء",
+        "save": "حفظ",
+        "saving": "جارٍ الحفظ...",
+        "position_required": "المنصب مطلوب",
+        "department_required": "القسم مطلوب لنوع النطاق المحدد",
+        "all_categories": "جميع التصنيفات",
+        "scope_audit_grant": "وصول تدقيق",
+        "scope_own_department": "القسم الخاص",
+        "scope_own_tasks": "مهامي"
+      },
+      "toast": {
+        "created": "تم إنشاء قاعدة الحوكمة",
+        "updated": "تم تحديث قاعدة الحوكمة",
+        "revoked": "تم إلغاء قاعدة الحوكمة"
+      },
+      "scope_tenant": "على مستوى المؤسسة",
+      "scope_specific_department": "قسم محدد",
+      "scope_department_tree": "شجرة الأقسام",
+      "classification_level_1": "عام",
+      "classification_level_2": "داخلي",
+      "classification_level_3": "سري",
+      "scope_own_department": "القسم الخاص",
+      "scope_own_tasks": "مهامي",
+      "scope_audit_grant": "وصول تدقيق"
     }
   }
 }

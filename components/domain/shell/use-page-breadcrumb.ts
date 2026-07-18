@@ -127,6 +127,13 @@ export function usePageBreadcrumb(): Crumb[] | null {
     ];
   }
 
+  if (pathname === '/admin/confidential-governance') {
+    return [
+      { label: nav('label_admin') },
+      { label: nav('governance_participants') },
+    ];
+  }
+
   if (pathname === '/settings') {
     return [
       { label: nav('settings') },

@@ -54,7 +54,8 @@
     "executive_dashboard": "Executive Dashboard",
     "aging_report": "Aging Report",
     "department_dashboard": "Department Dashboard",
-    "settings": "Settings"
+    "settings": "Settings",
+    "governance_participants": "Governance Participants"
   },
   "not_found": {
     "title": "Page Not Found",
@@ -255,7 +256,8 @@
       "classification": {
         "public": "Public",
         "internal": "Internal",
-        "confidential": "Confidential"
+        "confidential": "Confidential",
+        "aria_confidential": "Classification: Confidential"
       }
     },
     "detail": {
@@ -341,9 +343,9 @@
       "was_replaced": "was replaced",
       "stage_suffix": "Stage",
       "substage_suffix": "substage",
-"time_day_one": "day",
-        "time_day_two": "two days",
-        "time_day_many": "days",
+      "time_day_one": "day",
+      "time_day_two": "two days",
+      "time_day_many": "days",
       "time_hour_one": "hour",
       "time_hour_two": "2 hours",
       "time_hour_many": "hours",
@@ -477,7 +479,8 @@
       "no_permission_title": "No permission",
       "no_permission_desc": "You cannot edit this draft.",
       "not_found_title": "Task not found",
-      "back_to_tasks": "Back to tasks"
+      "back_to_tasks": "Back to tasks",
+      "confidential_explainer": "Confidential tasks are only visible to named participants and configured governance positions."
     },
     "references": {
       "title": "External References",
@@ -498,7 +501,7 @@
       "reference_type_other": "Other",
       "reference_number": "Reference Number",
       "reference_number_required": "Reference number is required",
-"reference_number_placeholder": "e.g. وارد-2026-00413",
+      "reference_number_placeholder": "e.g. وارد-2026-00413",
       "issuing_entity": "Issuing Entity",
       "select_entity": "Select entity",
       "loading_entities": "Loading entities...",
@@ -823,13 +826,13 @@
       "sla_unit_hours": "Hours",
       "sla_unit_days": "Days",
       "warning_threshold": "Warning Threshold (%)",
-        "name_ar_placeholder": "Enter Arabic name",
-        "name_en_placeholder": "Enter English name",
-        "display_order_placeholder": "Enter display order",
-        "sla_value_placeholder": "Enter SLA value",
-        "sla_unit_placeholder": "Select unit",
-        "warning_threshold_placeholder": "Enter warning threshold",
-        "deactivate": "Deactivate",
+      "name_ar_placeholder": "Enter Arabic name",
+      "name_en_placeholder": "Enter English name",
+      "display_order_placeholder": "Enter display order",
+      "sla_value_placeholder": "Enter SLA value",
+      "sla_unit_placeholder": "Select unit",
+      "warning_threshold_placeholder": "Enter warning threshold",
+      "deactivate": "Deactivate",
       "reactivate": "Reactivate",
       "deactivate_category_title": "Deactivate Category",
       "deactivate_category_description": "Are you sure you want to deactivate this category?",
@@ -951,15 +954,15 @@
       "date_to": "Date to",
       "date_field": "Date field"
     },
-      "bottlenecks": {
-        "title": "Stage Bottlenecks by Department",
-        "overdue": "overdue",
-        "at_risk": "at risk",
-        "empty_title": "No bottlenecks",
-        "empty_description": "No stage-level bottlenecks detected.",
-        "error_title": "Unable to load bottlenecks",
-        "view_all_stages": "View all stage bottlenecks ({count})"
-      },
+    "bottlenecks": {
+      "title": "Stage Bottlenecks by Department",
+      "overdue": "overdue",
+      "at_risk": "at risk",
+      "empty_title": "No bottlenecks",
+      "empty_description": "No stage-level bottlenecks detected.",
+      "error_title": "Unable to load bottlenecks",
+      "view_all_stages": "View all stage bottlenecks ({count})"
+    },
     "recent_actions": {
       "title": "Recent Follow-Up Actions",
       "empty_title": "No recent actions",
@@ -1397,7 +1400,7 @@
     "gregorian": "Gregorian",
     "hijri": "Hijri",
     "hijri_prefix": "",
-"hijri_suffix": " AH",
+    "hijri_suffix": " AH",
     "hijri_date_label": "Hijri date",
     "calendar_system_label": "Calendar system",
     "date_converter_label": "Date Converter",
@@ -1534,6 +1537,126 @@
         "delegation_updated": "Delegation updated successfully",
         "delegation_revoked": "Delegation revoked successfully"
       }
+    }
+  },
+  "confidential": {
+    "participants": {
+      "title": "Confidential Participants",
+      "add_placeholder": "Search user to add...",
+      "empty_title": "No participants yet",
+      "empty_description": "Add named participants to grant access to this confidential task.",
+      "loading": "Loading...",
+      "load_more": "Load more",
+      "remove_title": "Remove participant",
+      "remove_description": "Are you sure you want to remove {name} from this task?",
+      "remove_confirm": "Remove",
+      "remove_cancel": "Cancel",
+      "remove_aria": "Remove {name}",
+      "toast": {
+        "added": "Participant added",
+        "removed": "Participant removed"
+      }
+    },
+    "metadata": {
+      "alert_title": "Restricted Access",
+      "alert_description": "You are viewing restricted metadata only. Full content is not accessible with your current permissions.",
+      "department": "Owning Department",
+      "responsible_position": "Responsible Position",
+      "status": "Status",
+      "sla_health": "SLA Health",
+      "due_date": "Due Date",
+      "open_content": "Open Confidential Content"
+    },
+    "override": {
+      "title": "Open Confidential Content",
+      "description": "This action will be recorded in the audit log.",
+      "audit_notice": "This access is audited and logged. Only access confidential content when you have a legitimate reason.",
+      "reason_label": "Reason for access",
+      "reason_placeholder": "Enter the reason for accessing this confidential content...",
+      "reason_hint": "Minimum 10 characters required",
+      "reason_too_short": "Reason must be at least 10 characters",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "session_title": "Monitored Access Session",
+      "session_description": "Reason: {reason}",
+      "toast": {
+        "opened": "Override session started"
+      }
+    },
+    "governance": {
+      "page_title": "Confidential Governance Participants",
+      "page_description": "Manage which positions have automatic oversight access on confidential tasks.",
+      "title": "Governance Participant Rules",
+      "add_rule": "Add rule",
+      "edit": "Edit",
+      "revoke": "Revoke",
+      "active": "Active",
+      "revoked_status": "Revoked",
+      "all_categories": "All categories",
+      "scope_tenant_label": "Tenant-wide",
+      "loading": "Loading...",
+      "load_more": "Load more",
+      "error": "Failed to load governance participants",
+      "empty_title": "No rules configured",
+      "empty_description": "Add governance participant rules to automatically include certain positions on confidential tasks.",
+      "revoke_title": "Revoke rule",
+      "revoke_description": "Are you sure you want to revoke the governance rule for {name}?",
+      "revoke_confirm": "Revoke",
+      "revoke_cancel": "Cancel",
+      "filter_scope": "Filter by scope",
+      "filter_status": "Filter by status",
+      "all_scopes": "All scopes",
+      "all_statuses": "All statuses",
+      "columns": {
+        "position": "Position",
+        "scope": "Scope",
+        "target": "Target",
+        "category": "Category",
+        "classification": "Classification",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "form": {
+        "create_title": "Add Governance Rule",
+        "edit_title": "Edit Governance Rule",
+        "position": "Position",
+        "select_position": "Select a position...",
+        "scope_type": "Scope Type",
+        "scope_tenant": "Tenant-wide",
+        "scope_specific_department": "Specific Department",
+        "scope_department_tree": "Department Tree",
+        "department": "Department",
+        "select_department": "Select a department...",
+        "blueprint_category": "Blueprint Category (optional)",
+        "classification_level": "Classification Level",
+        "classification_public": "Public",
+        "classification_internal": "Internal",
+        "classification_confidential": "Confidential",
+        "cancel": "Cancel",
+        "create": "Create",
+        "save": "Save",
+        "saving": "Saving...",
+        "position_required": "Position is required",
+        "department_required": "Department is required for the selected scope type",
+        "all_categories": "All categories",
+        "scope_audit_grant": "Audit Grant",
+        "scope_own_department": "Own Department",
+        "scope_own_tasks": "Own Tasks"
+      },
+      "toast": {
+        "created": "Governance rule created",
+        "updated": "Governance rule updated",
+        "revoked": "Governance rule revoked"
+      },
+      "scope_tenant": "Tenant-wide",
+      "scope_specific_department": "Specific Department",
+      "scope_department_tree": "Department Tree",
+      "classification_level_1": "Public",
+      "classification_level_2": "Internal",
+      "classification_level_3": "Confidential",
+      "scope_own_department": "Own Department",
+      "scope_own_tasks": "Own Tasks",
+      "scope_audit_grant": "Audit Grant"
     }
   }
 }

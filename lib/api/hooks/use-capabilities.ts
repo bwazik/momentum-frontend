@@ -1,30 +1,24 @@
-import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../client';
-import { queryKeys } from '../query-keys';
-import { useCapabilityStore } from '@/lib/stores/use-capability-store';
 import { useEffect } from 'react';
-import type { components } from '@/lib/generated/api-types';
+import { useCapabilityStore } from '@/lib/stores/use-capability-store';
+import { useCurrentUser } from './use-auth';
 
-type EffectiveCapabilityResource = components['schemas']['EffectiveCapabilityResource'];
+function parseCapabilities(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw as string[];
+  if (typeof raw === 'string') return raw.length > 0 ? raw.split(',').map((s) => s.trim()).filter(Boolean) : [];
+  return [];
+}
 
 export function useCapabilities(userPublicId: string | undefined) {
   const setCapabilities = useCapabilityStore((s) => s.setCapabilities);
-
-  const query = useQuery({
-    queryKey: userPublicId ? queryKeys.auth.capabilities(userPublicId) : ['auth', 'capabilities'] as const,
-    queryFn: () =>
-      apiClient.get<EffectiveCapabilityResource[]>(`/v1/iam/users/${userPublicId}/capabilities`),
-    enabled: !!userPublicId,
-    staleTime: 5 * 60 * 1000,
-  });
+  const { data: user, isLoading } = useCurrentUser();
 
   useEffect(() => {
-    if (query.data) {
-      setCapabilities(query.data.map((c) => c.capability_key));
+    if (user?.effective_capabilities && userPublicId) {
+      setCapabilities(parseCapabilities(user.effective_capabilities));
     }
-  }, [query.data, setCapabilities]);
+  }, [user?.effective_capabilities, userPublicId, setCapabilities]);
 
-  return query;
+  return { data: user?.effective_capabilities, isLoading };
 }
 
 export function useCapability(capability: string): boolean {

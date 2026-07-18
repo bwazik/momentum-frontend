@@ -34,6 +34,7 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
   const canAdmin = useCapability('iam.manage_users');
   const canManageBlueprints = useCapability('blueprint.manage');
   const canManageEntities = useCapability('task.manage_external_entities');
+  const canManageGovernance = useCapability('iam.manage_capabilities');
   const canViewAnalyticsOrg = useCapability('analytics.view.organization');
   const canViewAnalyticsDept = useCapability('analytics.view.department');
   const canViewFollowUpScope = useCapability('task.view.follow_up_scope');
@@ -114,13 +115,14 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {(canAdmin || canManageEntities) && (
+        {(canAdmin || canManageEntities || canManageGovernance) && (
           <SidebarGroup>
             <SidebarGroupLabel>{tnav('label_admin')}</SidebarGroupLabel>
             <SidebarGroupContent>
               <NavMain items={[
-                ...(canAdmin ? [{ title: tnav('admin'), url: '/admin', icon: Shield, isActive: (p: string) => p === '/admin' || (p.startsWith('/admin/') && !p.startsWith('/admin/external-entities')) }] : []),
+                ...(canAdmin ? [{ title: tnav('admin'), url: '/admin', icon: Shield, isActive: (p: string) => p === '/admin' || (p.startsWith('/admin/') && !p.startsWith('/admin/external-entities') && !p.startsWith('/admin/confidential-governance')) }] : []),
                 ...(canManageEntities ? [{ title: tnav('external_entities'), url: '/admin/external-entities', icon: Building2 }] : []),
+                ...(canManageGovernance ? [{ title: tnav('governance_participants'), url: '/admin/confidential-governance', icon: Shield }] : []),
               ]} pathname={pathname} />
             </SidebarGroupContent>
           </SidebarGroup>

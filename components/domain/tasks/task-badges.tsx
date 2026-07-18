@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations, useLocale } from 'next-intl';
-import { Shield, Lock, Globe } from 'lucide-react';
+import { Shield, LockKeyhole, Globe } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { localizeName } from '@/lib/utils/localize';
@@ -21,6 +21,14 @@ const STATUS_VARIANTS: Record<string, string> = {
   completed: 'text-teal-600 border-teal-300 dark:text-teal-400 dark:border-teal-700',
   cancelled: 'text-rose-600 border-rose-300 dark:text-rose-400 dark:border-rose-700',
 } as const;
+
+const STATUS_MAP: Record<string, string> = {
+  '1': 'draft',
+  '2': 'active',
+  '3': 'suspended',
+  '4': 'completed',
+  '5': 'cancelled',
+};
 
 const PRIORITY_DOT: Record<string, string> = {
   critical: 'bg-red-500',
@@ -48,9 +56,11 @@ export function SlaBadge({ health, status }: { health?: string | null; status?: 
   );
 }
 
-export function TaskStatusBadge({ status }: { status?: string | null }) {
+export function TaskStatusBadge({ status }: { status?: string | number | null }) {
   const t = useTranslations('tasks.board.status');
-  const key = status && status in STATUS_VARIANTS ? status : 'draft';
+  const raw = status != null ? String(status) : '';
+  const resolved = raw in STATUS_MAP ? STATUS_MAP[raw] : raw;
+  const key = resolved && resolved in STATUS_VARIANTS ? resolved : 'draft';
 
   return (
     <Badge
@@ -100,7 +110,7 @@ export function ClassificationBadge({ level }: { level?: string | number | null 
       isPublic ? 'text-muted-foreground/50' : 'text-muted-foreground',
     )}>
       {key === 'confidential' ? (
-        <Lock className="size-3" aria-hidden="true" />
+        <LockKeyhole className="size-3" aria-hidden="true" />
       ) : isPublic ? (
         <Globe className="size-3" aria-hidden="true" />
       ) : (

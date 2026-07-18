@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
+import { LockKeyhole } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   SlaBadge,
@@ -31,6 +32,8 @@ export function TitleMetaCard({
     task.description_ar,
     task.description_en,
   );
+  const rawLevel = String(task.classification_level ?? '');
+  const isConfidential = rawLevel === '3' || rawLevel === 'confidential';
 
   return (
     <Card>
@@ -38,12 +41,15 @@ export function TitleMetaCard({
         <div className="flex items-start justify-between gap-3">
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-center gap-1.5">
-              <PriorityBadge priority={task.priority} />
               <ClassificationBadge level={task.classification_level} />
+              <PriorityBadge priority={task.priority} />
               <TaskStatusBadge status={task.status} />
               <SlaBadge health={slaHealth} status={task.status} />
             </div>
-            <h1 className="text-xl font-bold text-foreground">{title}</h1>
+            <div className="flex items-center gap-2">
+              {isConfidential && <LockKeyhole className="size-5 text-purple-600" aria-hidden="true" />}
+              <h1 className="text-xl font-bold text-foreground">{title}</h1>
+            </div>
           </div>
           <div className="flex items-center gap-1">
             <CopyLinkButton publicId={publicId} ariaLabel={t('copy_id')} linkCopiedLabel={t('link_copied')} copyFailedLabel={t('copy_failed')} />

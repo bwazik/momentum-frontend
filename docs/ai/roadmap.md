@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F6 — Admin, Org, Help, Onboarding
-**Active spec:** `019-confidential-access`
+**Active spec:** `010-system-administration`
 **Branch:** `main`
 
 ---
@@ -46,7 +46,7 @@
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `016-task-creation-launch` | F2 | Tasks | `005-task-execution` | ✅ |
 | `017-user-settings-delegation` | F6 | Settings | `016` | ✅ |
-| `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ⬜ |
+| `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ✅ |
 | `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ✅ |
 | `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
 | `022-platform-administration` | F6 | Platform | `001-platform-tenancy`, `001-platform-admin` | ⬜ |
@@ -293,10 +293,19 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **UserSearchCombobox ID resolution:** Added a separate `useQuery` with `public_ids[]` param to resolve pre-populated user names, matching `MultiUserCombobox` pattern. Solves the empty display label when a `public_id` is provided without a prior search.
 - **Mobile input with `+` prefix:** Used `InputGroup` + `InputGroupAddon` pattern from shadcn for the mobile number field, showing a `+` prefix and numeric-only input to match E.164 validation.
 
+**Established by 019:**
+- **Classification badge as muted text:** Confidential tasks use the same muted `<span>` style as internal/public — no colored Badge wrapper. Avoids visual competition with SLA/status/priority colors.
+- **Metadata-first fallback pattern:** `TaskDetail` calls `useTaskDetail`; on 403, attempts `useTaskMetadata`. Success renders `ConfidentialMetadataPage`; 404 renders not-found `EmptyState`. Override session bypasses the 403 with an early return check.
+- **Override session as component state:** Override session data lives in `useState` only — no Zustand/localStorage. Discarded on navigation per security policy.
+- **Capability reading from `/me`:** `useCapabilities` now reads `effective_capabilities` from the `/me` response instead of calling the separate `/iam/users/{id}/capabilities` endpoint. The `parseCapabilities()` helper handles both array and string formats.
+- **Governance participant CRUD:** Admin table at `/admin/confidential-governance` with cursor-paginated `useInfiniteQuery`, shadcn `<RtlSelect>` filters, and a capability-gated add rule button in `PageHeader.actions`. Blueprint category field is optional in the form dialog.
+- **Shared `InfoAlert` component:** Created `components/shared/info-alert.tsx` with dynamic icon, title, description, and primary color scheme — replaces 4 hardcoded amber/purple alerts.
+- **Governance scope validation:** Only `tenant` (1), `specific_department` (3), and `department_tree` (4) are functional scope types. The form limits options to these 3 per backend.
+- **Dropdown alignment in RTL tables:** Radix dropdown menus in RTL table contexts need locale-aware `align` prop (`'start'` in RTL, `'end'` in LTR) because portals inherit the document's `dir`.
+
 **Remaining F6 specs:**
 - `010-system-administration` — Tenant admin screens (requires `015-audit-trail` — ✅ Done on backend)
 - `011-help-center` — Help center CMS screens (requires `020-help-center` — ✅ Done on backend)
-- `019-confidential-access` — Confidential task access management (requires `017-confidentiality-access` — ✅ Done on backend)
 - `021-onboarding-training` — Onboarding and training module (requires `019-onboarding-training` — ✅ Done on backend)
 - `022-platform-administration` — Platform-level tenant management (requires `001-platform-tenancy`/`admin` — ✅ Done on backend)
 

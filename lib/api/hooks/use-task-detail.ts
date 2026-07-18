@@ -1,9 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { apiClient } from '@/lib/api/client';
+import { apiClient, ApiRequestError } from '@/lib/api/client';
 import { queryKeys } from '@/lib/api/query-keys';
 import { toast } from 'sonner';
-import type { components } from '@/lib/generated/api-types';
+import type { components, operations } from '@/lib/generated/api-types';
 import type { CursorPage } from '@/lib/api/types';
 
 type TaskDetailResource = components['schemas']['TaskDetailResource'];
@@ -18,6 +18,9 @@ type ReturnStageRequest = components['schemas']['ReturnStageRequest'];
 type OverrideAssignmentRequest = components['schemas']['OverrideAssignmentRequest'];
 type SuspendTaskRequest = components['schemas']['SuspendTaskRequest'];
 type CancelTaskRequest = components['schemas']['CancelTaskRequest'];
+type ConfidentialParticipantResource = components['schemas']['ConfidentialParticipantResource'];
+type StoreConfidentialParticipantRequest = components['schemas']['StoreConfidentialParticipantRequest'];
+type AccessOverrideRequest = components['schemas']['AccessOverrideRequest'];
 
 export function useTaskDetail(publicId: string) {
   return useQuery({
@@ -250,5 +253,76 @@ export function useCancelTask(publicId: string) {
     onError: (error) => {
       toast.error(error.message);
     },
+  });
+}
+
+export function useConfidentialParticipantsInfinite(taskPublicId: string) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.tasks.confidentialParticipants(taskPublicId),
+    queryFn: ({ pageParam }) =>
+      apiClient.get<CursorPage<ConfidentialParticipantResource>>(
+        `/v1/tasks/${taskPublicId}/confidential-participants`,
+        { params: { cursor: pageParam, per_page: 15 } },
+      ),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => (lastPage.has_more ? lastPage.next_cursor : undefined),
+    enabled: !!taskPublicId,
+    staleTime: 30 * 1000,
+  });
+}
+
+export function useTaskMetadata(taskPublicId: string) {
+  return useQuery({
+    queryKey: queryKeys.tasks.metadata(taskPublicId),
+    queryFn: () => apiClient.get<operations['confidentialAccess.metadata']['responses']['200']['content']['application/json']>(`/v1/tasks/${taskPublicId}/metadata`),
+    enabled: !!taskPublicId,
+    staleTime: 30 * 1000,
+    retry: (failureCount, error) => {
+      if (error instanceof ApiRequestError && error.status === 404) return false;
+      return failureCount < 2;
+    },
+  });
+}
+
+export function useAddConfidentialParticipant(taskPublicId: string) {
+  const queryClient = useQueryClient();
+  const t = useTranslations('confidential.participants.toast');
+  return useMutation({
+    mutationFn: (body: StoreConfidentialParticipantRequest) =>
+      apiClient.post<ConfidentialParticipantResource>(
+        `/v1/tasks/${taskPublicId}/confidential-participants`,
+        body,
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.confidentialParticipants(taskPublicId) });
+      toast.success(t('added'));
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+}
+
+export function useRemoveConfidentialParticipant(taskPublicId: string) {
+  const queryClient = useQueryClient();
+  const t = useTranslations('confidential.participants.toast');
+  return useMutation({
+    mutationFn: (userPublicId: string) =>
+      apiClient.delete(`/v1/tasks/${taskPublicId}/confidential-participants/${userPublicId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.tasks.confidentialParticipants(taskPublicId) });
+      toast.success(t('removed'));
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+}
+
+export function useAccessOverride(taskPublicId: string) {
+  const t = useTranslations('confidential.override.toast');
+  return useMutation({
+    mutationFn: (body: AccessOverrideRequest) =>
+      apiClient.post<TaskDetailResource>(`/v1/tasks/${taskPublicId}/access-override`, body),
+    onSuccess: () => {
+      toast.success(t('opened'));
+    },
+    onError: (error: Error) => toast.error(error.message),
   });
 }

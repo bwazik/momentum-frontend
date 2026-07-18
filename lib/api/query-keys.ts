@@ -16,6 +16,10 @@ export const queryKeys = {
     externalEntities: () => [...queryKeys.tasks.all, 'external-entities'] as const,
     externalReferences: (taskPublicId: string, filters?: { per_page?: number }) =>
       [...queryKeys.tasks.detail(taskPublicId), 'external-references', filters] as const,
+    confidentialParticipants: (publicId: string) =>
+      [...queryKeys.tasks.detail(publicId), 'confidential-participants'] as const,
+    metadata: (publicId: string) =>
+      [...queryKeys.tasks.detail(publicId), 'metadata'] as const,
   },
   documents: {
     all: ['documents'] as const,

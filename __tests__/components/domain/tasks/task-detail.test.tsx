@@ -216,17 +216,30 @@ describe('TaskDetail', () => {
     expect(screen.getByText('This task may have been deleted or you may not have access.')).toBeInTheDocument();
   });
 
-  it('renders 403 no permission state', async () => {
+  it('renders metadata-only view on 403', async () => {
     server.use(
       http.get('https://api.momentum.test/v1/tasks/:publicId', () => {
         return HttpResponse.json({ message: 'Forbidden' }, { status: 403 });
+      }),
+      http.get('https://api.momentum.test/v1/tasks/:publicId/metadata', () => {
+        return HttpResponse.json({
+          public_id: 'forbidden-task',
+          classification_level: '3',
+          title: 'Confidential Task',
+          owning_department: 'HR',
+          current_responsible_position: 'Manager',
+          status: 'active',
+          due_date: '2026-08-01',
+          sla_health: null,
+          metadata_only: true,
+        });
       }),
     );
 
     renderWithProviders(<TaskDetail publicId="forbidden-task" />);
 
-    await screen.findByText('No permission');
-    expect(screen.getByText('You do not have permission to view this task.')).toBeInTheDocument();
+    await screen.findByText('Confidential Task');
+    expect(screen.getByText('HR')).toBeInTheDocument();
   });
 
   it('renders generic error state on 500', async () => {

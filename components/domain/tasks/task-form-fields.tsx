@@ -4,6 +4,8 @@ import { useTranslations } from 'next-intl';
 import { Field, FieldLabel, FieldGroup } from '@/components/ui/field';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { InfoAlert } from '@/components/shared/info-alert';
+import { Info } from 'lucide-react';
 import { BilingualNameFields } from '@/components/shared/bilingual-name-fields';
 import { BilingualDescriptionFields } from '@/components/shared/bilingual-description-fields';
 import { useTaskFormStore } from '@/lib/stores/use-task-form-store';
@@ -35,6 +37,7 @@ export function TaskFormFields({ mode, manualItems, canClassifyConfidential, due
   const titleEn = useTaskFormStore((s) => s.title_en);
   const descAr = useTaskFormStore((s) => s.description_ar);
   const descEn = useTaskFormStore((s) => s.description_en);
+  const classificationLevel = useTaskFormStore((s) => s.classificationLevel);
   const storeSet = useTaskFormStore((s) => s.set);
   const onFieldChange = (key: string, value: string) => (storeSet as (k: string, v: string) => void)(key, value);
   const { data: prioritiesData, isLoading: prioritiesLoading } = useTaskPriorities();
@@ -91,6 +94,13 @@ export function TaskFormFields({ mode, manualItems, canClassifyConfidential, due
             </>
           )}
         </div>
+
+        {classificationLevel === 3 && (
+          <InfoAlert
+            icon={<Info className="size-4" aria-hidden="true" />}
+            description={t('confidential_explainer')}
+          />
+        )}
 
         {manualItems.length > 0 && (
           <>

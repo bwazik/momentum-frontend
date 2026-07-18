@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { organizationHandlers } from './organization-handlers';
 import { taskCreateHandlers } from './task-create-handlers';
+import { confidentialHandlers } from './confidential-handlers';
 
 const mockDocuments = [
   {
@@ -21,6 +22,7 @@ const mockDocuments = [
 export const handlers = [
   ...organizationHandlers,
   ...taskCreateHandlers,
+  ...confidentialHandlers,
   http.get('https://api.momentum.test/v1/follow-up/actions', () =>
     HttpResponse.json({ data: [], next_cursor: null, has_more: false }),
   ),
