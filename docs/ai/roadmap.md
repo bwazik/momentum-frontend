@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F6 — Admin, Org, Help, Onboarding
-**Active spec:** `010-system-administration`
+**Active spec:** `022-platform-administration`
 **Branch:** `main`
 
 ---
@@ -41,7 +41,7 @@
 | `007-follow-up-center` | F4 | Follow-up | `007`, `010-follow-up-board` | ✅ |
 | `008-organization-structure` | F6 | Organization | `002-organization-structure` | ✅ |
 | `009-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ✅ |
-| `010-system-administration` | F6 | Tenant Admin | `003`, `005` (priorities), `015` | ⬜ |
+| `010-system-administration` | F6 | Tenant Admin | `003`, `005` (priorities), `015` | ✅ |
 | `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `016-task-creation-launch` | F2 | Tasks | `005-task-execution` | ✅ |
@@ -257,7 +257,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** 🔄 In Progress
 
-**Specs:** `008` ✅, `010` ⬜, `011` ⬜, `017` ✅, `019` ⬜, `020` ✅, `021` ⬜, `022` ⬜
+**Specs:** `008` ✅, `010` ✅, `011` ⬜, `017` ✅, `019` ✅, `020` ✅, `021` ⬜, `022` ⬜
 
 **Established by 008:**
 - **Visual org chart pattern:** Gradient avatar cards with initials, tiered layout with CSS connector lines, progressive disclosure via click, zoom controls (`ZoomIn`/`ZoomOut`). Works for org chart browsing, not just list trees.
@@ -303,8 +303,20 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Governance scope validation:** Only `tenant` (1), `specific_department` (3), and `department_tree` (4) are functional scope types. The form limits options to these 3 per backend.
 - **Dropdown alignment in RTL tables:** Radix dropdown menus in RTL table contexts need locale-aware `align` prop (`'start'` in RTL, `'end'` in LTR) because portals inherit the document's `dir`.
 
+**Established by 010:**
+- **Four-tab admin workspace pattern:** URL-driven `?tab=users|access|priorities|audit` with capability-gated `TabsTrigger`/`TabsContent` (never just visually hidden). PageHeader actions slot driven by active tab. Tabs use `flex-row-reverse` for RTL and `<div dir>` wrapper on content.
+- **Two-column split panel for Access tab:** Capability catalog (80%) + position grants panel (20%) side by side via `grid-cols-[4fr_1fr]`.
+- **Cursor-paginated users + audit logs:** `useInfiniteQuery` with manual Load More. Filters use debounced search (`useRef` + `useCallback`), URL-driven state, `position="popper"` on all `SelectContent`.
+- **User detail Sheet with tabs:** Opens from start edge (`side={locale === 'ar' ? 'left' : 'right'}`). Uses flat layout with `Separator` and `text-xs font-medium text-muted-foreground` labels (no Card nesting). Status summary row at top.
+- **Row actions via shared `ActionsDropdown`:** Reuses `catalog-table.tsx` `ActionsDropdown` with `editAction`/`deactivateAction`/`reactivateAction` helpers. `ConfirmDeleteDialog` supports `destructive` prop for non-destructive confirmations.
+- **Dynamic PriorityBadge color:** Reads `color_code` from API via inline `style={{ backgroundColor }}` instead of hardcoded `PRIORITY_DOT` map. `?all=true` param on `GET /v1/tasks/priorities` for admin listing (shows inactive).
+- **Scope type select limited to functional values:** Only `TENANT(1)`, `SPECIFIC_DEPARTMENT(3)`, `DEPARTMENT_TREE(4)` shown — types 2 and 5 have no real consumption logic.
+- **Granted_by as user object:** `granted_by` returns `{ public_id, name_ar, name_en }` across all grant resources. `blueprint_category` also returns nested object instead of raw integer ID.
+- **Account type / preferred language via apiValue:** Backend returns strings (`"tenant_admin"`, `"arabic"`) instead of integers. Frontend normalizes with mapping table + `formatAdminAccountType` utility.
+- **Audit event details via Dialog:** Payload and technical details (IP, UA) open in a Dialog instead of inline collapsible. `DualDateDisplay` includes time in audit rows.
+- **Tab-specific create dialogs owned by workspace:** Workspace owns dialog state, passes simple callbacks (`onCreateUser`, `onCreatePriority`) to tab panels — no bidirectional prop contract.
+
 **Remaining F6 specs:**
-- `010-system-administration` — Tenant admin screens (requires `015-audit-trail` — ✅ Done on backend)
 - `011-help-center` — Help center CMS screens (requires `020-help-center` — ✅ Done on backend)
 - `021-onboarding-training` — Onboarding and training module (requires `019-onboarding-training` — ✅ Done on backend)
 - `022-platform-administration` — Platform-level tenant management (requires `001-platform-tenancy`/`admin` — ✅ Done on backend)

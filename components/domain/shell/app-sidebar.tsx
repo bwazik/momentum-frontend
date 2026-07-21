@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { LayoutDashboard, ListTodo, FolderKanban, BarChart3, GitMerge, Building2, Shield, Zap, Plus, Mail, Settings2 } from 'lucide-react';
+import { LayoutDashboard, ListTodo, FolderKanban, BarChart3, GitMerge, Building2, Shield, Zap, Plus, Mail, Settings2, UserCog } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -120,7 +120,7 @@ export function AppSidebar({ locale = 'ar', ...props }: React.ComponentProps<typ
             <SidebarGroupLabel>{tnav('label_admin')}</SidebarGroupLabel>
             <SidebarGroupContent>
               <NavMain items={[
-                ...(canAdmin ? [{ title: tnav('admin'), url: '/admin', icon: Shield, isActive: (p: string) => p === '/admin' || (p.startsWith('/admin/') && !p.startsWith('/admin/external-entities') && !p.startsWith('/admin/confidential-governance')) }] : []),
+                ...(canAdmin ? [{ title: tnav('admin'), url: '/admin', icon: UserCog, isActive: (p: string) => p === '/admin' || (p.startsWith('/admin/') && !p.startsWith('/admin/external-entities') && !p.startsWith('/admin/confidential-governance')) }] : []),
                 ...(canManageEntities ? [{ title: tnav('external_entities'), url: '/admin/external-entities', icon: Building2 }] : []),
                 ...(canManageGovernance ? [{ title: tnav('governance_participants'), url: '/admin/confidential-governance', icon: Shield }] : []),
               ]} pathname={pathname} />

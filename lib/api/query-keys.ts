@@ -1,3 +1,21 @@
+export interface AdminUserFilters {
+  search?: string;
+  is_active?: '0' | '1';
+  account_type?: string;
+  department_id?: string;
+  per_page?: number;
+}
+
+export interface AuditFilters {
+  user_id?: string;
+  event_type?: string;
+  entity_type?: string;
+  date_from?: string;
+  date_to?: string;
+  calendar_system?: 'gregorian' | 'hijri';
+  per_page?: number;
+}
+
 export const queryKeys = {
   tasks: {
     all: ['tasks'] as const,
@@ -85,8 +103,24 @@ export const queryKeys = {
   users: {
     all: ['users'] as const,
     lists: () => [...queryKeys.users.all, 'list'] as const,
-    list: (filters: { search: string; is_active?: number; per_page?: number }) =>
-      [...queryKeys.users.lists(), filters] as const,
+    list: (filters: AdminUserFilters) => [...queryKeys.users.lists(), filters] as const,
+    details: () => [...queryKeys.users.all, 'detail'] as const,
+    detail: (publicId: string) => [...queryKeys.users.details(), publicId] as const,
+    positions: (publicId: string) => [...queryKeys.users.detail(publicId), 'positions'] as const,
+    capabilityGrants: (publicId: string) => [...queryKeys.users.detail(publicId), 'capability-grants'] as const,
+    monitoringScopes: (publicId: string) => [...queryKeys.users.detail(publicId), 'monitoring-scopes'] as const,
+    auditGrants: (publicId: string) => [...queryKeys.users.detail(publicId), 'audit-grants'] as const,
+  },
+  iam: {
+    all: ['iam'] as const,
+    capabilities: () => [...queryKeys.iam.all, 'capabilities'] as const,
+    positionCapabilities: (positionPublicId: string) =>
+      [...queryKeys.iam.all, 'position-capabilities', positionPublicId] as const,
+  },
+  audit: {
+    all: ['audit'] as const,
+    systemLists: () => [...queryKeys.audit.all, 'system', 'list'] as const,
+    systemList: (filters: AuditFilters) => [...queryKeys.audit.systemLists(), filters] as const,
   },
   followUp: {
     all: ['follow-up'] as const,

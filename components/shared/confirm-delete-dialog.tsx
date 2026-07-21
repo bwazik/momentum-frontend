@@ -17,11 +17,12 @@ interface ConfirmDeleteDialogProps {
   confirmLabel?: string;
   cancelLabel?: string;
   isPending?: boolean;
+  destructive?: boolean;
 }
 
 export function ConfirmDeleteDialog({
   open, onOpenChange, title, description, onConfirm,
-  confirmLabel, cancelLabel, isPending = false,
+  confirmLabel, cancelLabel, isPending = false, destructive = true,
 }: ConfirmDeleteDialogProps) {
   const t = useTranslations('shared');
   return (
@@ -33,7 +34,7 @@ export function ConfirmDeleteDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>{cancelLabel ?? t('cancel')}</AlertDialogCancel>
-          <AlertDialogAction className="text-destructive" onClick={onConfirm} disabled={isPending}>
+          <AlertDialogAction className={destructive ? 'text-destructive' : ''} onClick={onConfirm} disabled={isPending}>
             {isPending && <Loader2 className="size-4 animate-spin" />}
             {confirmLabel ?? t('delete')}
           </AlertDialogAction>

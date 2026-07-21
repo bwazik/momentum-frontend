@@ -110,3 +110,8 @@ export class ApiRequestError extends Error {
     this.name = 'ApiRequestError';
   }
 }
+
+export function localizedApiError(e: unknown, t: (key: string) => string): string {
+  if (e instanceof ApiRequestError && e.error?.message) return e.error.message;
+  return t('generic_error');
+}

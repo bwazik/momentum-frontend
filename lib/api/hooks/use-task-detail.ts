@@ -28,6 +28,7 @@ export function useTaskDetail(publicId: string) {
     queryFn: () => apiClient.get<TaskDetailResource>(`/v1/tasks/${publicId}`),
     enabled: !!publicId,
     staleTime: 30 * 1000,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -70,10 +71,10 @@ export function useBlueprintTransitions(blueprintId: string | undefined) {
 
 export function useUsersSearch(search: string) {
   return useQuery({
-    queryKey: queryKeys.users.list({ search, is_active: 1, per_page: 20 }),
+    queryKey: queryKeys.users.list({ search, is_active: true, per_page: 20 }),
     queryFn: () =>
       apiClient.get<CursorPage<UserResource>>('/v1/iam/users', {
-        params: { search, is_active: 1, per_page: 20 },
+        params: { search, is_active: true, per_page: 20 },
       }),
     enabled: search.length >= 2,
     staleTime: 30 * 1000,

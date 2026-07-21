@@ -31,6 +31,25 @@
       "models": {
         "mimo-v2.5-pro-free": {
           "name": "Mimo v2.5 Pro Free"
+        },
+        "glm-5.2-free": {
+          "name": "GLM 5.2 Free"
+        },
+        "grok-4.5-free": {
+          "name": "Grok 4.5 Free"
+        }
+      }
+    },
+    "tokenrouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "TokenRouter",
+      "options": {
+        "baseURL": "https://api.tokenrouter.com/v1"
+      },
+      "models": {
+        "glm-5.2-free": {
+          "id": "z-ai/glm-5.2-free",
+          "name": "GLM 5.2 Free"
         }
       }
     }

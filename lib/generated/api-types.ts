@@ -2112,7 +2112,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["positionAssignment.index"];
         put?: never;
         post: operations["positionAssignment.assign"];
         delete?: never;
@@ -2842,6 +2842,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/iam/users/{user}/capability-grants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["userCapabilityGrant.grantsIndex"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/iam/user-capability-grants/{grant}/revoke": {
         parameters: {
             query?: never;
@@ -2933,7 +2949,7 @@ export interface components {
         };
         /** AssignPositionRequest */
         AssignPositionRequest: {
-            position_id: number;
+            position_id: string;
             /** Format: date-time */
             started_at?: string | null;
             is_primary?: boolean | null;
@@ -2956,6 +2972,7 @@ export interface components {
         AuditEntityType: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32 | 33 | 34;
         /** AuditGrantResource */
         AuditGrantResource: {
+            public_id: string;
             external_auditor?: {
                 public_id: string;
                 name_ar: string;
@@ -3379,7 +3396,7 @@ export interface components {
             capability_key: string;
             source: string;
             scope_type: string;
-            scope_department_id: string;
+            scope_department: unknown;
         };
         /** EndPositionRequest */
         EndPositionRequest: {
@@ -3518,33 +3535,32 @@ export interface components {
         FollowUpActionType: 1 | 2 | 3 | 4 | 5;
         /** GrantAuditGrantRequest */
         GrantAuditGrantRequest: {
-            external_auditor_user_id: string;
             /** Format: date-time */
             date_range_start: string;
             /** Format: date-time */
             date_range_end: string;
-            department_id?: number | null;
+            department_id?: string | null;
             calendar_system?: components["schemas"]["CalendarSystem"];
         };
         /** GrantMonitoringScopeRequest */
         GrantMonitoringScopeRequest: {
             /** @enum {integer} */
             scope_type: 1 | 2 | 3 | 4;
-            scope_department_id?: number | null;
+            scope_department_id?: string | null;
             blueprint_category_id?: number | null;
         };
         /** GrantPositionCapabilityRequest */
         GrantPositionCapabilityRequest: {
-            capability_id: number;
+            capability_id: string;
             /** @enum {integer} */
             scope_type: 1 | 2 | 3 | 4 | 5;
-            scope_department_id?: number | null;
+            scope_department_id?: string | null;
         };
         /** GrantUserCapabilityRequest */
         GrantUserCapabilityRequest: {
-            capability_id: number;
+            capability_id: string;
             scope_type: components["schemas"]["ScopeType"];
-            scope_department_id?: number | null;
+            scope_department_id?: string | null;
             reason: string;
         };
         /** HelpArticleCategoryResource */
@@ -3663,6 +3679,7 @@ export interface components {
         };
         /** MonitoringScopeGrantResource */
         MonitoringScopeGrantResource: {
+            public_id: string;
             user_id: string;
             scope_type: string;
             scope_department?: {
@@ -3855,6 +3872,7 @@ export interface components {
         };
         /** PositionCapabilityGrantResource */
         PositionCapabilityGrantResource: {
+            public_id: string;
             position_id: string;
             capability?: {
                 public_id: string;
@@ -4625,7 +4643,6 @@ export interface components {
             name_ar?: string;
             name_en?: string | null;
             description?: string | null;
-            key?: string;
         };
         /** UpdateCategoryRequest */
         UpdateCategoryRequest: {
@@ -4790,6 +4807,7 @@ export interface components {
         };
         /** UserCapabilityGrantResource */
         UserCapabilityGrantResource: {
+            public_id: string;
             user_id: string;
             capability?: {
                 public_id: string;
@@ -4802,7 +4820,11 @@ export interface components {
                 name_ar: string;
             } | null;
             reason: string;
-            granted_by: string;
+            granted_by?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            } | null;
             granted_at: string;
             revoked_at: string;
         };
@@ -4831,7 +4853,7 @@ export interface components {
             email: string;
             mobile: string | null;
             employee_id: string | null;
-            account_type: number;
+            account_type: string;
             preferred_language: string;
             is_active: boolean;
             is_out_of_office: boolean;
@@ -5021,7 +5043,7 @@ export interface operations {
                 "X-Tenant": string;
             };
             path: {
-                /** @description The grant ID */
+                /** @description The grant public id */
                 grant: number;
             };
             cookie?: never;
@@ -8967,7 +8989,7 @@ export interface operations {
                 "X-Tenant": string;
             };
             path: {
-                /** @description The grant ID */
+                /** @description The grant public id */
                 grant: number;
             };
             cookie?: never;
@@ -10185,6 +10207,39 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "positionAssignment.index": {
+        parameters: {
+            query?: {
+                per_page?: number;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The user public id */
+                user: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["PositionAssignmentResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
     "positionAssignment.assign": {
         parameters: {
             query?: never;
@@ -10228,7 +10283,7 @@ export interface operations {
             path: {
                 /** @description The user public id */
                 user: string;
-                /** @description The assignment ID */
+                /** @description The assignment public id */
                 assignment: number;
             };
             cookie?: never;
@@ -10263,7 +10318,7 @@ export interface operations {
             path: {
                 /** @description The user public id */
                 user: string;
-                /** @description The assignment ID */
+                /** @description The assignment public id */
                 assignment: number;
             };
             cookie?: never;
@@ -10352,7 +10407,7 @@ export interface operations {
                 "X-Tenant": string;
             };
             path: {
-                /** @description The grant ID */
+                /** @description The grant public id */
                 grant: number;
             };
             cookie?: never;
@@ -11682,7 +11737,9 @@ export interface operations {
     };
     "taskPriority.index": {
         parameters: {
-            query?: never;
+            query?: {
+                all?: boolean;
+            };
             header: {
                 /** @description Tenant slug or public ID for multi-tenant resolution. */
                 "X-Tenant": string;
@@ -11830,6 +11887,7 @@ export interface operations {
                 account_type?: components["schemas"]["AccountType"];
                 department_id?: string | null;
                 "public_ids[]"?: string[];
+                cursor?: string | null;
                 per_page?: number | null;
             };
             header: {
@@ -12194,6 +12252,34 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
+    "userCapabilityGrant.grantsIndex": {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The user public id */
+                user: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Array of `UserCapabilityGrantResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserCapabilityGrantResource"][];
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
     "userCapabilityGrant.revoke": {
         parameters: {
             query?: never;
@@ -12202,7 +12288,7 @@ export interface operations {
                 "X-Tenant": string;
             };
             path: {
-                /** @description The grant ID */
+                /** @description The grant public id */
                 grant: number;
             };
             cookie?: never;

@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { useQueryClient } from '@tanstack/react-query';
 import { Ellipsis, ExternalLink, GitBranch, Copy } from 'lucide-react';
 import {
   DropdownMenu,
@@ -13,8 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { BoardTable } from '@/components/domain/tasks/board-table';
-import { queryKeys } from '@/lib/api/query-keys';
-import { apiClient } from '@/lib/api/client';
 import { copyTaskLink, copyToClipboard } from '@/components/shared/copy-link-button';
 import type { BoardTaskResource } from './task-board-types';
 
@@ -27,14 +24,6 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
   const locale = useLocale();
   const t = useTranslations('tasks.board.columns');
   const nav = useTranslations('nav');
-  const queryClient = useQueryClient();
-
-  function handleRowHover(publicId: string) {
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.tasks.detail(publicId),
-      queryFn: () => apiClient.get(`/v1/tasks/${publicId}`),
-    });
-  }
 
   return (
     <BoardTable
@@ -48,7 +37,6 @@ export function TaskBoardTable({ tasks }: TaskBoardTableProps) {
         actions: t('actions'),
         table_label: t('table_label'),
       }}
-      onRowHover={handleRowHover}
       renderActions={(task) => (
         <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
           <DropdownMenuTrigger asChild>

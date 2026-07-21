@@ -30,11 +30,7 @@ const STATUS_MAP: Record<string, string> = {
   '5': 'cancelled',
 };
 
-const PRIORITY_DOT: Record<string, string> = {
-  critical: 'bg-red-500',
-  urgent: 'bg-amber-500',
-  routine: 'bg-transparent',
-} as const;
+
 
 export function SlaBadge({ health, status }: { health?: string | null; status?: string | null }) {
   const t = useTranslations('tasks.board.sla');
@@ -72,19 +68,22 @@ export function TaskStatusBadge({ status }: { status?: string | number | null })
   );
 }
 
-export function PriorityBadge({ priority }: { priority?: { name_ar?: string; name_en?: string; severity_rank?: string } | null }) {
+export function PriorityBadge({ priority }: { priority?: { name_ar?: string; name_en?: string; severity_rank?: string; color_code?: string } | null }) {
   const t = useTranslations('tasks.board.priority');
   const locale = useLocale();
-  const severity = priority?.severity_rank;
-  const dotColor = severity && severity in PRIORITY_DOT ? PRIORITY_DOT[severity] : 'bg-transparent';
+  const dotColor = priority?.color_code;
 
   return (
     <Badge
       variant="outline"
       className="gap-1.5 bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
     >
-      {severity !== 'routine' && severity && (
-        <span className={cn('size-1.5 rounded-full', dotColor)} aria-hidden="true" />
+      {dotColor && (
+        <span
+          className="size-1.5 rounded-full"
+          style={{ backgroundColor: dotColor }}
+          aria-hidden="true"
+        />
       )}
       {priority ? localizeName(locale, priority.name_ar, priority.name_en) : t('unknown')}
     </Badge>
