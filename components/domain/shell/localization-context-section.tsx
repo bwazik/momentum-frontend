@@ -1,14 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLocalizationContext } from '@/lib/api/hooks/use-localization';
 import { useLocaleStore } from '@/lib/stores/use-locale-store';
 
-export function LocalizationContextSection() {
+export function LocalizationContextSection({ mode = 'tenant' }: { mode?: 'tenant' | 'platform' }) {
   const t = useTranslations('localization');
-  const { data, isLoading, isError } = useLocalizationContext();
+  const locale = useLocale();
+  const { data, isLoading, isError } = useLocalizationContext(mode === 'tenant');
 
   useEffect(() => {
     if (!data) return;
@@ -29,13 +30,20 @@ export function LocalizationContextSection() {
     );
   }
 
-  if (isError || !data) return null;
+  const context = data ?? (mode === 'platform' ? {
+    locale,
+    text_direction: locale === 'ar' ? 'rtl' : 'ltr',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    hijri_calendar_variant: '-',
+  } : null);
+
+  if (isError || !context) return null;
 
   const items = [
-    { label: t('context.locale'), value: data.locale },
-    { label: t('context.direction'), value: data.text_direction.toUpperCase() },
-    { label: t('context.timezone'), value: data.timezone },
-    { label: t('context.variant'), value: data.hijri_calendar_variant },
+    { label: t('context.locale'), value: context.locale },
+    { label: t('context.direction'), value: context.text_direction.toUpperCase() },
+    { label: t('context.timezone'), value: context.timezone },
+    { label: t('context.variant'), value: context.hijri_calendar_variant },
   ];
 
   return (

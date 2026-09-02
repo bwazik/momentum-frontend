@@ -29,26 +29,40 @@ import Link from 'next/link';
 import { useLogout } from '@/lib/api/hooks/use-auth';
 import { useBrandColorStore, type BrandColor, brandColorHex } from '@/lib/stores/use-brand-color-store';
 import { LocalizationContextSection } from './localization-context-section';
-import type { components } from '@/lib/generated/api-types';
 
-type UserResource = components['schemas']['UserResource'];
+interface NavUserData {
+  name_ar: string;
+  name_en?: string | null;
+  email: string;
+}
+
+interface NavUserLogout {
+  onLogout: () => void;
+  isPending: boolean;
+}
 
 interface NavUserProps {
-  user: UserResource;
+  user: NavUserData;
   locale?: 'ar' | 'en';
+  logout?: NavUserLogout;
+  settingsHref?: string | null;
+  showLocalizationContext?: boolean;
+  localizationContextMode?: 'tenant' | 'platform';
 }
 
 const brandColors: BrandColor[] = ['amber', 'al_adaam', 'blue', 'emerald', 'rose', 'slate'];
 const themes = ['light', 'dark', 'system'] as const;
 
-export function NavUser({ user, locale = 'ar' }: NavUserProps) {
+export function NavUser({ user, locale = 'ar', logout, settingsHref = '/settings', showLocalizationContext = true, localizationContextMode = 'tenant' }: NavUserProps) {
   const { isMobile } = useSidebar();
   const t = useTranslations('auth');
   const ct = useTranslations('colors');
   const st = useTranslations('shell');
   const { theme, setTheme } = useTheme();
-  const logout = useLogout();
+  const defaultLogout = useLogout();
   const { color: brandColor, setColor: setBrandColor } = useBrandColorStore();
+  const onLogout = logout?.onLogout ?? (() => defaultLogout.mutate());
+  const isLogoutPending = logout?.isPending ?? defaultLogout.isPending;
   const name = locale === 'ar' ? (user.name_ar || user.name_en || user.email) : (user.name_en || user.name_ar || user.email);
   const initials = name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
   const menuSide = isMobile ? 'bottom' : (locale === 'ar' ? 'left' : 'right');
@@ -122,25 +136,31 @@ export function NavUser({ user, locale = 'ar' }: NavUserProps) {
                   ))}
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="cursor-pointer">
-                  <Globe data-slot="sidebar-menu-button-icon" />
-                  <span>{t('localization')}</span>
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                  <LocalizationContextSection />
-                </DropdownMenuSubContent>
+              {showLocalizationContext && (
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="cursor-pointer">
+                    <Globe data-slot="sidebar-menu-button-icon" />
+                    <span>{t('localization')}</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <LocalizationContextSection mode={localizationContextMode} />
+                  </DropdownMenuSubContent>
                 </DropdownMenuSub>
+              )}
               </DropdownMenuGroup>
+              {settingsHref && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href={settingsHref} className="flex items-center gap-2">
+                      <Settings data-slot="sidebar-menu-button-icon" />
+                      <span>{t('preferences')}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href="/settings" className="flex items-center gap-2">
-                  <Settings data-slot="sidebar-menu-button-icon" />
-                  <span>{t('preferences')}</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => logout.mutate()} disabled={logout.isPending} className="cursor-pointer">
+            <DropdownMenuItem onClick={onLogout} disabled={isLogoutPending} className="cursor-pointer">
               <LogOut data-slot="sidebar-menu-button-icon" />
               {t('logout')}
             </DropdownMenuItem>

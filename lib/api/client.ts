@@ -10,6 +10,10 @@ function isFormData(body: unknown): body is FormData {
   return typeof FormData !== 'undefined' && body instanceof FormData;
 }
 
+function isPlatformPath(path: string): boolean {
+  return path.startsWith('/v1/platform/');
+}
+
 interface ApiErrorResponse {
   message: string;
   errors?: Record<string, string[]>;
@@ -23,6 +27,7 @@ interface RequestOptions {
 }
 
 function getXsrfToken(): string | null {
+  if (typeof document === 'undefined') return null;
   const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
   return match ? decodeURIComponent(match[1]) : null;
 }
@@ -48,16 +53,19 @@ async function request<T>(
         return;
       }
 
-      url.searchParams.set(key, String(value));
+      url.searchParams.set(key, typeof value === 'boolean' ? (value ? '1' : '0') : String(value));
     });
   }
 
   const headers: Record<string, string> = {
     'Accept': 'application/json',
-    'X-Tenant': getTenantSlug(),
     'X-Locale': getLocaleSlug(),
     ...options?.headers,
   };
+
+  if (!isPlatformPath(path)) {
+    headers['X-Tenant'] = getTenantSlug();
+  }
 
   const bodyIsFormData = isFormData(body);
   if (!bodyIsFormData) {

@@ -8,9 +8,9 @@ function parseCapabilities(raw: unknown): string[] {
   return [];
 }
 
-export function useCapabilities(userPublicId: string | undefined) {
+export function useCapabilities(userPublicId: string | undefined, enabled = true) {
   const setCapabilities = useCapabilityStore((s) => s.setCapabilities);
-  const { data: user, isLoading } = useCurrentUser();
+  const { data: user, isLoading } = useCurrentUser(enabled);
 
   useEffect(() => {
     if (user?.effective_capabilities && userPublicId) {
@@ -21,6 +21,6 @@ export function useCapabilities(userPublicId: string | undefined) {
   return { data: user?.effective_capabilities, isLoading };
 }
 
-export function useCapability(capability: string): boolean {
-  return useCapabilityStore((s) => s.hasCapability(capability));
+export function useCapability(capability: string, enabled = true): boolean {
+  return useCapabilityStore((s) => enabled && s.hasCapability(capability));
 }

@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { CalendarSearch } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
@@ -27,12 +27,15 @@ const DateConverterDialog = dynamic(
   { ssr: false },
 );
 
-export function SiteHeader() {
+export function SiteHeader({ mode = 'tenant' }: { mode?: 'tenant' | 'platform' }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const t = useTranslations('shell');
   const lt = useTranslations('localization');
-  const appName = useBrandName();
-  const crumbs = usePageBreadcrumb();
+  const platform = useTranslations('platform.workspace');
+  const appName = useBrandName(mode === 'tenant');
+  const tenantCrumbs = usePageBreadcrumb();
+  const crumbs = mode === 'tenant' ? tenantCrumbs : null;
   const [converterOpen, setConverterOpen] = useState(false);
 
   const pageTitles: Record<string, string> = {
@@ -46,7 +49,16 @@ export function SiteHeader() {
     '/admin': t('page_titles.admin'),
     '/settings': t('page_titles.settings'),
   };
-  const pageTitle = pageTitles[pathname] ?? appName;
+  const platformPageTitles: Record<string, string> = {
+    tenants: platform('tabs.tenants'),
+    admins: platform('tabs.admins'),
+    impersonation: platform('tabs.impersonation'),
+    audit: platform('tabs.audit'),
+  };
+  const platformTab = searchParams.get('tab') ?? 'tenants';
+  const pageTitle = mode === 'platform'
+    ? platformPageTitles[platformTab] ?? platform('title')
+    : pageTitles[pathname] ?? appName;
 
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -74,20 +86,24 @@ export function SiteHeader() {
           <h1 className="ms-1 text-base font-medium">{pageTitle}</h1>
         )}
         <div className="ms-auto flex items-center gap-2">
-          <GlobalSearch />
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={lt('date_converter_label')}
-            onClick={() => setConverterOpen(true)}
-          >
-          <CalendarSearch data-slot="icon" />
-          </Button>
-          <NotificationBell />
+          {mode === 'tenant' && (
+            <>
+              <GlobalSearch />
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={lt('date_converter_label')}
+                onClick={() => setConverterOpen(true)}
+              >
+                <CalendarSearch data-slot="icon" />
+              </Button>
+            </>
+          )}
+          <NotificationBell enabled={mode === 'tenant'} />
           <LocaleToggle />
         </div>
       </div>
-      <DateConverterDialog open={converterOpen} onOpenChange={setConverterOpen} />
+      {mode === 'tenant' && <DateConverterDialog open={converterOpen} onOpenChange={setConverterOpen} />}
     </header>
   );
 }

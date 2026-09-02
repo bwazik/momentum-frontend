@@ -16,10 +16,11 @@ async function getCsrfCookie(): Promise<void> {
   await fetch(`${baseUrl}/sanctum/csrf-cookie`, { credentials: 'include' });
 }
 
-export function useCurrentUser() {
+export function useCurrentUser(enabled = true) {
   return useQuery({
     queryKey: queryKeys.auth.me,
     queryFn: () => apiClient.get<UserResource>('/v1/iam/auth/me'),
+    enabled,
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error) => {
       if (error instanceof ApiRequestError && error.status === 401) return false;

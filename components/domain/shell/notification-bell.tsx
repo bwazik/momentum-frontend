@@ -9,10 +9,10 @@ import { Badge } from '@/components/ui/badge';
 import { useNotificationsCount } from '@/lib/api/hooks/use-notifications';
 import { NotificationPanel } from './notification-panel';
 
-export function NotificationBell() {
+export function NotificationBell({ enabled = true }: { enabled?: boolean }) {
   const t = useTranslations('notifications');
   const [open, setOpen] = useState(false);
-  const { data: countData } = useNotificationsCount();
+  const { data: countData } = useNotificationsCount(enabled);
   const unreadCount = countData?.unread_count ?? 0;
 
   return (
@@ -28,7 +28,7 @@ export function NotificationBell() {
         </Button>
       </PopoverTrigger>
       <PopoverContent side="bottom" align="end" className="w-80 p-0" sideOffset={8}>
-        <NotificationPanel onClose={() => setOpen(false)} />
+        <NotificationPanel enabled={enabled} onClose={() => setOpen(false)} />
       </PopoverContent>
     </Popover>
   );

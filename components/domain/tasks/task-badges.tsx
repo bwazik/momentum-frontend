@@ -68,7 +68,7 @@ export function TaskStatusBadge({ status }: { status?: string | number | null })
   );
 }
 
-export function PriorityBadge({ priority }: { priority?: { name_ar?: string; name_en?: string; severity_rank?: string; color_code?: string } | null }) {
+export function PriorityBadge({ priority }: { priority?: { name_ar?: string; name_en?: string; severity_rank?: string; color_code?: string | null } | null }) {
   const t = useTranslations('tasks.board.priority');
   const locale = useLocale();
   const dotColor = priority?.color_code;

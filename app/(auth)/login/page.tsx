@@ -3,9 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { LoginForm } from '@/components/domain/auth/login-form';
-import { LocaleToggle } from '@/components/shared/locale-toggle';
-import { ModeToggle } from '@/components/theme-toggle';
-import { AppBrand } from '@/components/shared/app-brand';
+import { AuthPageShell } from '@/components/domain/auth/auth-page-shell';
 import { useCurrentUser } from '@/lib/api/hooks/use-auth';
 import { useBrandName } from '@/lib/api/hooks/use-brand-name';
 
@@ -23,15 +21,9 @@ export default function LoginPage() {
   }, [isFetched, user, router]);
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <AppBrand appName={appName} />
-        <LoginForm />
-        <div className="flex items-center justify-center gap-2">
-          <LocaleToggle />
-          <ModeToggle />
-        </div>
-      </div>
-    </div>
+    <AuthPageShell appName={appName}>
+      <LoginForm />
+    </AuthPageShell>
   );
 }
+

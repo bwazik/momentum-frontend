@@ -9,9 +9,9 @@ import { ErrorState } from '@/components/shared/error-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Bell } from 'lucide-react';
 
-export function NotificationPanel({ onClose }: { onClose: () => void }) {
+export function NotificationPanel({ onClose, enabled = true }: { onClose: () => void; enabled?: boolean }) {
   const t = useTranslations('notifications');
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useNotifications();
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useNotifications(enabled);
   const markAllRead = useMarkAllNotificationsRead();
   const allNotifications = data?.pages.flatMap((p) => p.data) ?? [];
 

@@ -30,7 +30,7 @@ interface UnreadCountResponse {
   unread_count: number;
 }
 
-export function useNotifications() {
+export function useNotifications(enabled = true) {
   return useInfiniteQuery({
     queryKey: queryKeys.notifications.list({}),
     queryFn: ({ pageParam }) =>
@@ -39,13 +39,15 @@ export function useNotifications() {
       }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => (lastPage.has_more ? lastPage.next_cursor : undefined),
+    enabled,
   });
 }
 
-export function useNotificationsCount() {
+export function useNotificationsCount(enabled = true) {
   return useQuery({
     queryKey: queryKeys.notifications.unreadCount(),
     queryFn: () => apiClient.get<UnreadCountResponse>('/v1/notifications/unread-count'),
+    enabled,
     staleTime: 5 * 60 * 1000,
   });
 }

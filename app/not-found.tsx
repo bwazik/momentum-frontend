@@ -13,7 +13,8 @@ const PRODUCT_NAME: Record<string, string> = {
   en: 'Momentum',
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test';
+const API_URL = process.env.BACKEND_API_URL
+  || (process.env.NODE_ENV === 'development' ? 'http://api.momentum.test' : 'https://api.momentum.test');
 
 export default async function NotFound() {
   const cookieStore = await cookies();

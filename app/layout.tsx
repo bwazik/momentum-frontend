@@ -19,7 +19,8 @@ const PRODUCT_NAME: Record<string, string> = {
   en: 'Momentum',
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test';
+const API_URL = process.env.BACKEND_API_URL
+  || (process.env.NODE_ENV === 'development' ? 'http://api.momentum.test' : 'https://api.momentum.test');
 
 export async function generateMetadata(): Promise<Metadata> {
   const cookieStore = await cookies();
@@ -83,9 +84,6 @@ export default async function RootLayout({
       style={{ fontFamily: locale === 'ar' ? 'IBM Plex Sans Arabic, sans-serif' : 'Geist, sans-serif' }}
     >
       <body className="min-h-full flex flex-col">
-        <script dangerouslySetInnerHTML={{
-          __html: `(function(){try{var c=JSON.parse(localStorage.getItem('brand-color'));var n=c&&c.state&&c.state.color;if(n){var h={amber:'#9A3B00',blue:'#1d4ed8',emerald:'#059669',rose:'#be123c',slate:'#475569'}[n];if(h){document.documentElement.style.setProperty('--color-primary',h);document.documentElement.style.setProperty('--primary',h)}}}catch(e){}})()`
-        }} />
         <Providers dehydratedState={dehydratedState}>
           <BrandColorProvider />
           <LocaleProvider initialLocale={locale}>

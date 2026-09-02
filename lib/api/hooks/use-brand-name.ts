@@ -6,8 +6,8 @@ const PRODUCT_NAME: Record<string, string> = {
   en: 'Momentum',
 };
 
-export function useBrandName(): string {
-  const { data: tenant } = useTenant();
+export function useBrandName(enabled = true): string {
+  const { data: tenant } = useTenant(enabled);
   const locale = useLocale();
   const product = PRODUCT_NAME[locale] ?? PRODUCT_NAME.en;
   const tenantName = locale === 'ar' ? tenant?.tenant?.name_ar : tenant?.tenant?.name_en;

@@ -9,10 +9,11 @@ type LocalizationContextResource = components['schemas']['LocalizationContextRes
 type DateConversionResource = components['schemas']['DateConversionResource'];
 type CalendarSystem = components['schemas']['CalendarSystem'];
 
-export function useLocalizationContext() {
+export function useLocalizationContext(enabled = true) {
   return useQuery({
     queryKey: queryKeys.localization.context(),
     queryFn: () => apiClient.get<LocalizationContextResource>('/v1/localization/context'),
+    enabled,
     staleTime: 5 * 60 * 1000,
     retry: 1,
   });

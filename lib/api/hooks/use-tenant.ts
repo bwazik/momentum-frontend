@@ -14,10 +14,11 @@ interface TenantResponse {
   tenant: TenantInfo;
 }
 
-export function useTenant() {
+export function useTenant(enabled = true) {
   return useQuery({
     queryKey: queryKeys.tenant.info,
     queryFn: () => apiClient.get<TenantResponse>('/v1'),
+    enabled,
     staleTime: 30 * 60 * 1000,
   });
 }

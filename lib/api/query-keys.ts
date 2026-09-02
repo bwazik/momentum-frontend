@@ -1,6 +1,6 @@
 export interface AdminUserFilters {
   search?: string;
-  is_active?: '0' | '1';
+  is_active?: '0' | '1' | boolean;
   account_type?: string;
   department_id?: string;
   per_page?: number;
@@ -13,6 +13,33 @@ export interface AuditFilters {
   date_from?: string;
   date_to?: string;
   calendar_system?: 'gregorian' | 'hijri';
+  per_page?: number;
+}
+
+export interface PlatformTenantFilters {
+  search?: string;
+  is_active?: boolean;
+  per_page?: number;
+}
+
+export interface PlatformAdminFilters {
+  search?: string;
+  per_page?: number;
+}
+
+export interface PlatformAuditFilters {
+  action?: string;
+  entity_type?: string;
+  user_id?: string;
+  from?: string;
+  to?: string;
+  per_page?: number;
+}
+
+export interface PlatformTenantUserFilters {
+  search?: string;
+  is_active?: boolean;
+  department_id?: string;
   per_page?: number;
 }
 
@@ -190,5 +217,31 @@ export const queryKeys = {
       [...queryKeys.delegations.activeLists(), filters] as const,
     detail: (publicId: string) =>
       [...queryKeys.delegations.all, 'detail', publicId] as const,
+  },
+  platform: {
+    all: ['platform'] as const,
+    auth: {
+      me: () => [...queryKeys.platform.all, 'auth', 'me'] as const,
+    },
+    tenants: {
+      all: () => [...queryKeys.platform.all, 'tenants'] as const,
+      lists: () => [...queryKeys.platform.tenants.all(), 'list'] as const,
+      list: (filters: PlatformTenantFilters) => [...queryKeys.platform.tenants.lists(), filters] as const,
+      details: () => [...queryKeys.platform.tenants.all(), 'detail'] as const,
+      detail: (publicId: string) => [...queryKeys.platform.tenants.details(), publicId] as const,
+    },
+    admins: {
+      all: () => [...queryKeys.platform.all, 'admins'] as const,
+      lists: () => [...queryKeys.platform.admins.all(), 'list'] as const,
+      list: (filters: PlatformAdminFilters) => [...queryKeys.platform.admins.lists(), filters] as const,
+    },
+    impersonation: {
+      sessions: () => [...queryKeys.platform.all, 'impersonation-sessions'] as const,
+    },
+    audit: {
+      all: () => [...queryKeys.platform.all, 'audit'] as const,
+      lists: () => [...queryKeys.platform.audit.all(), 'list'] as const,
+      list: (filters: PlatformAuditFilters) => [...queryKeys.platform.audit.lists(), filters] as const,
+    },
   },
 } as const;

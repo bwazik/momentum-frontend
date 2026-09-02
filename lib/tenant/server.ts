@@ -4,7 +4,8 @@ import { headers } from 'next/headers';
 import { QueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/api/query-keys';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test';
+const BASE_URL = process.env.BACKEND_API_URL
+  || (process.env.NODE_ENV === 'development' ? 'http://api.momentum.test' : 'https://api.momentum.test');
 
 interface TenantInfo {
   public_id: string;
