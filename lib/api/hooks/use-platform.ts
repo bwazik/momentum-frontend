@@ -17,7 +17,7 @@ type UpdateTenantRequest = components['schemas']['UpdateTenantRequest'];
 type ImpersonateRequest = components['schemas']['ImpersonateRequest'];
 
 const csrf = async (): Promise<void> => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test';
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test');
   await fetch(`${baseUrl}/sanctum/csrf-cookie`, { credentials: 'include' });
 };
 
@@ -103,7 +103,14 @@ export function useImpersonateUser(id: string) {
   const t = useTranslations('platform.toast');
   return useMutation({
     mutationFn: (body: ImpersonateRequest) => apiClient.post<{ token: string; tenant: { slug: string } }>(`/v1/platform/tenants/${id}/impersonate`, body),
-    onSuccess: (data) => { window.open(`https://${data.tenant.slug}.momentum.test?platform_token=${encodeURIComponent(data.token)}`, '_blank'); showSuccessToast(t('impersonation_started')); },
+    onSuccess: (data) => {
+      const { protocol, port, hostname } = window.location;
+      const baseDomain = hostname.split('.').slice(1).join('.');
+      const portSuffix = port ? `:${port}` : '';
+      const targetUrl = `${protocol}//${data.tenant.slug}.${baseDomain}${portSuffix}/?platform_token=${encodeURIComponent(data.token)}`;
+      window.open(targetUrl, '_blank');
+      showSuccessToast(t('impersonation_started'));
+    },
     onError: (error) => showErrorToast(localizedApiError(error, t)),
   });
 }

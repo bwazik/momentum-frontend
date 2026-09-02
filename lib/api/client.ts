@@ -19,7 +19,17 @@ interface ApiErrorResponse {
   errors?: Record<string, string[]>;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test';
+function getBaseUrl(): string {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  return (
+    process.env.BACKEND_API_URL ||
+    (process.env.NODE_ENV === 'development'
+      ? 'http://api.momentum.test'
+      : 'https://api.momentum.test')
+  );
+}
 
 interface RequestOptions {
   params?: Record<string, unknown>;
@@ -32,13 +42,19 @@ function getXsrfToken(): string | null {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
+function getImpersonationToken(): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(/impersonation_token=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 async function request<T>(
   method: string,
   path: string,
   body?: unknown,
   options?: RequestOptions,
 ): Promise<T> {
-  const url = new URL(path, BASE_URL);
+  const url = new URL(path, getBaseUrl());
 
   if (options?.params) {
     Object.entries(options.params).forEach(([key, value]) => {
@@ -65,6 +81,10 @@ async function request<T>(
 
   if (!isPlatformPath(path)) {
     headers['X-Tenant'] = getTenantSlug();
+    const impersonationToken = getImpersonationToken();
+    if (impersonationToken) {
+      headers['Authorization'] = `Bearer ${impersonationToken}`;
+    }
   }
 
   const bodyIsFormData = isFormData(body);

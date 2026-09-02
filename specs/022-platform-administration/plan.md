@@ -1703,7 +1703,7 @@ export function TenantDetailView() {
           <FieldReadOnly label={t('database_name')} value={tenant.database_name} />
           <FieldReadOnly label={t('domain')} value={tenant.domain || '-'} />
           <FieldReadOnly label={t('timezone')} value={tenant.timezone || '-'} />
-          <FieldReadOnly label={t('default_language')} value={tenant.default_language === '2' ? t('lang_en') : t('lang_ar')} />
+          <FieldReadOnly label={t('default_language')} value={tenant.default_language === 'english' ? t('lang_en') : t('lang_ar')} />
           <FieldReadOnly label={t('logo_path')} value={tenant.logo_path || '-'} />
           <div className="md:col-span-2">
             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t('settings')}</p>

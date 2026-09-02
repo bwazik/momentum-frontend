@@ -4,7 +4,15 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ['moh.momentum.test', 'admin.momentum.test'],
+  allowedDevOrigins: [
+    '*.momentum.test',
+    'momentum.test',
+    'admin.momentum.test',
+    'moh.momentum.test',
+    'mof.momentum.test',
+    'moi.momentum.test',
+    'moe.momentum.test',
+  ],
   async rewrites() {
     return [
       {

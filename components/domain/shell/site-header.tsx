@@ -34,8 +34,9 @@ export function SiteHeader({ mode = 'tenant' }: { mode?: 'tenant' | 'platform' }
   const lt = useTranslations('localization');
   const platform = useTranslations('platform.workspace');
   const appName = useBrandName(mode === 'tenant');
-  const tenantCrumbs = usePageBreadcrumb();
-  const crumbs = mode === 'tenant' ? tenantCrumbs : null;
+  const pageCrumbs = usePageBreadcrumb();
+  const isPlatformRoot = mode === 'platform' && (pathname === '/' || pathname === '/platform');
+  const crumbs = isPlatformRoot ? null : pageCrumbs;
   const [converterOpen, setConverterOpen] = useState(false);
 
   const pageTitles: Record<string, string> = {

@@ -2,6 +2,7 @@ import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTaskDisplayStore } from '@/lib/stores/use-task-display-store';
 import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
+import { usePlatformTenantDisplayStore } from '@/lib/stores/use-platform-tenant-store';
 
 export interface Crumb {
   label: string;
@@ -12,9 +13,20 @@ export function usePageBreadcrumb(): Crumb[] | null {
   const pathname = usePathname();
   const nav = useTranslations('nav');
   const analytics = useTranslations('analytics');
+  const platform = useTranslations('platform');
 
   const displayId = useTaskDisplayStore((s) => s.displayId);
   const blueprintName = useBlueprintBuilderStore((s) => s.blueprintName);
+  const tenantDisplayName = usePlatformTenantDisplayStore((s) => s.tenantName);
+
+  const platformTenantDetail = pathname.match(/^\/(?:platform\/)?tenants\/([^/]+)$/);
+  if (platformTenantDetail) {
+    return [
+      { label: platform('workspace.title'), href: '/' },
+      { label: platform('workspace.tabs.tenants'), href: '/?tab=tenants' },
+      { label: tenantDisplayName || '...' },
+    ];
+  }
 
   const taskWorkflow = pathname.match(/^\/tasks\/([^/]+)\/workflow$/);
   if (taskWorkflow) {

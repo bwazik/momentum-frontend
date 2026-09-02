@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Skeleton } from '@/components/ui/skeleton';
 import { RtlTable } from './rtl-table';
 
-interface ActionsDropdownAction {
+export interface ActionsDropdownAction {
   label: string;
   onClick: () => void;
   icon?: ReactNode;

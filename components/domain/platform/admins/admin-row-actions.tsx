@@ -1,54 +1,56 @@
-"use client";
+'use client';
 
-import { MoreHorizontal, Pencil } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import type { PlatformAdmin } from "@/lib/utils/platform-utils";
+import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
+import { Pencil, Ban, RotateCcw } from 'lucide-react';
+import { ActionsDropdown, type ActionsDropdownAction } from '@/components/shared/catalog-table';
+import type { PlatformAdmin } from '@/lib/utils/platform-utils';
+
+interface AdminRowActionsProps {
+  admin: PlatformAdmin;
+  currentAdminId?: string;
+  onEdit: () => void;
+  onDeactivate: () => void;
+  onReactivate: () => void;
+}
 
 export function AdminRowActions({
-    admin,
-    currentAdminId,
-    onEdit,
-    onDeactivate,
-    onReactivate,
-}: {
-    admin: PlatformAdmin;
-    currentAdminId?: string;
-    onEdit: () => void;
-    onDeactivate: () => void;
-    onReactivate: () => void;
-}) {
-    const t = useTranslations("platform");
-    const locale = useLocale();
-    return (
-        <DropdownMenu dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8" aria-label={t("common.actions")}>
-                    <MoreHorizontal />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={onEdit}>
-                    <Pencil />
-                    {t("common.edit")}
-                </DropdownMenuItem>
-                {currentAdminId !== admin.public_id &&
-                    (admin.is_active ? (
-                        <DropdownMenuItem variant="destructive" onClick={onDeactivate}>
-                            {t("common.suspend")}
-                        </DropdownMenuItem>
-                    ) : (
-                        <DropdownMenuItem onClick={onReactivate}>
-                            {t("common.reactivate")}
-                        </DropdownMenuItem>
-                    ))}
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
+  admin,
+  currentAdminId,
+  onEdit,
+  onDeactivate,
+  onReactivate,
+}: AdminRowActionsProps) {
+  const t = useTranslations('platform');
+
+  const actions = useMemo(() => {
+    const list: ActionsDropdownAction[] = [
+      {
+        label: t('common.edit'),
+        onClick: onEdit,
+        icon: <Pencil className="size-4" />,
+      },
+    ];
+
+    if (currentAdminId !== admin.public_id) {
+      if (admin.is_active) {
+        list.push({
+          label: t('common.suspend'),
+          onClick: onDeactivate,
+          icon: <Ban className="size-4" />,
+          className: 'text-destructive',
+        });
+      } else {
+        list.push({
+          label: t('common.reactivate'),
+          onClick: onReactivate,
+          icon: <RotateCcw className="size-4" />,
+        });
+      }
+    }
+
+    return list;
+  }, [admin, currentAdminId, onEdit, onDeactivate, onReactivate, t]);
+
+  return <ActionsDropdown actions={actions} translationsNamespace="platform.common" />;
 }

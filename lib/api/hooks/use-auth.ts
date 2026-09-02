@@ -12,7 +12,7 @@ type LoginRequest = components['schemas']['LoginRequest'];
 type UpdateUserRequest = components['schemas']['UpdateUserRequest'];
 
 async function getCsrfCookie(): Promise<void> {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test';
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_API_URL || 'https://api.momentum.test');
   await fetch(`${baseUrl}/sanctum/csrf-cookie`, { credentials: 'include' });
 }
 
@@ -50,10 +50,16 @@ export function useLogout() {
   return useMutation({
     mutationFn: () => apiClient.post('/v1/iam/auth/logout'),
     onSuccess: () => {
+      if (typeof document !== 'undefined') {
+        document.cookie = 'impersonation_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
       queryClient.clear();
       router.push('/login');
     },
     onError: (error) => {
+      if (typeof document !== 'undefined') {
+        document.cookie = 'impersonation_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
       if (error instanceof ApiRequestError) {
         toast.error(error.error.message);
       } else {

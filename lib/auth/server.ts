@@ -19,29 +19,37 @@ export async function prefetchAuthenticatedUser(queryClient: QueryClient): Promi
   const headerStore = await headers();
 
   const sessionCookie = cookieStore.get(COOKIE_NAME);
+  const impersonationToken = cookieStore.get('impersonation_token')?.value;
   const host = headerStore.get('host') ?? '';
   const tenantSlug = host.split('.')[0] || process.env.NEXT_PUBLIC_DEFAULT_TENANT || 'moh';
   const locale = cookieStore.get('NEXT_LOCALE')?.value ?? 'ar';
 
-  if (!sessionCookie) {
+  if (!sessionCookie && !impersonationToken) {
     redirect('/login');
   }
 
   const proto = headerStore.get('x-forwarded-proto') || 'http';
   const origin = `${proto}://${host}`;
 
+  const authHeaders: Record<string, string> = {
+    'X-Tenant': tenantSlug,
+    'X-Locale': locale,
+    Origin: origin,
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
+
+  if (impersonationToken) {
+    authHeaders['Authorization'] = `Bearer ${impersonationToken}`;
+  } else if (sessionCookie) {
+    authHeaders['Cookie'] = `${COOKIE_NAME}=${sessionCookie.value}`;
+  }
+
   // Fetch at top level so redirect() propagates correctly to Next.js.
   // redirect() inside a TanStack Query callback would be swallowed.
   const res = await fetch(`${BASE_URL}/v1/iam/auth/me`, {
     method: 'GET',
-    headers: {
-      Cookie: `${COOKIE_NAME}=${sessionCookie.value}`,
-      'X-Tenant': tenantSlug,
-      'X-Locale': locale,
-      Origin: origin,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
+    headers: authHeaders,
     cache: 'no-store',
     signal: AbortSignal.timeout(5000),
   });
