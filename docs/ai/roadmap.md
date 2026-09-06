@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F6 — Admin, Org, Help, Onboarding
-**Active spec:** `022-platform-administration`
+**Active spec:** `011-help-center`
 **Branch:** `main`
 
 ---
@@ -49,7 +49,7 @@
 | `019-confidential-access` | F6 | Access | `017-confidentiality-access` | ✅ |
 | `020-localization-calendar` | F6 | Core | `018-localization-calendar` | ✅ |
 | `021-onboarding-training` | F6 | Onboarding | `019-onboarding-training` | ⬜ |
-| `022-platform-administration` | F6 | Platform | `001-platform-tenancy`, `001-platform-admin` | ⬜ |
+| `022-platform-administration` | F6 | Platform | `001-platform-tenancy`, `001-platform-admin` | ✅ |
 | `023-task-comments` | F2 | Tasks | `013-comments-collaboration` | ✅ |
 | `024-task-documents` | F2 | Tasks | `012-documents-attachments` | ✅ |
 | `025-external-references` | F2 | Tasks | `014-external-references` | ✅ |
@@ -257,7 +257,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** 🔄 In Progress
 
-**Specs:** `008` ✅, `010` ✅, `011` ⬜, `017` ✅, `019` ✅, `020` ✅, `021` ⬜, `022` ⬜
+**Specs:** `008` ✅, `010` ✅, `011` ⬜, `017` ✅, `019` ✅, `020` ✅, `021` ⬜, `022` ✅
 
 **Established by 008:**
 - **Visual org chart pattern:** Gradient avatar cards with initials, tiered layout with CSS connector lines, progressive disclosure via click, zoom controls (`ZoomIn`/`ZoomOut`). Works for org chart browsing, not just list trees.
@@ -316,10 +316,17 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Audit event details via Dialog:** Payload and technical details (IP, UA) open in a Dialog instead of inline collapsible. `DualDateDisplay` includes time in audit rows.
 - **Tab-specific create dialogs owned by workspace:** Workspace owns dialog state, passes simple callbacks (`onCreateUser`, `onCreatePriority`) to tab panels — no bidirectional prop contract.
 
+**Established by 022:**
+- **Platform admin workspace shell:** Standalone workspace at `/platform` with URL-driven tabs (`?tab=tenants|admins|impersonation|audit`), dynamic `PageHeader.actions`, and minimal top-bar layout.
+- **Single `apiClient` path-based header suppression:** `isPlatformPath(path)` checks if path starts with `/v1/platform/` and omits `X-Tenant` header while preserving Sanctum session cookie credentials and CSRF tokens for central database endpoints.
+- **Ephemeral support impersonation:** `useImpersonateUser` creates tenant-scoped session and opens tenant app in a new browser tab with `?platform_token=`; zero `localStorage` token persistence.
+- **Tenant fleet lifecycle management:** Full tenant CRUD + suspend/reactivate + database migrations trigger with `BilingualNameFields` and numeric `PreferredLanguage` enum conversion.
+- **Self-deactivation guard:** Platform admin row actions compare row `public_id` against `/v1/platform/auth/me` to hide self-deactivation.
+- **Structured audit details dialog:** Escaped JSON payload viewer with user agent, IP address, and dual date displays (never `dangerouslySetInnerHTML`).
+
 **Remaining F6 specs:**
 - `011-help-center` — Help center CMS screens (requires `020-help-center` — ✅ Done on backend)
 - `021-onboarding-training` — Onboarding and training module (requires `019-onboarding-training` — ✅ Done on backend)
-- `022-platform-administration` — Platform-level tenant management (requires `001-platform-tenancy`/`admin` — ✅ Done on backend)
 
 All F6 backend dependencies are now ✅ Done. No specs are blocked.
 

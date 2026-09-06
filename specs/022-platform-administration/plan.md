@@ -2,9 +2,7 @@
 
 > **Spec:** `specs/022-platform-administration/spec.md`
 > **Date:** 2026-07-22
-> **Status:** `approved`
-> **Branch:** `feat/022-platform-administration` from `main`
-> **Backend spec:** `../backend/specs/001-platform-admin/` — `Contract status: stable`
+> **Status:** `completed`
 
 ---
 

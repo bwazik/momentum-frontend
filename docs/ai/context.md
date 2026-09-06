@@ -126,7 +126,7 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 - ✅ `019-confidential-access` — Confidential task access, metadata-only view, override flow, governance participant management
 - ✅ `020-localization-calendar` — Hijri date picker, dual date display, calendar system filter, department calendar assignment
 - ⬜ `021-onboarding-training` — Onboarding module (requires `019-onboarding-training` — ✅ Done on backend)
-- ⬜ `022-platform-administration` — Platform tenant management (requires `001-platform-tenancy/admin` — ✅ Done on backend)
+- ✅ `022-platform-administration` — Platform workspace, tenant management, platform admin roster, support impersonation, central audit log
 
 ---
 

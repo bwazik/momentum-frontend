@@ -1,8 +1,8 @@
-﻿# Spec: Platform Administration
+# Spec: Platform Administration
 
 > **Number:** 022
 > **Date:** 2026-07-22
-> **Status:** `approved`
+> **Status:** `completed`
 > **Milestone:** F6 — Admin, Org, Help, Onboarding
 > **Depends on:** `001-core-shell`
 > **Backend spec:** `../backend/specs/001-platform-admin/` — `Contract status: stable`
@@ -87,76 +87,76 @@ The workspace uses Sanctum SPA session cookie authentication — identical mecha
 
 ### Authentication
 
-- [ ] `admin.momentum.test/login` renders a standalone login page with no tenant sidebar or shell chrome.
-- [ ] Login flow: `GET /sanctum/csrf-cookie` → `POST /api/v1/platform/auth/login` (same Sanctum SPA pattern as tenant auth).
-- [ ] Successful login sets the session cookie and redirects to `admin.momentum.test/` (workspace default tab: Tenants).
-- [ ] Failed login displays the API error message via `toast.error()` without exposing stack traces or internal IDs.
-- [ ] Logout calls `POST /api/v1/platform/auth/logout` which invalidates the session.
-- [ ] All platform API requests use `credentials: 'include'` (cookie-based session); **no `Authorization` header, no `X-Tenant` header**.
-- [ ] Login response is a **flat** `PlatformAuthResource`: `{ public_id, name_ar, name_en, email, account_type (string), is_active, created_at, updated_at }` — not nested under `user`.
-- [ ] `account_type` is a string via `apiValue()`: `"platform_admin"` for platform admins, `"internal_user"` / `"tenant_admin"` / `"external_auditor"` for tenant users.
-- [ ] Unauthenticated navigation to any protected platform route redirects to `/login`.
-- [ ] A 401 response from any platform API redirects to `/login` (same `QueryCache.onError` pattern as tenant app).
+- [x] `admin.momentum.test/login` renders a standalone login page with no tenant sidebar or shell chrome.
+- [x] Login flow: `GET /sanctum/csrf-cookie` → `POST /api/v1/platform/auth/login` (same Sanctum SPA pattern as tenant auth).
+- [x] Successful login sets the session cookie and redirects to `admin.momentum.test/` (workspace default tab: Tenants).
+- [x] Failed login displays the API error message via `toast.error()` without exposing stack traces or internal IDs.
+- [x] Logout calls `POST /api/v1/platform/auth/logout` which invalidates the session.
+- [x] All platform API requests use `credentials: 'include'` (cookie-based session); **no `Authorization` header, no `X-Tenant` header**.
+- [x] Login response is a **flat** `PlatformAuthResource`: `{ public_id, name_ar, name_en, email, account_type (string), is_active, created_at, updated_at }` — not nested under `user`.
+- [x] `account_type` is a string via `apiValue()`: `"platform_admin"` for platform admins, `"internal_user"` / `"tenant_admin"` / `"external_auditor"` for tenant users.
+- [x] Unauthenticated navigation to any protected platform route redirects to `/login`.
+- [x] A 401 response from any platform API redirects to `/login` (same `QueryCache.onError` pattern as tenant app).
 
 ### Workspace Shell
 
-- [ ] The authenticated platform workspace uses a minimal top bar (logo, admin name/email, locale toggle, logout) and a main content area; no tenant sidebar is shown.
-- [ ] Tab state is URL-driven via `?tab=tenants|admins|impersonation|audit`; invalid or missing values resolve to `tenants`.
-- [ ] `PageHeader` renders a localized title, description, and the tab-specific primary action in its `actions` slot.
-- [ ] The locale toggle sets `NEXT_LOCALE` and reloads the page using the same mechanic as the tenant app.
+- [x] The authenticated platform workspace uses a minimal top bar (logo, admin name/email, locale toggle, logout) and a main content area; no tenant sidebar is shown.
+- [x] Tab state is URL-driven via `?tab=tenants|admins|impersonation|audit`; invalid or missing values resolve to `tenants`.
+- [x] `PageHeader` renders a localized title, description, and the tab-specific primary action in its `actions` slot.
+- [x] The locale toggle sets `NEXT_LOCALE` and reloads the page using the same mechanic as the tenant app.
 
 ### Tenants Tab
 
-- [ ] Loads cursor-paginated tenants from `GET /api/v1/platform/tenants` with a manual "Load More" button.
-- [ ] List columns: localized name, slug, domain, active status, created at (dual date), and row actions.
-- [ ] URL-driven filters: debounced search (300 ms) over name/slug, active-status select (`All / Active / Suspended`). The API param is `is_active` (boolean) — OpenAPI schema only shows `search` but the backend also accepts `is_active`. Use `asBool()` on the response `is_active` field.
-- [ ] "Provision Tenant" button in `PageHeader.actions` opens a create dialog.
-- [ ] Provision form fields: `name_ar` (required), `name_en` (optional), `slug` (required, alpha-dash, immutable), `domain` (optional), `timezone` (select), `default_language` (Arabic/English select), `logo_path` (optional string), `settings` (optional JSON). Uses `BilingualNameFields`.
-- [ ] Clicking a tenant row navigates to `/tenants/[publicId]` for the detail view.
-- [ ] Tenant detail page shows all fields: `public_id`, `name_ar`, `name_en`, `slug` (read-only), `domain`, `database_name` (read-only), `is_active`, `default_language`, `timezone`, `logo_path`, `settings` (escaped structured display), `created_at` (dual date), `updated_at`.
-- [ ] Edit Tenant dialog pre-populates mutable fields and keeps `slug`/`database_name` read-only.
-- [ ] Suspend action is hidden when `is_active` is false; shows `ConfirmDeleteDialog` (non-destructive variant) before calling `POST /api/v1/platform/tenants/{tenant}/suspend`.
-- [ ] Reactivate action is hidden when `is_active` is true; shows confirmation before calling `POST /api/v1/platform/tenants/{tenant}/reactivate`.
-- [ ] Run Migrations action shows confirmation, calls `POST /api/v1/platform/tenants/{tenant}/run-migrations`, and toasts success for the 202 response.
-- [ ] Impersonate User action opens a debounced user-picker dialog; on selection it calls `POST /api/v1/platform/tenants/{tenant}/impersonate` and hands off the returned token to the tenant app.
-- [ ] Active/suspended status uses the shared `ActiveBadge` pattern (emerald text for active, muted for suspended; color + text, never color-only).
-- [ ] All four states are implemented: loading skeleton (8 rows), empty (no tenants + CTA), empty-filtered (clear filters CTA), and error with retry.
+- [x] Loads cursor-paginated tenants from `GET /api/v1/platform/tenants` with a manual "Load More" button.
+- [x] List columns: localized name, slug, domain, active status, created at (dual date), and row actions.
+- [x] URL-driven filters: debounced search (300 ms) over name/slug, active-status select (`All / Active / Suspended`). The API param is `is_active` (boolean) — OpenAPI schema only shows `search` but the backend also accepts `is_active`. Use `asBool()` on the response `is_active` field.
+- [x] "Provision Tenant" button in `PageHeader.actions` opens a create dialog.
+- [x] Provision form fields: `name_ar` (required), `name_en` (optional), `slug` (required, alpha-dash, immutable), `domain` (optional), `timezone` (select), `default_language` (Arabic/English select), `logo_path` (optional string), `settings` (optional JSON). Uses `BilingualNameFields`.
+- [x] Clicking a tenant row navigates to `/tenants/[publicId]` for the detail view.
+- [x] Tenant detail page shows all fields: `public_id`, `name_ar`, `name_en`, `slug` (read-only), `domain`, `database_name` (read-only), `is_active`, `default_language`, `timezone`, `logo_path`, `settings` (escaped structured display), `created_at` (dual date), `updated_at`.
+- [x] Edit Tenant dialog pre-populates mutable fields and keeps `slug`/`database_name` read-only.
+- [x] Suspend action is hidden when `is_active` is false; shows `ConfirmDeleteDialog` (non-destructive variant) before calling `POST /api/v1/platform/tenants/{tenant}/suspend`.
+- [x] Reactivate action is hidden when `is_active` is true; shows confirmation before calling `POST /api/v1/platform/tenants/{tenant}/reactivate`.
+- [x] Run Migrations action shows confirmation, calls `POST /api/v1/platform/tenants/{tenant}/run-migrations`, and toasts success for the 202 response.
+- [x] Impersonate User action opens a debounced user-picker dialog; on selection it calls `POST /api/v1/platform/tenants/{tenant}/impersonate` and hands off the returned token to the tenant app.
+- [x] Active/suspended status uses the shared `ActiveBadge` pattern (emerald text for active, muted for suspended; color + text, never color-only).
+- [x] All four states are implemented: loading skeleton (8 rows), empty (no tenants + CTA), empty-filtered (clear filters CTA), and error with retry.
 
 ### Platform Admins Tab
 
-- [ ] Loads cursor-paginated admins from `GET /api/v1/platform/admins` with manual "Load More".
-- [ ] List columns: localized name, email, active status, and row actions.
-- [ ] URL-driven debounced search by name/email.
-- [ ] "Add Platform Admin" button in `PageHeader.actions` opens a create dialog.
-- [ ] Create form: `name_ar` (required), `name_en` (optional), `email` (required), `password` (required, min 8).
-- [ ] Edit form: `name_ar`, `name_en`, `email`; optional password replacement field.
-- [ ] Deactivate action is hidden for the currently authenticated admin's own row (compare row `public_id` with `GET /api/v1/platform/auth/me`); shows confirmation before calling `POST /api/v1/platform/admins/{admin}/deactivate`.
-- [ ] Reactivate action is shown for deactivated admins after confirmation.
-- [ ] All four states implemented.
+- [x] Loads cursor-paginated admins from `GET /api/v1/platform/admins` with manual "Load More".
+- [x] List columns: localized name, email, active status, and row actions.
+- [x] URL-driven debounced search by name/email.
+- [x] "Add Platform Admin" button in `PageHeader.actions` opens a create dialog.
+- [x] Create form: `name_ar` (required), `name_en` (optional), `email` (required), `password` (required, min 8).
+- [x] Edit form: `name_ar`, `name_en`, `email`; optional password replacement field.
+- [x] Deactivate action is hidden for the currently authenticated admin's own row (compare row `public_id` with `GET /api/v1/platform/auth/me`); shows confirmation before calling `POST /api/v1/platform/admins/{admin}/deactivate`.
+- [x] Reactivate action is shown for deactivated admins after confirmation.
+- [x] All four states implemented.
 
 ### Impersonation Tab
 
-- [ ] Loads active sessions from `GET /api/v1/platform/impersonation-sessions`.
-- [ ] List columns: impersonator admin name, impersonated user name + tenant slug, started at (dual date + relative time), End Session action.
-- [ ] End Session calls `POST /api/v1/platform/tenants/{tenant}/leave-impersonation` and refreshes the session list.
-- [ ] Empty state: "No active impersonation sessions" with an informational note.
-- [ ] Loading and error states implemented.
+- [x] Loads active sessions from `GET /api/v1/platform/impersonation-sessions`.
+- [x] List columns: impersonator admin name, impersonated user name + tenant slug, started at (dual date + relative time), End Session action.
+- [x] End Session calls `POST /api/v1/platform/tenants/{tenant}/leave-impersonation` and refreshes the session list.
+- [x] Empty state: "No active impersonation sessions" with an informational note.
+- [x] Loading and error states implemented.
 
 ### Audit Log Tab
 
-- [ ] Loads events from `GET /api/v1/platform/audit-events` with cursor pagination and manual "Load More".
-- [ ] List columns: timestamp (dual date), actor name, action, entity type, entity `public_id`, Details action.
-- [ ] URL-driven filters: action type select (known `AuditAction` enum values + free-text fallback), entity type select, date range with `CalendarSystemToggle`.
-- [ ] Details dialog shows escaped structured payload, IP address, and user agent — never `dangerouslySetInnerHTML`.
-- [ ] Audit log is read-only; no edit/delete actions.
-- [ ] All four states implemented.
+- [x] Loads events from `GET /api/v1/platform/audit-events` with cursor pagination and manual "Load More".
+- [x] List columns: timestamp (dual date), actor name, action, entity type, entity `public_id`, Details action.
+- [x] URL-driven filters: action type select (known `AuditAction` enum values + free-text fallback), entity type select, date range with `CalendarSystemToggle`.
+- [x] Details dialog shows escaped structured payload, IP address, and user agent — never `dangerouslySetInnerHTML`.
+- [x] Audit log is read-only; no edit/delete actions.
+- [x] All four states implemented.
 
 ### General
 
-- [ ] Every mutation shows `toast.success()` on success and `toast.error(error.message)` on failure.
-- [ ] All cursor-paginated lists use `next_cursor`/`has_more` with a manual "Load More" button.
-- [ ] All bilingual entity fields are localized via `localizeName` / `localizeTitle` (`name_ar` / `name_en`).
-- [ ] All dates use `DualDateDisplay` (Gregorian + Hijri companion).
+- [x] Every mutation shows `toast.success()` on success and `toast.error(error.message)` on failure.
+- [x] All cursor-paginated lists use `next_cursor`/`has_more` with a manual "Load More" button.
+- [x] All bilingual entity fields are localized via `localizeName` / `localizeTitle` (`name_ar` / `name_en`).
+- [x] All dates use `DualDateDisplay` (Gregorian + Hijri companion).
 
 ---
 
@@ -373,36 +373,36 @@ app/
 
 ### RTL Considerations
 
-- [ ] All layout uses logical properties: `ms-*`, `me-*`, `ps-*`, `pe-*`, `text-start`, `text-end`, `border-s`, `border-e`.
-- [ ] Table column order is stable; text columns `text-start`, action columns `text-end`.
-- [ ] Directional icons (chevrons, arrows, back buttons) use `rtl:rotate-180`.
-- [ ] `RtlSelect` and `RtlTable` used for selects and data tables.
-- [ ] Bilingual fields: `name_ar` input `dir="rtl"`, `name_en` input `dir="ltr"`.
-- [ ] Dates use `DualDateDisplay` (Gregorian + Hijri companion) consistent with Spec 020.
-- [ ] `CalendarSystemToggle` used in audit date-range filter.
-- [ ] Locale toggle sets `NEXT_LOCALE` cookie and reloads.
-- [ ] Platform login defaults to Arabic RTL layout.
+- [x] All layout uses logical properties: `ms-*`, `me-*`, `ps-*`, `pe-*`, `text-start`, `text-end`, `border-s`, `border-e`.
+- [x] Table column order is stable; text columns `text-start`, action columns `text-end`.
+- [x] Directional icons (chevrons, arrows, back buttons) use `rtl:rotate-180`.
+- [x] `RtlSelect` and `RtlTable` used for selects and data tables.
+- [x] Bilingual fields: `name_ar` input `dir="rtl"`, `name_en` input `dir="ltr"`.
+- [x] Dates use `DualDateDisplay` (Gregorian + Hijri companion) consistent with Spec 020.
+- [x] `CalendarSystemToggle` used in audit date-range filter.
+- [x] Locale toggle sets `NEXT_LOCALE` cookie and reloads.
+- [x] Platform login defaults to Arabic RTL layout.
 
 ### Accessibility
 
-- [ ] Login form: associated labels, visible required indicators, `aria-describedby` for error messages.
-- [ ] Tab navigation uses Radix Tabs: `aria-selected`, arrow-key navigation, logical focus order.
-- [ ] Tables use semantic `<table>`, `<th scope="col">`, and localized `aria-label`.
-- [ ] Icon-only buttons (edit, suspend, end-session, details) have localized `aria-label`; decorative icons are `aria-hidden="true"`.
-- [ ] Confirm dialogs use `AlertDialog` with specific action labels (e.g., "Suspend Tenant", "Deactivate Admin").
-- [ ] Audit detail dialog traps focus, closes on Escape, and returns focus to the trigger row.
-- [ ] Status uses `ActiveBadge` (color + text, never color-only).
-- [ ] Mobile card views include `sr-only` labels for implied fields.
-- [ ] All interactive elements have visible focus rings.
-- [ ] Slug field includes an accessible explanation that it is immutable after creation.
+- [x] Login form: associated labels, visible required indicators, `aria-describedby` for error messages.
+- [x] Tab navigation uses Radix Tabs: `aria-selected`, arrow-key navigation, logical focus order.
+- [x] Tables use semantic `<table>`, `<th scope="col">`, and localized `aria-label`.
+- [x] Icon-only buttons (edit, suspend, end-session, details) have localized `aria-label`; decorative icons are `aria-hidden="true"`.
+- [x] Confirm dialogs use `AlertDialog` with specific action labels (e.g., "Suspend Tenant", "Deactivate Admin").
+- [x] Audit detail dialog traps focus, closes on Escape, and returns focus to the trigger row.
+- [x] Status uses `ActiveBadge` (color + text, never color-only).
+- [x] Mobile card views include `sr-only` labels for implied fields.
+- [x] All interactive elements have visible focus rings.
+- [x] Slug field includes an accessible explanation that it is immutable after creation.
 
 ### Animation / Transition
 
-- [ ] Row hover: `transition-colors duration-150`.
-- [ ] Dialog/Sheet: shadcn default enter/exit transitions.
-- [ ] Skeleton: `animate-pulse` with `motion-reduce:animate-none`.
-- [ ] Status badge after state change: `transition-colors duration-200`.
-- [ ] No blur or backdrop-filter on dense table rows.
+- [x] Row hover: `transition-colors duration-150`.
+- [x] Dialog/Sheet: shadcn default enter/exit transitions.
+- [x] Skeleton: `animate-pulse` with `motion-reduce:animate-none`.
+- [x] Status badge after state change: `transition-colors duration-200`.
+- [x] No blur or backdrop-filter on dense table rows.
 
 ---
 
@@ -442,7 +442,7 @@ app/
 
 ---
 
-## Open Questions
+## Open Questions — All Resolved
 
 - [x] **Auth token storage:** Platform admin auth returns a Sanctum Bearer token. Proposed `localStorage` key `platform_token` is the only auth-token-in-localStorage exception. **Needs explicit approval** before implementation. Alternative: backend issues a short-lived HttpOnly cookie from the central domain. — **Resolved.** Backend uses `Auth::guard('web')->login($user)` — Sanctum SPA session cookies, not Bearer tokens. No `platform_token` in localStorage, no `platformApiClient`. Reuse the existing `apiClient` with a path check to omit `X-Tenant` for `/v1/platform/` routes. See Authentication Architecture section for full details.
 - [x] **X-Tenant header artifact:** OpenAPI lists `X-Tenant` as required on platform endpoints, but the backend spec says platform endpoints operate on the central DB without `X-Tenant`. Clarify whether `platformApiClient` must send a sentinel `X-Tenant` value or omit it entirely. — **Resolved.** Platform routes are registered outside `InitializeTenancyByHeader` middleware. The backend never resolves tenant context for platform endpoints. **Omit `X-Tenant` entirely** from platform requests.
@@ -451,5 +451,3 @@ app/
 - [x] **Hostname routing:** Should `admin.momentum.test` be served by a separate Next.js app or a hostname-aware route group in the existing repo? — **Resolved.** Single-repo route group using existing Next.js app. Add `(platform-auth)/` and `(platform-admin)/` route groups under `app/`. The existing `proxy.ts` or a new middleware detects `admin.momentum.test` hostname and routes to the platform layout instead of the tenant dashboard. The platform shell uses a minimal top bar (no sidebar), separate from the tenant `(dashboard)/` layout. `admin.momentum.test` must be added to Sanctum's `stateful` domains config on the backend.
 - [x] **Impersonation token handoff:** `POST /v1/platform/tenants/{tenant}/impersonate` returns `{ token, user, tenant, expires_at }` (1-hour tenant-scoped Sanctum token). How does the UI transfer this token to the tenant app? — **Resolved.** Open a **new tab** to `https://{slug}.momentum.test?platform_token={token}`. The tenant app middleware detects `?platform_token=` in the URL, stores it ephemerally, and uses it for the impersonated API session. Do not navigate same-tab (loses the platform workspace). Do not persist the impersonation token in localStorage. The `expires_at` can be displayed as a visible countdown in the tenant app UI to warn the admin before expiry.
 - [x] **Tenant user search:** The impersonation endpoint requires a `user_public_id`. Is there a `GET /api/v1/platform/tenants/{tenant}/users?search=...` endpoint for searching tenant users from the platform panel? — **Resolved.** Backend now exposes `GET /v1/platform/tenants/{tenant}/users` with `search`, `is_active`, `department_id`, `cursor`, and `per_page` params. Returns cursor-paginated `UserResource` items (`public_id`, `name_ar`, `name_en`, `email`, etc.). Uses `tenancy()->initialize()` internally to switch to the tenant DB. No `X-Tenant` header required — platform admin session only. Use `useInfiniteQuery` with `usePlatformTenantUsers(tenantPublicId, filters)` for the impersonation user picker.
-
-→ **Next:** Resolve Open Questions and obtain review approval before creating `plan.md`.
