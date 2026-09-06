@@ -79,9 +79,9 @@ async function request<T>(
     ...options?.headers,
   };
 
+  const impersonationToken = !isPlatformPath(path) ? getImpersonationToken() : null;
   if (!isPlatformPath(path)) {
     headers['X-Tenant'] = getTenantSlug();
-    const impersonationToken = getImpersonationToken();
     if (impersonationToken) {
       headers['Authorization'] = `Bearer ${impersonationToken}`;
     }
@@ -99,7 +99,7 @@ async function request<T>(
 
   const response = await fetch(url.toString(), {
     method,
-    credentials: 'include',
+    credentials: impersonationToken ? 'omit' : 'include',
     headers,
     body: bodyIsFormData ? body : (body ? JSON.stringify(body) : undefined),
   });

@@ -76,7 +76,7 @@ export function useRevokePositionCapability() {
   const qc = useQueryClient();
   const t = useTranslations('admin.toast');
   return useMutation({
-    mutationFn: ({ grantPublicId, positionPublicId }: { grantPublicId: string; positionPublicId: string }) =>
+    mutationFn: ({ grantPublicId }: { grantPublicId: string; positionPublicId: string }) =>
       apiClient.post(`/v1/iam/position-capability-grants/${grantPublicId}/revoke`),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: queryKeys.iam.positionCapabilities(variables.positionPublicId) });
@@ -120,7 +120,7 @@ export function useRevokeUserCapability() {
   const qc = useQueryClient();
   const t = useTranslations('admin.toast');
   return useMutation({
-    mutationFn: ({ grantPublicId, userPublicId }: { grantPublicId: string; userPublicId: string }) =>
+    mutationFn: ({ grantPublicId }: { grantPublicId: string; userPublicId: string }) =>
       apiClient.post(`/v1/iam/user-capability-grants/${grantPublicId}/revoke`),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: queryKeys.users.capabilityGrants(variables.userPublicId) });
@@ -162,7 +162,7 @@ export function useRevokeMonitoringScope() {
   const qc = useQueryClient();
   const t = useTranslations('admin.toast');
   return useMutation({
-    mutationFn: ({ grantPublicId, userPublicId }: { grantPublicId: string; userPublicId: string }) =>
+    mutationFn: ({ grantPublicId }: { grantPublicId: string; userPublicId: string }) =>
       apiClient.post(`/v1/iam/monitoring-scope-grants/${grantPublicId}/revoke`),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: queryKeys.users.monitoringScopes(variables.userPublicId) });
@@ -201,7 +201,7 @@ export function useRevokeAuditGrant() {
   const qc = useQueryClient();
   const t = useTranslations('admin.toast');
   return useMutation({
-    mutationFn: ({ grantPublicId, userPublicId }: { grantPublicId: string; userPublicId: string }) =>
+    mutationFn: ({ grantPublicId }: { grantPublicId: string; userPublicId: string }) =>
       apiClient.post(`/v1/iam/audit-grants/${grantPublicId}/revoke`),
     onSuccess: (_data, variables) => {
       qc.invalidateQueries({ queryKey: queryKeys.users.auditGrants(variables.userPublicId) });

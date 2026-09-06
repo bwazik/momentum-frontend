@@ -3,7 +3,7 @@ import type { CursorPage } from '@/lib/api/types';
 export interface AuditEvent {
   public_id: string;
   event_type: string;
-  entity_type: string;
+  entity_type: string | number;
   entity_id: string | null;
   root_entity_type: string | null;
   root_entity_id: string | null;
@@ -72,7 +72,7 @@ export function narrowAuditEvent(input: unknown): AuditEvent | null {
   return {
     public_id: r.public_id,
     event_type: r.event_type,
-    entity_type: typeof r.entity_type === 'string' ? r.entity_type : String(r.entity_type ?? ''),
+    entity_type: typeof r.entity_type === 'number' ? r.entity_type : (typeof r.entity_type === 'string' ? r.entity_type : String(r.entity_type ?? '')),
     entity_id: typeof r.entity_id === 'string' ? r.entity_id : null,
     root_entity_type: typeof r.root_entity_type === 'string' ? r.root_entity_type : null,
     root_entity_id: typeof r.root_entity_id === 'string' ? r.root_entity_id : null,

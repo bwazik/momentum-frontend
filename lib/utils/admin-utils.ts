@@ -1,11 +1,23 @@
-const ACCOUNT_TYPE_MAP: Record<string, string> = {
-  '1': 'internal_user', '2': 'tenant_admin', '3': 'external_auditor', '4': 'platform_admin',
-  internal_user: 'internal_user', tenant_admin: 'tenant_admin',
-  external_auditor: 'external_auditor', platform_admin: 'platform_admin',
+const ACCOUNT_TYPE_LABELS: Record<string, { ar: string; en: string; key: string }> = {
+  '1': { ar: 'مستخدم داخلي', en: 'Internal User', key: 'internal_user' },
+  '2': { ar: 'مدير المستأجر', en: 'Tenant Admin', key: 'tenant_admin' },
+  '3': { ar: 'مدقق خارجي', en: 'External Auditor', key: 'external_auditor' },
+  '4': { ar: 'مدير المنصة', en: 'Platform Admin', key: 'platform_admin' },
+  internal_user: { ar: 'مستخدم داخلي', en: 'Internal User', key: 'internal_user' },
+  tenant_admin: { ar: 'مدير المستأجر', en: 'Tenant Admin', key: 'tenant_admin' },
+  external_auditor: { ar: 'مدقق خارجي', en: 'External Auditor', key: 'external_auditor' },
+  platform_admin: { ar: 'مدير المنصة', en: 'Platform Admin', key: 'platform_admin' },
 };
 
-export function formatAdminAccountType(accountType?: string | number): string {
-  return ACCOUNT_TYPE_MAP[String(accountType ?? '')] ?? '';
+export function formatAdminAccountType(localeOrType?: string | number, accountType?: string | number): string {
+  if (typeof localeOrType === 'string' && (localeOrType === 'ar' || localeOrType === 'en') && accountType !== undefined) {
+    const label = ACCOUNT_TYPE_LABELS[String(accountType)];
+    if (!label) return '';
+    return localeOrType === 'ar' ? label.ar : label.en;
+  }
+  // Single-arg path: return the snake_case key used in translation files
+  const label = ACCOUNT_TYPE_LABELS[String(localeOrType ?? '')];
+  return label ? label.key : '';
 }
 
 export function formatAdminScopeType(locale: string, scopeType?: number): string {

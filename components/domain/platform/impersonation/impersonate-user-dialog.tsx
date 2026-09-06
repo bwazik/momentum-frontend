@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Field, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useDebounce } from '@/lib/hooks/use-debounce';
 import { useImpersonateUser, usePlatformTenantUsersInfinite } from '@/lib/api/hooks/use-platform';
-import type { PlatformTenantUser } from '@/lib/utils/platform-utils';
+import { localizeName, type PlatformTenantUser } from '@/lib/utils/platform-utils';
 
 interface ImpersonateUserDialogProps {
   tenantPublicId: string;
@@ -22,11 +23,13 @@ export function ImpersonateUserDialog({
 }: ImpersonateUserDialogProps) {
   const t = useTranslations('platform.impersonation');
   const c = useTranslations('platform.common');
+  const locale = useLocale();
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const [selected, setSelected] = useState<PlatformTenantUser | null>(null);
 
   const users = usePlatformTenantUsersInfinite(tenantPublicId, {
-    search: search || undefined,
+    search: debouncedSearch || undefined,
     is_active: true,
     per_page: 15,
   });
@@ -66,7 +69,7 @@ export function ImpersonateUserDialog({
                   selected?.public_id === user.public_id ? 'border border-primary bg-primary/10 font-medium' : ''
                 }`}
               >
-                <span>{user.name_ar}</span>
+                <span>{localizeName(locale, user.name_ar, user.name_en)}</span>
                 <span className="font-mono text-xs text-muted-foreground" dir="ltr">
                   {user.email}
                 </span>

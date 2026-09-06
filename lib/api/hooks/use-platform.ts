@@ -114,7 +114,7 @@ export function useImpersonateUser(id: string) {
     onError: (error) => showErrorToast(localizedApiError(error, t)),
   });
 }
-export function useEndImpersonation(id: string) { return usePlatformMutation(() => apiClient.post(`/v1/platform/tenants/${id}/leave-impersonation`), 'impersonation_ended', (qc) => { qc.invalidateQueries({ queryKey: queryKeys.platform.impersonation.sessions() }); qc.invalidateQueries({ queryKey: queryKeys.platform.audit.lists() }); }); }
+export function useEndImpersonation() { return usePlatformMutation((id: string) => apiClient.post(`/v1/platform/tenants/${id}/leave-impersonation`), 'impersonation_ended', (qc) => { qc.invalidateQueries({ queryKey: queryKeys.platform.impersonation.sessions() }); qc.invalidateQueries({ queryKey: queryKeys.platform.audit.lists() }); }); }
 export function usePlatformAuditEventsInfinite(filters: PlatformAuditFilters) { return useInfiniteQuery({ ...pageOptions, queryKey: queryKeys.platform.audit.list(filters), queryFn: ({ pageParam }) => apiClient.get('/v1/platform/audit-events', { params: { ...filters, cursor: pageParam, per_page: filters.per_page ?? 15 } }).then(narrowAuditEventPage), getNextPageParam: (last) => last.has_more ? last.next_cursor : undefined }); }
 
 export type { ImpersonationSession, PlatformAdmin, PlatformAuditEvent, PlatformTenant, PlatformTenantUser };

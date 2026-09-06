@@ -91,7 +91,7 @@ export async function prefetchPlatformAdmin(queryClient: QueryClient): Promise<v
     signal: AbortSignal.timeout(5000),
   });
 
-  if (res.status === 401) redirect('/login');
+  if (res.status === 401 || res.status === 403) redirect('/login');
   if (!res.ok) throw new ApiRequestError(res.status, await res.json().catch(() => ({ message: res.statusText })));
   queryClient.setQueryData(queryKeys.platform.auth.me(), (await res.json()) as PlatformAdminResource);
 }

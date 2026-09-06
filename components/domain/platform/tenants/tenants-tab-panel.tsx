@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useRef } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -36,11 +36,8 @@ export function TenantsTabPanel({ onCreateTenant }: TenantsTabPanelProps) {
   const query = usePlatformTenantsInfinite(filters);
   const tenants = query.data?.pages.flatMap((page) => page.data) ?? [];
 
-  const hasEverLoaded = useRef(false);
-  if (query.data) hasEverLoaded.current = true;
-
-  const isFirstLoad = !hasEverLoaded.current && query.isLoading;
-  const isRefetching = hasEverLoaded.current && query.isFetching;
+  const isFirstLoad = query.isLoading;
+  const isRefetching = query.isFetching && !query.isLoading;
 
   function resetFilters() {
     const params = new URLSearchParams();

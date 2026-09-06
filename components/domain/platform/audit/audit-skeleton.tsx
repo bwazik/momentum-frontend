@@ -26,6 +26,7 @@ export function AuditTableSkeleton() {
             <tr className="border-b border-border">
               <th className="text-start p-2"><Skeleton className="h-4 w-28" /></th>
               <th className="text-start p-2"><Skeleton className="h-4 w-24" /></th>
+              <th className="text-start p-2"><Skeleton className="h-4 w-20" /></th>
               <th className="text-start p-2"><Skeleton className="h-4 w-32" /></th>
               <th className="text-start p-2"><Skeleton className="h-4 w-28" /></th>
               <th className="text-end p-2"><Skeleton className="h-4 w-12 ms-auto" /></th>
@@ -36,6 +37,7 @@ export function AuditTableSkeleton() {
               <tr key={i} className="border-b border-border">
                 <td className="p-2"><Skeleton className="h-5 w-28" /></td>
                 <td className="p-2"><Skeleton className="h-5 w-24" /></td>
+                <td className="p-2"><Skeleton className="h-5 w-20" /></td>
                 <td className="p-2"><Skeleton className="h-5 w-36" /></td>
                 <td className="p-2"><Skeleton className="h-5 w-28" /></td>
                 <td className="p-2"><div className="flex justify-end"><Skeleton className="h-8 w-12" /></div></td>

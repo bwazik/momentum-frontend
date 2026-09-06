@@ -33,9 +33,15 @@ export function proxy(request: NextRequest) {
     const cleanUrl = request.nextUrl.clone();
     cleanUrl.searchParams.delete('platform_token');
 
+    // Scope cookie to the tenant subdomain so it's sent to this tenant
+    // but NOT to admin.momentum.test or other tenant subdomains.
+    const isMomentumDomain = host?.endsWith('.momentum.test') ?? false;
+    const cookieDomain = isMomentumDomain ? `.${host}` : undefined;
+
     const response = NextResponse.redirect(cleanUrl);
     response.cookies.set('impersonation_token', token, {
       path: '/',
+      domain: cookieDomain,
       sameSite: 'lax',
       httpOnly: false, // Allow client-side apiClient to read token and attach Bearer header
       maxAge: 3600, // 1 hour expiration

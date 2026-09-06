@@ -33,6 +33,7 @@ export interface PlatformAuditFilters {
   user_id?: string;
   from?: string;
   to?: string;
+  calendar_system?: 'gregorian' | 'hijri';
   per_page?: number;
 }
 

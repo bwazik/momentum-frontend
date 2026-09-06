@@ -65,6 +65,7 @@ export function ProvisionTenantDialog({ open, onOpenChange }: ProvisionTenantDia
     create.mutate(
       {
         ...form,
+        default_language: (Number(form.default_language) || 1) as 1 | 2,
         domain: form.domain || null,
         timezone: form.timezone || null,
         logo_path: form.logo_path || null,

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 
 export function AdminsFilters() {
   const t = useTranslations('platform.admins');
+  const c = useTranslations('platform.common');
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
@@ -43,7 +44,7 @@ export function AdminsFilters() {
 
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2">
-      <div className="relative min-w-[200px] max-w-md flex-1">
+      <div className="relative w-full">
         <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           className="ps-9"
@@ -54,7 +55,7 @@ export function AdminsFilters() {
         />
       </div>
       {hasFilters && (
-        <Button variant="ghost" size="sm" onClick={reset} aria-label={t('empty_description')}>
+        <Button variant="ghost" size="sm" onClick={reset} aria-label={c('reset_filters')}>
           <X className="size-4" />
         </Button>
       )}

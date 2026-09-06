@@ -25,9 +25,6 @@ export function UsersRowActions({ user }: UsersRowActionsProps) {
 
   const deactivate = useDeactivateUser(user.public_id);
   const reactivate = useReactivateUser(user.public_id);
-
-  if (!canManage) return null;
-
   const isActive = String(user.is_active) !== 'false';
 
   const actions = useMemo(() => {
@@ -39,6 +36,8 @@ export function UsersRowActions({ user }: UsersRowActionsProps) {
     }
     return items;
   }, [t, isActive]);
+
+  if (!canManage) return null;
 
   return (
     <>

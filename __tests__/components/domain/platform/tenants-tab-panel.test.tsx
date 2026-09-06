@@ -8,7 +8,7 @@ vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams()
 vi.mock('next-intl', () => ({ useTranslations: () => (key: string) => key, useLocale: () => 'en' }));
 
 test('shows the tenant empty state when the platform API returns no tenants', async () => {
-  server.use(http.get('https://api.momentum.test/v1/platform/tenants', () => HttpResponse.json({ data: [], next_cursor: null, has_more: false })));
+  server.use(http.get('*/v1/platform/tenants', () => HttpResponse.json({ data: [], next_cursor: null, has_more: false })));
   renderWithProviders(<TenantsTabPanel />);
   expect(await screen.findByText('empty_title')).toBeInTheDocument();
 });

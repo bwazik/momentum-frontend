@@ -14,11 +14,7 @@ import { useUpdateTenant } from '@/lib/api/hooks/use-platform';
 import type { PlatformTenant } from '@/lib/utils/platform-utils';
 
 function languageToSelect(v: string | null | undefined): '1' | '2' {
-  return v === 'english' ? '2' : '1';
-}
-
-function languageToApi(v: string): 'arabic' | 'english' {
-  return v === '2' ? 'english' : 'arabic';
+  return (v === '2' || v === 'english') ? '2' : '1';
 }
 
 interface EditTenantDialogProps {
@@ -71,7 +67,7 @@ export function EditTenantDialog({ tenant, open, onOpenChange }: EditTenantDialo
     update.mutate(
       {
         ...form,
-        default_language: languageToApi(form.default_language),
+        default_language: (Number(form.default_language) || 1) as 1 | 2,
         domain: form.domain || null,
         timezone: form.timezone || null,
         logo_path: form.logo_path || null,

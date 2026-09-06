@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useLocale, useTranslations } from 'next-intl';
-import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -20,7 +19,6 @@ type TabValue = (typeof TAB_VALUES)[number];
 
 export function PlatformWorkspace() {
   const t = useTranslations('platform');
-  const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -73,13 +71,13 @@ export function PlatformWorkspace() {
         actions={pageAction}
       />
       <Tabs value={activeTab} onValueChange={(v) => setTab(v as TabValue)}>
-        <TabsList className={cn('w-full justify-start', locale === 'ar' && 'flex-row-reverse')}>
+        <TabsList className="w-full justify-start">
           <TabsTrigger value="tenants">{t('workspace.tabs.tenants')}</TabsTrigger>
           <TabsTrigger value="admins">{t('workspace.tabs.admins')}</TabsTrigger>
           <TabsTrigger value="impersonation">{t('workspace.tabs.impersonation')}</TabsTrigger>
           <TabsTrigger value="audit">{t('workspace.tabs.audit')}</TabsTrigger>
         </TabsList>
-        <div dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+        <div>
           <TabsContent value="tenants" className="mt-0">
             <TenantsTabPanel onCreateTenant={() => setTenantDialog(true)} />
           </TabsContent>

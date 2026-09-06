@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/table';
 import { AdminRowActions } from './admin-row-actions';
 import { localizeName, type PlatformAdmin } from '@/lib/utils/platform-utils';
+import { formatAdminAccountType } from '@/lib/utils/admin-utils';
 
 interface AdminsTableProps {
   admins: PlatformAdmin[];
@@ -55,7 +56,9 @@ export function AdminsTable({
               {admin.email}
             </TableCell>
             <TableCell>
-              {admin.account_type}
+              {formatAdminAccountType(admin.account_type)
+                ? t(`account_type_${formatAdminAccountType(admin.account_type)}`)
+                : '-'}
             </TableCell>
             <TableCell>
               <ActiveBadge

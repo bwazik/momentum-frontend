@@ -39,6 +39,8 @@ export interface PlatformTenantUser {
 export interface PlatformAuditEvent {
   public_id: string;
   user_id: string | null;
+  user_name_ar?: string | null;
+  user_name_en?: string | null;
   action: string;
   entity_type: string;
   entity_id: string | null;
@@ -46,6 +48,41 @@ export interface PlatformAuditEvent {
   ip_address: string | null;
   user_agent: string | null;
   created_at: string | null;
+  created_at_hijri?: string | null;
+}
+
+export const PLATFORM_AUDIT_ACTION_LABELS: Record<string, { ar: string; en: string }> = {
+  'tenant.create': { ar: 'إنشاء مؤسسة', en: 'Create Tenant' },
+  'tenant.update': { ar: 'تحديث مؤسسة', en: 'Update Tenant' },
+  'tenant.suspend': { ar: 'تعليق مؤسسة', en: 'Suspend Tenant' },
+  'tenant.reactivate': { ar: 'إعادة تفعيل مؤسسة', en: 'Reactivate Tenant' },
+  'tenant.run_migrations': { ar: 'ترحيل قاعدة بيانات المؤسسة', en: 'Run Tenant Migrations' },
+  'platform_admin.created': { ar: 'إنشاء مدير منصة', en: 'Create Platform Admin' },
+  'platform_admin.updated': { ar: 'تحديث مدير منصة', en: 'Update Platform Admin' },
+  'platform_admin.deactivated': { ar: 'تعطيل مدير منصة', en: 'Deactivate Platform Admin' },
+  'platform_admin.reactivated': { ar: 'إعادة تفعيل مدير منصة', en: 'Reactivate Platform Admin' },
+  'platform_admin.logged_in': { ar: 'تسجيل دخول مدير', en: 'Admin Logged In' },
+  'platform_admin.logged_out': { ar: 'تسجيل خروج مدير', en: 'Admin Logged Out' },
+  'impersonation.start': { ar: 'بدء انتحال هوية', en: 'Start Impersonation' },
+  'impersonation.end': { ar: 'إنهاء انتحال هوية', en: 'End Impersonation' },
+};
+
+export const PLATFORM_AUDIT_ENTITY_LABELS: Record<string, { ar: string; en: string }> = {
+  tenant: { ar: 'مؤسسة', en: 'Tenant' },
+  platform_admin: { ar: 'مدير منصة', en: 'Platform Admin' },
+  impersonation: { ar: 'جلسة انتحال', en: 'Impersonation' },
+};
+
+export function formatPlatformAuditAction(locale: string, action: string): string {
+  const item = PLATFORM_AUDIT_ACTION_LABELS[action];
+  if (!item) return action;
+  return locale === 'ar' ? item.ar : item.en;
+}
+
+export function formatPlatformAuditEntity(locale: string, entityType: string): string {
+  const item = PLATFORM_AUDIT_ENTITY_LABELS[entityType];
+  if (!item) return entityType;
+  return locale === 'ar' ? item.ar : item.en;
 }
 
 export interface ImpersonationSession extends PlatformAuditEvent {
@@ -53,15 +90,21 @@ export interface ImpersonationSession extends PlatformAuditEvent {
   tenant_public_id: string | null;
   expires_at: string | null;
   target_user_id: string | null;
+  target_email: string | null;
+  target_name_ar: string | null;
+  target_name_en: string | null;
+  actor_name_ar: string | null;
+  actor_name_en: string | null;
 }
+
+
 
 export function asBool(value: unknown): boolean {
   return value === true || value === 1 || value === '1' || value === 'true';
 }
 
-export function localizeName(locale: string, nameAr: string | null | undefined, nameEn: string | null | undefined): string {
-  return locale === 'ar' ? (nameAr || nameEn || '') : (nameEn || nameAr || '');
-}
+export { localizeName } from '@/lib/utils/localize';
+
 
 function record(value: unknown): Record<string, unknown> | null {
   return typeof value === 'object' && value !== null ? value as Record<string, unknown> : null;
@@ -147,17 +190,20 @@ export function narrowAuditEventPage(input: unknown): CursorPage<PlatformAuditEv
 
 export function narrowAuditEvent(value: unknown): PlatformAuditEvent | null {
   const r = record(value);
-  if (!r || typeof r.public_id !== 'string' || typeof r.entity_type !== 'string') return null;
+  if (!r || typeof r.public_id !== 'string') return null;
   return {
     public_id: r.public_id,
     user_id: typeof r.user_id === 'string' ? r.user_id : null,
+    user_name_ar: typeof r.user_name_ar === 'string' ? r.user_name_ar : null,
+    user_name_en: typeof r.user_name_en === 'string' ? r.user_name_en : null,
     action: String(r.action ?? ''),
-    entity_type: r.entity_type,
+    entity_type: String(r.entity_type ?? ''),
     entity_id: typeof r.entity_id === 'string' ? r.entity_id : null,
     payload: record(r.payload),
     ip_address: typeof r.ip_address === 'string' ? r.ip_address : null,
     user_agent: typeof r.user_agent === 'string' ? r.user_agent : null,
     created_at: typeof r.created_at === 'string' ? r.created_at : null,
+    created_at_hijri: typeof r.created_at_hijri === 'string' ? r.created_at_hijri : null,
   };
 }
 
@@ -166,7 +212,30 @@ export function narrowImpersonationSessionPage(input: unknown): CursorPage<Imper
     const event = narrowAuditEvent(value);
     const r = record(value);
     const payload = record(event?.payload);
-    return event ? { ...event, tenant_slug: typeof r?.tenant_slug === 'string' ? r.tenant_slug : typeof payload?.tenant_slug === 'string' ? payload.tenant_slug : null, tenant_public_id: typeof r?.tenant_public_id === 'string' ? r.tenant_public_id : typeof payload?.tenant_public_id === 'string' ? payload.tenant_public_id : null, expires_at: typeof r?.expires_at === 'string' ? r.expires_at : null, target_user_id: typeof payload?.target_user_id === 'string' ? payload.target_user_id : null } : null;
+    if (!event) return null;
+
+    let expiresAt = typeof r?.expires_at === 'string' ? r.expires_at : null;
+    if (!expiresAt && event.created_at) {
+      try {
+        expiresAt = new Date(new Date(event.created_at).getTime() + 60 * 60 * 1000).toISOString();
+      } catch {
+        expiresAt = null;
+      }
+    }
+
+    return {
+      ...event,
+      tenant_slug: typeof r?.tenant_slug === 'string' ? r.tenant_slug : typeof payload?.tenant_slug === 'string' ? payload.tenant_slug : null,
+      tenant_public_id: typeof r?.tenant_public_id === 'string' ? r.tenant_public_id : typeof payload?.tenant_public_id === 'string' ? payload.tenant_public_id : null,
+      expires_at: expiresAt,
+      target_user_id: typeof payload?.target_user_id === 'string' ? payload.target_user_id : null,
+      target_email: typeof payload?.target_email === 'string' ? payload.target_email : null,
+      target_name_ar: typeof payload?.target_name_ar === 'string' ? payload.target_name_ar : null,
+      target_name_en: typeof payload?.target_name_en === 'string' ? payload.target_name_en : null,
+      // actor name: from top-level resource fields (new) or payload fallback
+      actor_name_ar: typeof r?.user_name_ar === 'string' ? r.user_name_ar : typeof payload?.impersonated_by_name_ar === 'string' ? payload.impersonated_by_name_ar : null,
+      actor_name_en: typeof r?.user_name_en === 'string' ? r.user_name_en : typeof payload?.impersonated_by_name_en === 'string' ? payload.impersonated_by_name_en : null,
+    };
   }).filter((x): x is ImpersonationSession => x !== null);
   return { data, ...pageMeta(input) };
 }

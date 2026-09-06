@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -58,11 +58,8 @@ export function UsersTabPanel({ onCreateUser }: UsersTabPanelProps) {
   }
 
   const selectedUserPublicId = sp.get('userPublicId');
-  const hasEverLoaded = useRef(false);
-  if (query.data) hasEverLoaded.current = true;
-
-  const isFirstLoad = !hasEverLoaded.current && query.isLoading;
-  const isRefetching = hasEverLoaded.current && query.isFetching;
+  const isFirstLoad = query.isLoading;
+  const isRefetching = query.isFetching && !query.isLoading;
 
   if (isFirstLoad) return <AdminUsersSkeleton />;
 

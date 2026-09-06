@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useRef } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -27,19 +27,18 @@ export function AuditTabPanel() {
   const filters = useMemo(() => ({
     action: sp.get('action') || undefined,
     entity_type: sp.get('entity_type') || undefined,
+    user_id: sp.get('user_id') || undefined,
     from: sp.get('from') || undefined,
     to: sp.get('to') || undefined,
+    calendar_system: (sp.get('calendar_system') as 'gregorian' | 'hijri') || undefined,
     per_page: 15,
   }), [sp]);
 
   const query = usePlatformAuditEventsInfinite(filters);
   const events = query.data?.pages.flatMap((page) => page.data) ?? [];
 
-  const hasEverLoaded = useRef(false);
-  if (query.data) hasEverLoaded.current = true;
-
-  const isFirstLoad = !hasEverLoaded.current && query.isLoading;
-  const isRefetching = hasEverLoaded.current && query.isFetching;
+  const isFirstLoad = query.isLoading;
+  const isRefetching = query.isFetching && !query.isLoading;
 
   function resetFilters() {
     const params = new URLSearchParams();

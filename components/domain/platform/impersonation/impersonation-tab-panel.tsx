@@ -18,7 +18,7 @@ export function ImpersonationTabPanel() {
 
   const query = useImpersonationSessions();
   const sessions = query.data?.data ?? [];
-  const end = useEndImpersonation(selected?.tenant_public_id ?? '');
+  const end = useEndImpersonation();
 
   if (query.isLoading) return <ImpersonationSessionsSkeleton />;
   if (query.isError) return <ErrorState message={t('error')} onRetry={() => query.refetch()} />;
@@ -44,12 +44,14 @@ export function ImpersonationTabPanel() {
         <ConfirmDeleteDialog
           open={!!selected}
           onOpenChange={(open) => !open && setSelected(null)}
-          title={t('end')}
-          description={t('empty_description')}
+          title={t('confirm_end_title')}
+          description={t('confirm_end_description')}
           confirmLabel={t('end')}
-          onConfirm={() =>
-            end.mutate(undefined, { onSuccess: () => setSelected(null) })
-          }
+          onConfirm={() => {
+            if (selected.tenant_public_id) {
+              end.mutate(selected.tenant_public_id, { onSuccess: () => setSelected(null) });
+            }
+          }}
           isPending={end.isPending}
         />
       )}

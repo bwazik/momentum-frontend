@@ -61,7 +61,12 @@ export function AdminFormDialog({ admin, open, onOpenChange }: AdminFormDialogPr
     event.preventDefault();
     if (editing) {
       update.mutate(
-        { name_ar: form.name_ar, name_en: form.name_en || null, email: form.email },
+        {
+          name_ar: form.name_ar,
+          name_en: form.name_en || null,
+          email: form.email,
+          ...(form.password ? { password: form.password } : {}),
+        },
         { onSuccess: () => onOpenChange(false) },
       );
     } else {

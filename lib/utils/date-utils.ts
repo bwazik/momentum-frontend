@@ -29,6 +29,31 @@ export function formatGregorianDate(iso: string, locale: string): string {
   }).format(date);
 }
 
+export function formatDatetime(iso: string, locale: string): string {
+  const date = new Date(iso);
+  return new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(date);
+}
+
+/** Returns time as 12h format with localised AM/PM suffix. */
+export function formatTime(iso: string, locale = 'en'): string {
+  const date = new Date(iso);
+  const raw = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const isAm = raw < 12;
+  const hours = raw % 12 || 12;
+  const suffix = locale === 'ar'
+    ? (isAm ? 'صباحاً' : 'مساءً')
+    : (isAm ? 'AM' : 'PM');
+  return `${hours}:${minutes} ${suffix}`;
+}
+
 export function dateToLocalIso(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useRef } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -48,11 +48,8 @@ export function AdminsTabPanel({ onCreateAdmin }: AdminsTabPanelProps) {
   const deactivate = useDeactivateAdmin(deactivating?.public_id ?? '');
   const reactivate = useReactivateAdmin(reactivating?.public_id ?? '');
 
-  const hasEverLoaded = useRef(false);
-  if (query.data) hasEverLoaded.current = true;
-
-  const isFirstLoad = !hasEverLoaded.current && query.isLoading;
-  const isRefetching = hasEverLoaded.current && query.isFetching;
+  const isFirstLoad = query.isLoading;
+  const isRefetching = query.isFetching && !query.isLoading;
 
   function resetFilters() {
     const params = new URLSearchParams();
@@ -144,8 +141,8 @@ export function AdminsTabPanel({ onCreateAdmin }: AdminsTabPanelProps) {
         <ConfirmDeleteDialog
           open={!!reactivating}
           onOpenChange={(open) => !open && setReactivating(null)}
-          title={c('reactivate')}
-          description={t('confirm_deactivate_description')}
+          title={t('confirm_reactivate_title')}
+          description={t('confirm_reactivate_description')}
           confirmLabel={c('reactivate')}
           destructive={false}
           onConfirm={() =>

@@ -2025,6 +2025,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/platform/tenants/{tenant}/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["platformTenant.users"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/organization/positions": {
         parameters: {
             query?: never;
@@ -2995,6 +3011,7 @@ export interface components {
             name_en: string;
             email: string;
             account_type: string;
+            is_active: string;
         };
         /** AuthorityGradeResource */
         AuthorityGradeResource: {
@@ -3686,10 +3703,19 @@ export interface components {
                 public_id: string;
                 name_ar: string;
             } | null;
-            blueprint_category_id: string;
-            granted_by: string;
+            blueprint_category?: {
+                public_id: string;
+                name_ar: string;
+            } | null;
+            granted_by?: {
+                public_id: string;
+                name_ar: string;
+                name_en: string;
+            } | null;
             granted_at: string;
+            granted_at_hijri: string | null;
             revoked_at: string;
+            revoked_at_hijri: string | null;
         };
         /** OnboardingDepartmentStatusResource */
         OnboardingDepartmentStatusResource: {
@@ -3823,7 +3849,14 @@ export interface components {
         };
         /** PlatformAuthResource */
         PlatformAuthResource: {
-            user: components["schemas"]["PlatformAdminResource"];
+            public_id: string;
+            name_ar: string;
+            name_en: string;
+            email: string;
+            account_type: string;
+            is_active: string;
+            created_at: string;
+            updated_at: string;
         };
         /** PlatformLoginRequest */
         PlatformLoginRequest: {
@@ -4285,10 +4318,9 @@ export interface components {
             slug: string;
             domain?: string | null;
             timezone?: string | null;
-            /** @enum {integer|null} */
-            default_language?: "1" | "2" | null;
+            default_language?: components["schemas"]["PreferredLanguage"];
             logo_path?: string | null;
-            settings?: string[] | null;
+            settings?: string | null;
         };
         /** StoreUserRequest */
         StoreUserRequest: {
@@ -4550,7 +4582,7 @@ export interface components {
             domain: string | null;
             database_name: string;
             logo_path: string | null;
-            default_language: number;
+            default_language: components["schemas"]["PreferredLanguage"];
             timezone: string;
             is_active: boolean;
             settings: unknown[] | null;
@@ -4768,10 +4800,9 @@ export interface components {
             name_en?: string | null;
             domain?: string | null;
             timezone?: string | null;
-            /** @enum {integer|null} */
-            default_language?: "1" | "2" | null;
+            default_language?: components["schemas"]["PreferredLanguage"];
             logo_path?: string | null;
-            settings?: string[] | null;
+            settings?: string | null;
         };
         /** UpdateUserRequest */
         UpdateUserRequest: {
@@ -4826,7 +4857,9 @@ export interface components {
                 name_en: string;
             } | null;
             granted_at: string;
+            granted_at_hijri: string | null;
             revoked_at: string;
+            revoked_at_hijri: string | null;
         };
         /** UserDetailResource */
         UserDetailResource: {
@@ -9968,6 +10001,44 @@ export interface operations {
             };
             401: components["responses"]["AuthenticationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "platformTenant.users": {
+        parameters: {
+            query?: {
+                search?: string | null;
+                is_active?: boolean | null;
+                department_id?: string | null;
+                cursor?: string | null;
+                per_page?: number | null;
+            };
+            header: {
+                /** @description Tenant slug or public ID for multi-tenant resolution. */
+                "X-Tenant": string;
+            };
+            path: {
+                /** @description The tenant public id */
+                tenant: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["UserResource"][];
+                        next_cursor: string;
+                        has_more: boolean;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "position.index": {
