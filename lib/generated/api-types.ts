@@ -3583,6 +3583,7 @@ export interface components {
         /** HelpArticleCategoryResource */
         HelpArticleCategoryResource: {
             public_id: string;
+            slug: string;
             name_ar: string;
             name_en: string;
             display_order: string;
@@ -3593,12 +3594,16 @@ export interface components {
         /** HelpArticleDetailResource */
         HelpArticleDetailResource: {
             public_id: string;
+            slug: string;
             title_ar: string;
             title_en: string;
             body_ar: string;
             body_en: string;
+            word_count: string;
+            estimated_read_time: string;
             category?: {
                 public_id: string;
+                slug: string;
                 name_ar: string;
                 name_en: string;
             };
@@ -3622,13 +3627,17 @@ export interface components {
         /** HelpArticleResource */
         HelpArticleResource: {
             public_id: string;
+            slug: string;
             title_ar: string;
             title_en: string;
             category?: {
                 public_id: string;
+                slug: string;
                 name_ar: string;
                 name_en: string;
             };
+            word_count: string;
+            estimated_read_time: string;
             is_published: string;
             display_order: string;
             view_count: string;
@@ -3644,10 +3653,12 @@ export interface components {
         /** HelpArticleSearchResultResource */
         HelpArticleSearchResultResource: {
             public_id: string;
+            slug: string;
             title_ar: string;
             title_en: string;
             category?: {
                 public_id: string;
+                slug: string;
                 name_ar: string;
                 name_en: string;
             };
@@ -3879,6 +3890,15 @@ export interface components {
             settings: string;
             created_at: string;
             updated_at: string;
+        };
+        /** PlatformTenantUserResource */
+        PlatformTenantUserResource: {
+            public_id: string;
+            name_ar: string;
+            name_en: string;
+            email: string;
+            is_active: string;
+            account_type: string;
         };
         /** PositionAssignmentResource */
         PositionAssignmentResource: {
@@ -4724,6 +4744,7 @@ export interface components {
             name_en?: string | null;
             /** Format: email */
             email?: string;
+            password?: string | null;
         };
         /** UpdatePositionRequest */
         UpdatePositionRequest: {
@@ -10030,7 +10051,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["UserResource"][];
+                        data: components["schemas"]["PlatformTenantUserResource"][];
                         next_cursor: string;
                         has_more: boolean;
                     };

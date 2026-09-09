@@ -1,3 +1,5 @@
+import type { HelpArticleFilters, HelpArticleSearchFilters } from './types/help-center-types';
+
 export interface AdminUserFilters {
   search?: string;
   is_active?: '0' | '1' | boolean;
@@ -244,5 +246,18 @@ export const queryKeys = {
       lists: () => [...queryKeys.platform.audit.all(), 'list'] as const,
       list: (filters: PlatformAuditFilters) => [...queryKeys.platform.audit.lists(), filters] as const,
     },
+  },
+  helpCenter: {
+    all: ['help-center'] as const,
+    categories: () => [...queryKeys.helpCenter.all, 'categories'] as const,
+    articles: () => [...queryKeys.helpCenter.all, 'articles'] as const,
+    articleList: (filters?: HelpArticleFilters) =>
+      [...queryKeys.helpCenter.articles(), filters] as const,
+    details: () => [...queryKeys.helpCenter.all, 'detail'] as const,
+    detail: (publicId: string) => [...queryKeys.helpCenter.details(), publicId] as const,
+    search: (filters: HelpArticleSearchFilters) =>
+      [...queryKeys.helpCenter.all, 'search', filters] as const,
+    documents: (articlePublicId: string) =>
+      [...queryKeys.helpCenter.detail(articlePublicId), 'documents'] as const,
   },
 } as const;

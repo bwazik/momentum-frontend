@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { LayoutDashboard, ListTodo, FolderKanban, BarChart3, GitMerge, Building2, Shield, Zap, Plus, Mail, Settings2, UserCog } from 'lucide-react';
+import { LayoutDashboard, ListTodo, FolderKanban, BarChart3, GitMerge, Building2, Shield, Zap, Plus, Mail, Settings2, UserCog, BookOpen } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -54,6 +54,9 @@ export function AppSidebar({ locale = 'ar', mode = 'tenant', ...props }: AppSide
   const canViewAnalyticsOrg = useCapability('analytics.view.organization', mode === 'tenant');
   const canViewAnalyticsDept = useCapability('analytics.view.department', mode === 'tenant');
   const canViewFollowUpScope = useCapability('task.view.follow_up_scope', mode === 'tenant');
+  const canViewHelpCenter = useCapability('helpcenter.view', mode === 'tenant');
+  const canManageHelpCenter = useCapability('helpcenter.manage', mode === 'tenant');
+  const canViewHelp = canViewHelpCenter || canManageHelpCenter;
   const appName = useBrandName(mode === 'tenant');
 
   useCapabilities(tenantUser?.public_id, mode === 'tenant');
@@ -158,6 +161,25 @@ export function AppSidebar({ locale = 'ar', mode = 'tenant', ...props }: AppSide
                 ...(canManageEntities ? [{ title: tnav('external_entities'), url: '/admin/external-entities', icon: Building2 }] : []),
                 ...(canManageGovernance ? [{ title: tnav('governance_participants'), url: '/admin/confidential-governance', icon: Shield }] : []),
               ]} pathname={pathname} />
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {mode === 'tenant' && canViewHelp && (
+          <SidebarGroup>
+            <SidebarGroupLabel>{tnav('label_support')}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <NavMain
+                items={[
+                  {
+                    title: tnav('help_center'),
+                    url: '/help',
+                    icon: BookOpen,
+                    isActive: (p: string) => p === '/help' || p.startsWith('/help/'),
+                  },
+                ]}
+                pathname={pathname}
+              />
             </SidebarGroupContent>
           </SidebarGroup>
         )}
