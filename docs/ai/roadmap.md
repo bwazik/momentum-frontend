@@ -7,7 +7,7 @@
 ## Current Focus
 
 **Phase:** F6 — Admin, Org, Help, Onboarding
-**Active spec:** `011-help-center`
+**Active spec:** `021-onboarding-training`
 **Branch:** `main`
 
 ---
@@ -42,7 +42,7 @@
 | `008-organization-structure` | F6 | Organization | `002-organization-structure` | ✅ |
 | `009-analytics-reporting` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `010-system-administration` | F6 | Tenant Admin | `003`, `005` (priorities), `015` | ✅ |
-| `011-help-center` | F6 | Support | `020-help-center` | ⬜ |
+| `011-help-center` | F6 | Support | `020-help-center` | ✅ |
 | `012-department-manager-dashboard` | F5 | Analytics | `009-analytics-reporting` | ✅ |
 | `016-task-creation-launch` | F2 | Tasks | `005-task-execution` | ✅ |
 | `017-user-settings-delegation` | F6 | Settings | `016` | ✅ |
@@ -257,7 +257,7 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 
 **Status:** 🔄 In Progress
 
-**Specs:** `008` ✅, `010` ✅, `011` ⬜, `017` ✅, `019` ✅, `020` ✅, `021` ⬜, `022` ✅
+**Specs:** `008` ✅, `010` ✅, `011` ✅, `017` ✅, `019` ✅, `020` ✅, `021` ⬜, `022` ✅
 
 **Established by 008:**
 - **Visual org chart pattern:** Gradient avatar cards with initials, tiered layout with CSS connector lines, progressive disclosure via click, zoom controls (`ZoomIn`/`ZoomOut`). Works for org chart browsing, not just list trees.
@@ -324,8 +324,16 @@ Note: Spec IDs are frontend-specific. Cross-reference backend roadmap for API de
 - **Self-deactivation guard:** Platform admin row actions compare row `public_id` against `/v1/platform/auth/me` to hide self-deactivation.
 - **Structured audit details dialog:** Escaped JSON payload viewer with user agent, IP address, and dual date displays (never `dangerouslySetInnerHTML`).
 
+**Established by 011:**
+- **Slug-first public URLs with UUID fallback:** Category links use `?category={slug}` resolved to UUID via a `slugToIdMap` from cached categories; article links use `article.slug || article.public_id`. Backend `resolveRouteBinding` accepts both; mutations keep `public_id` (stable across retitles). Backend added `slug` to `HelpArticleSearchResultResource`; `openapi.json` re-exported via Scramble and `lib/generated/api-types.ts` regenerated.
+- **Hydration-safe capability gating:** Page clients render skeletons until a client-only `hydrated` flag flips; permission checks run only after hydration. All hooks stay above conditional returns (Rules of Hooks).
+- **Slug-keyed category icons:** `CATEGORY_ICONS` map in `help-center-utils.ts` (14 distinct icons, keyword fallback for custom categories). Cards carry explicit `cursor-pointer` (Tailwind v4 dropped the button default).
+- **Section-mirrored reader skeleton:** `HelpArticleReaderSkeleton` mirrors the reader 1:1 (manager actions, badge + locale toggle, full-width title, 4-item meta, gallery + related grids) — no layout shift.
+- **Dialog width vs responsive variants:** Base `DialogContent` carries `sm:max-w-sm`, which beats any base-variant override — overrides must use the same `sm:` variant (`sm:max-w-4xl`). `overflow-x-clip` on scroll containers keeps vertical-only scrolling.
+- **Breadcrumb slug via cached lookup:** `useHelpDisplayStore` carries `categorySlug` (renamed from `categoryPublicId`), resolved from the categories list with payload/UUID fallback chain.
+- **Help content seeded:** 53 bilingual guides (EN + AR) across 14 categories rewritten into UI-specific practical articles and reseeded for all tenants.
+
 **Remaining F6 specs:**
-- `011-help-center` — Help center CMS screens (requires `020-help-center` — ✅ Done on backend)
 - `021-onboarding-training` — Onboarding and training module (requires `019-onboarding-training` — ✅ Done on backend)
 
 All F6 backend dependencies are now ✅ Done. No specs are blocked.

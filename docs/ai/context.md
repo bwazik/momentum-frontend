@@ -121,7 +121,7 @@ Frontend specs are domain-level (~16), aligned with backend spec IDs where appli
 **Milestone F6 — Admin, Org, Help, Onboarding: 🔄 In Progress**
 - ✅ `008-organization-structure` — Org chart, department/position/grade CRUD, working calendars, holidays
 - ✅ `010-system-administration` — Tenant admin workspace with Users, Access, Priorities, Audit Log tabs
-- ⬜ `011-help-center` — Help center CMS (requires `020-help-center` — ✅ Done on backend)
+- ✅ `011-help-center` — Help center CMS + 53 bilingual guides; slug-first URLs, hydration-safe gating, reader skeleton mirroring layout
 - ✅ `017-user-settings-delegation` — Profile editing, out-of-office toggle, delegation management, settings page with capability-gated tabs
 - ✅ `019-confidential-access` — Confidential task access, metadata-only view, override flow, governance participant management
 - ✅ `020-localization-calendar` — Hijri date picker, dual date display, calendar system filter, department calendar assignment

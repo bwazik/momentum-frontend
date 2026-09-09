@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import { useTaskDisplayStore } from '@/lib/stores/use-task-display-store';
 import { useBlueprintBuilderStore } from '@/lib/stores/use-blueprint-builder-store';
 import { usePlatformTenantDisplayStore } from '@/lib/stores/use-platform-tenant-store';
+import { useHelpDisplayStore } from '@/lib/stores/use-help-display-store';
 
 export interface Crumb {
   label: string;
@@ -18,6 +19,7 @@ export function usePageBreadcrumb(): Crumb[] | null {
   const displayId = useTaskDisplayStore((s) => s.displayId);
   const blueprintName = useBlueprintBuilderStore((s) => s.blueprintName);
   const tenantDisplayName = usePlatformTenantDisplayStore((s) => s.tenantName);
+  const { articleTitle, categoryName, categorySlug } = useHelpDisplayStore();
 
   const platformTenantDetail = pathname.match(/^\/(?:platform\/)?tenants\/([^/]+)$/);
   if (platformTenantDetail) {
@@ -149,6 +151,38 @@ export function usePageBreadcrumb(): Crumb[] | null {
   if (pathname === '/settings') {
     return [
       { label: nav('settings') },
+    ];
+  }
+
+  const helpArticleEdit = pathname.match(/^\/help\/([^/]+)\/edit$/);
+  if (helpArticleEdit) {
+    return [
+      { label: nav('help_center'), href: '/help' },
+      { label: articleTitle || '...', href: `/help/${helpArticleEdit[1]}` },
+      { label: nav('edit') },
+    ];
+  }
+
+  const helpArticleNew = pathname === '/help/new';
+  if (helpArticleNew) {
+    return [
+      { label: nav('help_center'), href: '/help' },
+      { label: nav('new_article') },
+    ];
+  }
+
+  const helpArticleDetail = pathname.match(/^\/help\/([^/]+)$/);
+  if (helpArticleDetail) {
+    return [
+      { label: nav('help_center'), href: '/help' },
+      ...(categoryName ? [{ label: categoryName, href: `/help?category=${categorySlug}` }] : []),
+      { label: articleTitle || '...' },
+    ];
+  }
+
+  if (pathname === '/help') {
+    return [
+      { label: nav('help_center') },
     ];
   }
 
